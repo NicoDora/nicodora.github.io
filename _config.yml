@@ -82,3 +82,9 @@ sass:
 
 plugins:
   - jekyll-include-cache
+
+menu:
+  - title:              Home
+    url:                /
+  - title:              test
+    url:                /test/
