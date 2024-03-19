@@ -86,8 +86,8 @@ plugins:
 menu:
   - title:              Home
     url:                /
-  - title:              testCategory
-    url:                /testCategory/
+  - title:              testcategory
+    url:                /testcategory/
 
 collections:
   featured_categories:
