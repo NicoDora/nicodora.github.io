@@ -6,5 +6,8 @@ vendor
 .jekyll-cache
 *.gem
 
+# DS_STORE
+**.DS_Store
+
 #<removed/js>
 #<removed/css>
