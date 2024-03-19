@@ -86,5 +86,10 @@ plugins:
 menu:
   - title:              Home
     url:                /
-  - title:              test
-    url:                /test/
+  - title:              testCategory
+    url:                /testCategory/
+
+collections:
+  featured_categories:
+    permalink:         /:name/
+    output:            true
