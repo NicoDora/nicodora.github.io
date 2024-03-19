@@ -92,4 +92,4 @@ menu:
 collections:
   featured_categories:
     permalink:         /:name/
-    output:            true
+    output:            true 
