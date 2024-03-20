@@ -20,12 +20,32 @@ layout: base
 {% assign strings = site.data.strings %}
 
 <article class="page" role="article">
-  <header>
-    <h1 class="page-title">{{ page.title | default:strings.home | default:"Home" }}</h1>
+  <!-- <header>
+    <h1 class="page-title">{{ page.title | default:strings.home | default:"" }}</h1>
     {% include components/message.html text=page.description hide=page.hide_description %}
-  </header>
+  </header> -->
 
-  {{ content }}
+  <!-- {{ content }} -->
+
+  <!-- <hr class="dingbat related"/> -->
+
+  {% assign plugins = site.plugins | default:site.gems %}
+
+  {% if plugins contains 'jekyll-paginate' %}
+    {% assign posts = paginator.posts %}
+  {% else %}
+    {% assign posts = site.categories[page.slug] | default:site.tags[page.slug] | default:site.posts %}
+  {% endif %}
+    
+  {% for post in posts %}
+    {% unless post.categories contains 'incomplete' %}
+      {% include_cached components/post.html post=post no_link_title=page.no_link_title no_excerpt=page.no_excerpt hide_image=page.hide_image %}
+    {% endunless %}
+  {% endfor %}
+
+  {% if plugins contains 'jekyll-paginate' %}
+    {% include components/pagination.html %}
+  {% endif %}
 
   <hr class="dingbat related"/>
 

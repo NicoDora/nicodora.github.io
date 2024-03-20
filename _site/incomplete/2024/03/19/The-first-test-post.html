@@ -31,7 +31,7 @@ Powered by Hydejack v9.1.6 <https://hydejack.com/>
     
 
 <title>The first test post | NicoDora</title>
-<meta name="description" content="안녕하세요?
+<meta name="description" content="첫 포스트 테스트 중
 ">
 <link rel="canonical" href="http://localhost:4000/incomplete/2024/03/19/The-first-test-post.html">
 
@@ -93,7 +93,7 @@ Powered by Hydejack v9.1.6 <https://hydejack.com/>
   w._search = {
     DATA_URL: '/assets/sitedata.json?no-cache',
     STORAGE_KEY: 'mini-search/',
-    INDEX_KEY: 'index--2024-03-20T20:36:58+09:00',
+    INDEX_KEY: 'index--2024-03-21T00:04:53+09:00',
   };
   w._clapButton = true;
 }(window);</script>
@@ -249,7 +249,12 @@ html{--accent-color: rgb(79,177,186);--accent-color-faded: rgba(79, 177, 186, 0.
 
 
 
-  <div class="hr pb0"></div>
+  
+    <p class="note-sm" >
+      첫 포스트 테스트 중
+
+    </p>
+  
 
 
   </header>
@@ -259,9 +264,142 @@ html{--accent-color: rgb(79,177,186);--accent-color-faded: rgba(79, 177, 186, 0.
 
 <p>첫 포스트입니다.
 <br />
+<br /></p>
+
+<p><img src="/assets/img/2024-03-19-The-first-test-post/test1.jpeg" alt="test1" />
 <br />
-<br />
-<img src="/assets/img/2024-03-19-The-first-test-post/test1.jpeg" alt="test image" /></p>
+<br /></p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// file: "test.ts"</span>
+
+<span class="k">import</span> <span class="p">{</span> <span class="nx">Injectable</span><span class="p">,</span> <span class="nx">NotFoundException</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@nestjs/common</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">EntityManager</span><span class="p">,</span> <span class="nx">FindManyOptions</span><span class="p">,</span> <span class="nx">FindOneOptions</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">typeorm</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">plainToInstance</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">class-transformer</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">QueryDeepPartialEntity</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">typeorm/query-builder/QueryPartialEntity</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">UserProvider</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@src/auth/enums/user-provider.enum</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">UserInfo</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@src/auth/interfaces/user-info.interface</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">UserBadgeRepository</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@src/users/repositories/user-badge.repository</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">UserIntroRepository</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@src/users/repositories/user-intro.repository</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">MyIntroDto</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@src/users/dtos/get-my-intro.dto</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">MyProfileResponseDTO</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@src/users/dtos/get-my-profile.dto</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">UserBadgeResponseDTO</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@src/users/dtos/get-user-badge.dto</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">UserImageRepository</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@src/users/repositories/user-image.repository</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">UserRepository</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@src/users/repositories/user.repository</span><span class="dl">'</span><span class="p">;</span>
+<span class="k">import</span> <span class="p">{</span> <span class="nx">User</span> <span class="p">}</span> <span class="k">from</span> <span class="dl">'</span><span class="s1">@src/entities/User</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="p">@</span><span class="nd">Injectable</span><span class="p">()</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nc">UserService</span> <span class="p">{</span>
+  <span class="nf">constructor</span><span class="p">(</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">userRepository</span><span class="p">:</span> <span class="nx">UserRepository</span><span class="p">,</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">userImageRepository</span><span class="p">:</span> <span class="nx">UserImageRepository</span><span class="p">,</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">userBadgeRepository</span><span class="p">:</span> <span class="nx">UserBadgeRepository</span><span class="p">,</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">userIntroRepository</span><span class="p">:</span> <span class="nx">UserIntroRepository</span><span class="p">,</span>
+  <span class="p">)</span> <span class="p">{}</span>
+
+  <span class="nf">findAll</span><span class="p">(</span><span class="nx">options</span><span class="p">:</span> <span class="nx">FindManyOptions</span><span class="o">&lt;</span><span class="nx">User</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">userRepository</span><span class="p">.</span><span class="nf">findAll</span><span class="p">(</span><span class="nx">options</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nf">findUser</span><span class="p">(</span><span class="nx">uniqueId</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">provider</span><span class="p">:</span> <span class="nx">UserProvider</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">userRepository</span><span class="p">.</span><span class="nf">findUser</span><span class="p">(</span><span class="nx">uniqueId</span><span class="p">,</span> <span class="nx">provider</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">async</span> <span class="nf">findOneByQueryBuilderOrNotFound</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">number</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">User</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">existUser</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">userRepository</span><span class="p">.</span><span class="nf">findOneByQueryBuilder</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+
+    <span class="k">if </span><span class="p">(</span><span class="o">!</span><span class="nx">existUser</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nc">NotFoundException</span><span class="p">(</span><span class="dl">'</span><span class="s1">해당 유저를 찾지 못했습니다.</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">existUser</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nf">findOneAndSelectAllByQueryBuilder</span><span class="p">(</span><span class="nx">email</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span> <span class="nx">provider</span><span class="p">:</span> <span class="nx">UserProvider</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">userRepository</span><span class="p">.</span><span class="nf">findOneAndSelectAllByQueryBuilder</span><span class="p">(</span>
+      <span class="nx">email</span><span class="p">,</span>
+      <span class="nx">provider</span><span class="p">,</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="nf">findOne</span><span class="p">(</span><span class="nx">options</span><span class="p">:</span> <span class="nx">FindOneOptions</span><span class="o">&lt;</span><span class="nx">User</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">userRepository</span><span class="p">.</span><span class="nf">findOne</span><span class="p">(</span><span class="nx">options</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">async</span> <span class="nf">findOneByOrNotFound</span><span class="p">(</span><span class="nx">options</span><span class="p">:</span> <span class="nx">FindOneOptions</span><span class="o">&lt;</span><span class="nx">User</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">existUser</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nf">findOne</span><span class="p">(</span><span class="nx">options</span><span class="p">);</span>
+
+    <span class="k">if </span><span class="p">(</span><span class="o">!</span><span class="nx">existUser</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nc">NotFoundException</span><span class="p">(</span><span class="dl">'</span><span class="s1">해당 유저를 찾지 못했습니다.</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">existUser</span><span class="p">;</span>
+  <span class="p">}</span>
+
+  <span class="nf">createUser</span><span class="p">(</span><span class="nx">entityManager</span><span class="p">:</span> <span class="nx">EntityManager</span><span class="p">,</span> <span class="nx">userInfo</span><span class="p">:</span> <span class="nx">UserInfo</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">userRepository</span><span class="p">.</span><span class="nf">createUser</span><span class="p">(</span><span class="nx">entityManager</span><span class="p">,</span> <span class="nx">userInfo</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">async</span> <span class="nf">getMyProfile</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">number</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">userInfo</span> <span class="o">=</span> <span class="nf">plainToInstance</span><span class="p">(</span>
+      <span class="nx">MyProfileResponseDTO</span><span class="p">,</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">userRepository</span><span class="p">.</span><span class="nf">getUser</span><span class="p">(</span><span class="nx">userId</span><span class="p">),</span>
+    <span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">intro</span> <span class="o">=</span> <span class="nf">plainToInstance</span><span class="p">(</span>
+      <span class="nx">MyIntroDto</span><span class="p">,</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">userIntroRepository</span><span class="p">.</span><span class="nf">getUserIntro</span><span class="p">(</span><span class="nx">userId</span><span class="p">),</span>
+    <span class="p">)[</span><span class="mi">0</span><span class="p">];</span>
+
+    <span class="kd">const</span> <span class="nx">image</span> <span class="o">=</span> <span class="p">(</span><span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">userImageRepository</span><span class="p">.</span><span class="nf">findUserImage</span><span class="p">(</span><span class="nx">userId</span><span class="p">))</span>
+      <span class="p">.</span><span class="nx">imageUrl</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="p">{</span> <span class="p">...</span><span class="nx">userInfo</span><span class="p">,</span> <span class="nx">image</span><span class="p">,</span> <span class="nx">intro</span> <span class="p">};</span>
+  <span class="p">}</span>
+
+  <span class="k">async</span> <span class="nf">getMyRank</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">number</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">rank</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">userRepository</span><span class="p">.</span><span class="nf">getUserRank</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">badge</span> <span class="o">=</span> <span class="nf">plainToInstance</span><span class="p">(</span>
+      <span class="nx">UserBadgeResponseDTO</span><span class="p">,</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">userBadgeRepository</span><span class="p">.</span><span class="nf">getUserBadges</span><span class="p">(</span><span class="nx">userId</span><span class="p">),</span>
+    <span class="p">);</span>
+
+    <span class="k">return</span> <span class="p">{</span> <span class="nx">rank</span><span class="p">,</span> <span class="nx">badge</span> <span class="p">};</span>
+  <span class="p">}</span>
+
+  <span class="nf">getUserInfo</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">number</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">userRepository</span><span class="p">.</span><span class="nf">getUserInfo</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">async</span> <span class="nf">getMyInfoWithOwner</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">number</span><span class="p">,</span> <span class="nx">targetId</span><span class="p">:</span> <span class="kr">number</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">name</span><span class="p">,</span> <span class="nx">email</span><span class="p">,</span> <span class="nx">role</span><span class="p">,</span> <span class="nx">provider</span> <span class="p">}</span> <span class="o">=</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">userRepository</span><span class="p">.</span><span class="nf">getUser</span><span class="p">(</span><span class="nx">userId</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">userImage</span> <span class="o">=</span> <span class="p">(</span><span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">userImageRepository</span><span class="p">.</span><span class="nf">findUserImage</span><span class="p">(</span><span class="nx">userId</span><span class="p">))</span>
+      <span class="p">.</span><span class="nx">imageUrl</span><span class="p">;</span>
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="nx">userId</span><span class="p">,</span>
+      <span class="nx">name</span><span class="p">,</span>
+      <span class="nx">email</span><span class="p">,</span>
+      <span class="nx">role</span><span class="p">,</span>
+      <span class="nx">provider</span><span class="p">,</span>
+      <span class="nx">userImage</span><span class="p">,</span>
+      <span class="na">owner</span><span class="p">:</span> <span class="nx">userId</span> <span class="o">===</span> <span class="nx">targetId</span><span class="p">,</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+
+  <span class="nf">updateUser</span><span class="p">(</span><span class="nx">userId</span><span class="p">:</span> <span class="kr">number</span><span class="p">,</span> <span class="nx">partialEntity</span><span class="p">:</span> <span class="nx">QueryDeepPartialEntity</span><span class="o">&lt;</span><span class="nx">User</span><span class="o">&gt;</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">userRepository</span><span class="p">.</span><span class="nf">updateUser</span><span class="p">(</span><span class="nx">userId</span><span class="p">,</span> <span class="nx">partialEntity</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="k">async</span> <span class="nf">countPageMentors</span><span class="p">(</span><span class="nx">categoryId</span><span class="p">:</span> <span class="kr">number</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="nx">limit</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">total</span> <span class="o">=</span> <span class="nx">categoryId</span>
+      <span class="p">?</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">userRepository</span><span class="p">.</span><span class="nf">countMentorsInCategory</span><span class="p">(</span><span class="nx">categoryId</span><span class="p">)</span>
+      <span class="p">:</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">userRepository</span><span class="p">.</span><span class="nf">countMentors</span><span class="p">();</span>
+    <span class="kd">const</span> <span class="nx">page</span> <span class="o">=</span> <span class="nx">total</span> <span class="o">/</span> <span class="nx">limit</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">totalPage</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nf">ceil</span><span class="p">(</span><span class="nx">page</span><span class="p">);</span>
+    <span class="k">return</span> <span class="p">{</span> <span class="nx">total</span><span class="p">,</span> <span class="nx">totalPage</span> <span class="p">};</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
 
   
 </article>
@@ -326,7 +464,7 @@ html{--accent-color: rgb(79,177,186);--accent-color-faded: rgba(79, 177, 186, 0.
 <footer class="content" role="contentinfo">
   <hr/>
   
-    <p><small class="copyright">© 2021. All rights reserved.
+    <p><small class="copyright">© 2024 NicoDora. All rights reserved.
 </small></p>
   
   

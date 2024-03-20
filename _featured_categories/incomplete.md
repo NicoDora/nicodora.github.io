@@ -1,5 +1,5 @@
 ---
-layout: list
+layout: blog
 title: "Incomplete"
 slug: incomplete
 menu: true
