@@ -30,15 +30,27 @@ layout: base
   <hr class="dingbat related"/>
 
   {% if site.posts.size > 0 %}
-    <h2 class="hr-bottom">{{ strings.posts | default:"Posts" }}</h2>
+    <h2 class="hr-bottom">{{ strings.posts | default:"All Posts" }}</h2>
     <ul class="related-posts">
       {% for post in site.posts limit:5 %}
+        {% unless post.categories contains 'incomplete' %}
+          {% include_cached components/post-list-item.html post=post %}
+        {% endunless %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% assign incomplete_posts = site.posts | where:"categories", "incomplete" %}
+  {% if incomplete_posts.size > 0 %}
+    <h2 class="hr-bottom">{{ strings.incomplete | default:"Incomplete Posts" }}</h2>
+    <ul class="related-posts">
+      {% for post in incomplete_posts limit:5 %}
         {% include_cached components/post-list-item.html post=post %}
       {% endfor %}
     </ul>
   {% endif %}
 
-  {% assign pages = site.html_pages | where:"layout","page" | where_exp:"page","page.sitemap != false" %}
+  <!-- {% assign pages = site.html_pages | where:"layout","page" | where_exp:"page","page.sitemap != false" %}
   {% if pages.size > 0 %}
     <h2 class="hr-bottom">{{ strings.pages | default:"Pages" }}</h2>
     <ul class="related-posts">
@@ -52,5 +64,5 @@ layout: base
         {% endif %}
       {% endfor %}
     </ul>
-  {% endif %}
+  {% endif %} -->
 </article>
