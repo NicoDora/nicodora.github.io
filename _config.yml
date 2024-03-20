@@ -88,6 +88,13 @@ defaults:
       path: ""
     values:
       accent_image: /assets/img/sidebar-bg.jpg
+  
+  - scope:
+      path: ""
+      type:            posts
+    values:
+      comments:        true
+      applause_button:       true
 
 menu:
   - title:              Home
