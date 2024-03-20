@@ -3,6 +3,7 @@ title:                 NicoDora
 copyright:             © 2024 NicoDora. All rights reserved.
 logo:                 /assets/img/logo.png
 url:                  https://nicodora.github.io
+baseurl:              ""
 tagline:              keep moving
 
 author:
