@@ -83,13 +83,19 @@ sass:
 plugins:
   - jekyll-include-cache
 
+defaults:
+  - scope:
+      path: ""
+    values:
+      accent_image: /assets/img/sidebar-bg.jpg
+
 menu:
   - title:              Home
     url:                /
-  - title:              testcategory
-    url:                /testcategory/
+  - title:              Incomplete
+    url:                /incomplete/
 
 collections:
   featured_categories:
     permalink:         /:name/
-    output:            true 
+    output:            true
