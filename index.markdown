@@ -5,4 +5,4 @@
 layout: home
 ---
 
-/ root 루트 NicoDora 홈 home 홈페이지 homepage 루트페이지 rootpage
+index.markdown 파일 입니다.
