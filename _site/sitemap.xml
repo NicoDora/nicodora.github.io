@@ -4,7 +4,7 @@
                 xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     
     <url>
-        <loc>https://nicodora.github.io/incomplete/2024/03/19/The-first-test-post.html</loc>
+        <loc>http://localhost:4000/incomplete/2024/03/19/The-first-test-post.html</loc>
         
         <lastmod>2024-03-19T21:31:00+09:00</lastmod>
         
@@ -20,7 +20,7 @@
     </url>
     
     <url>
-        <loc>https://nicodora.github.io/jekyll/update/2024/03/11/welcome-to-jekyll.html</loc>
+        <loc>http://localhost:4000/jekyll/update/2024/03/11/welcome-to-jekyll.html</loc>
         
         <lastmod>2024-03-11T21:31:00+09:00</lastmod>
         
