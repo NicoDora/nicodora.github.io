@@ -14,7 +14,76 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-layout: default
+layout: base
 ---
 
-{{ content }}
+{% assign strings = site.data.strings %}
+
+<article class="page" role="article">
+  <!-- <header>
+    <h1 class="page-title">{{ page.title | default:strings.home | default:"" }}</h1>
+    {% include components/message.html text=page.description hide=page.hide_description %}
+  </header> -->
+
+  <!-- {{ content }} -->
+
+  <!-- <hr class="dingbat related"/> -->
+
+  {% assign plugins = site.plugins | default:site.gems %}
+
+  {% if plugins contains 'jekyll-paginate' %}
+    {% assign posts = paginator.posts %}
+  {% else %}
+    {% assign posts = site.categories[page.slug] | default:site.tags[page.slug] | default:site.posts %}
+  {% endif %}
+    
+  {% for post in posts %}
+    {% unless post.categories contains 'incomplete' %}
+      {% include_cached components/post.html post=post no_link_title=page.no_link_title no_excerpt=page.no_excerpt hide_image=page.hide_image %}
+    {% endunless %}
+  {% endfor %}
+
+  {% if plugins contains 'jekyll-paginate' %}
+    {% include components/pagination.html %}
+  {% endif %}
+
+  <hr class="dingbat related"/>
+
+  {% if site.posts.size > 0 %}
+    <h2 class="hr-bottom">{{ strings.posts | default:"All Posts" }}</h2>
+    <ul class="related-posts">
+      {% for post in site.posts limit:5 %}
+        {% unless post.categories contains 'incomplete' %}
+          {% include_cached components/post-list-item.html post=post %}
+        {% endunless %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% assign incomplete_posts = site.posts | where:"categories", "incomplete" %}
+  {% if incomplete_posts.size > 0 %}
+    <h2 class="hr-bottom">{{ strings.incomplete | default:"Incomplete Posts" }}</h2>
+    <ul class="related-posts">
+      {% for post in incomplete_posts limit:5 %}
+        {% include_cached components/post-list-item.html post=post %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  <!-- {% assign pages = site.html_pages | where:"layout","page" | where_exp:"page","page.sitemap != false" %}
+  {% if pages.size > 0 %}
+    <h2 class="hr-bottom">{{ strings.pages | default:"Pages" }}</h2>
+    <ul class="related-posts">
+      {% for page in pages limit:5 %}
+        {% if page.layout == 'page' %}
+          <li class="h4">
+            <a href="{{ page.url | relative_url }}" class="flip-title">
+              <span>{{ page.title }}</span>
+            </a>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  {% endif %} -->
+</article>
+

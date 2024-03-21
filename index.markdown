@@ -5,4 +5,4 @@
 layout: home
 ---
 
-안녕하세요? NicoDora 입니다.
+/ root 루트 NicoDora 홈 home 홈페이지 homepage 루트페이지 rootpage
