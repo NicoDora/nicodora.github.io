@@ -81,7 +81,6 @@ sass:
   style:               compressed
 
 plugins:
-  - jekyll-last-modified-at
   - jekyll-include-cache
 
 defaults:
