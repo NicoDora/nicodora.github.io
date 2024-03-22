@@ -73,7 +73,7 @@ NestJS는 TypeScript로 쓸 것을 가정하고 만들어진 프레임워크입�
 NestJS를 사용하여 프로젝트에서 제가 구현했던 기능들부터 다른 팀원분들이 구현했던 기능들도 직접 한번 구현해보면서\
 차근차근 포스팅 해보겠습니다! 😊
 
-그럼 다음 포스팅에서 뵙겠습니다 뾰로롱~
+그럼 다음 포스트에서 뵙겠습니다 뾰로롱~
 <br>
 <br>
 <img src="https://github.com/NicoDora/nicodora.github.io/assets/76510679/9315135e-08d4-48ac-876b-c96c3222f0e9" width="300" height="300">
