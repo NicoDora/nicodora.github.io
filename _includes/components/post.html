@@ -15,7 +15,7 @@
     <div class="post-date">
       {% capture foobar %}
         {%- unless site.hydejack.hide_dates -%}
-          {%- assign post_format = site.data.strings.date_formats.post | default:"%Y-%m-%d" -%}
+          {%- assign post_format = site.data.strings.date_formats.post | default:"%Y-%m-%d %H:%M" -%}
           <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date:post_format }}</time>
         {%- else -%}
           {{- site.data.strings.posted | default:"Posted" -}}
@@ -34,11 +34,11 @@
       </span>
       {% unless site.hydejack.hide_dates or site.hydejack.hide_last_modified or post.hide_last_modified %}
         {% if post.last_modified_at %}
-          {% assign d1 = post.date             | date:"%Y-%m-%d" %}
-          {% assign d2 = post.last_modified_at | date:"%Y-%m-%d" %}
+          {% assign d1 = post.date             | date:"%Y-%m-%d %H:%M" %}
+          {% assign d2 = post.last_modified_at | date:"%Y-%m-%d %H:%M" %}
           {% if d1 != d2 %}
             {% assign label = site.data.strings.last_modified_at | default:"Last modified at" %}
-            {% assign last_modified_at_format = site.data.strings.date_formats.last_modified_at | default:"%Y-%m-%d" %}
+            {% assign last_modified_at_format = site.data.strings.date_formats.last_modified_at | default:"%Y-%m-%d %H:%M" %}
             <span class="ellipsis" data-tippy-content="{{ label }}{{ site.data.strings.colon }} {{ post.last_modified_at | date:post_format }}">
               <span class="sr-only">{{ label }}{{ site.data.strings.colon }}</span>
               <span class="{{ site.data.strings.last_modified_icon | default:'icon-history' }}"></span>

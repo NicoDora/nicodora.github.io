@@ -1,5 +1,5 @@
 {% assign post = include.post %}
-{% assign format = include.format | default:site.data.strings.date_formats.related_post | default:"%Y-%m-%d" %}
+{% assign format = include.format | default:site.data.strings.date_formats.related_post | default:"%Y-%m-%d %H:%M" %}
 
 <li class="h4">
   <a href="{{ post.url | relative_url }}" class="flip-title"><span>{{ post.title }}</span></a>
