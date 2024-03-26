@@ -29,7 +29,7 @@ layout: default
 
   <!-- <hr class="dingbat related"/> -->
 
-  {% assign plugins = site.plugins | default:site.gems %}
+  <!-- {% assign plugins = site.plugins | default:site.gems %}
 
   {% if plugins contains 'jekyll-paginate' %}
     {% assign posts = paginator.posts %}
@@ -45,9 +45,9 @@ layout: default
 
   {% if plugins contains 'jekyll-paginate' %}
     {% include components/pagination.html %}
-  {% endif %}
+  {% endif %} -->
 
-  <hr class="dingbat related"/>
+  <!-- <hr class="dingbat related"/> -->
 
   {% if site.posts.size > 0 %}
     <h2 class="hr-bottom">{{ strings.posts | default:"All Posts" }}</h2>
@@ -56,6 +56,16 @@ layout: default
         {% unless post.categories contains 'incomplete' %}
           {% include_cached components/post-list-item.html post=post %}
         {% endunless %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% assign nestjs_posts = site.posts | where:"categories", "nestjs" %}
+  {% if nestjs_posts.size > 0 %}
+    <h2 class="hr-bottom">{{ strings.nestjs | default:"NestJS" }}</h2>
+    <ul class="related-posts">
+      {% for post in nestjs_posts limit:5 %}
+        {% include_cached components/post-list-item.html post=post %}
       {% endfor %}
     </ul>
   {% endif %}
