@@ -3,7 +3,7 @@
 # To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
 layout: home
-title: Home
+title: NicoDora 블로그
 ---
 
-index.markdown 파일 입니다.
+안녕하세요! 백엔드 개발을 중심으로 포스트 하고 있는 NicoDora 입니다.
