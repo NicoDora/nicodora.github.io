@@ -5,6 +5,7 @@ logo:                 https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/as
 url:                  https://nicodora.github.io
 tagline:              keep moving
 description:          백엔드 개발을 중심으로 포스트 하고 있는 NicoDora의 블로그입니다.
+timezone:              Asia/Seoul
 
 author:
   name:                NicoDora
