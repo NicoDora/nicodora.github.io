@@ -104,8 +104,6 @@ menu:
     url:                /
   - title:              NestJS
     url:                /nestjs/
-  - title:              Incomplete
-    url:                /incomplete/
 
 collections:
   featured_categories:
