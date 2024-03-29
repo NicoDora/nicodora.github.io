@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2024-03-28T22:32:09+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">NicoDora</title><subtitle>백엔드 개발을 중심으로 포스트 하고 있는 NicoDora의 블로그입니다.</subtitle><author><name>NicoDora</name></author><entry><title type="html">NestJS 공식 문서와 함께 시작하기</title><link href="http://localhost:4000/nestjs/2024/03/26/NestJS-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0.html" rel="alternate" type="text/html" title="NestJS 공식 문서와 함께 시작하기" /><published>2024-03-26T21:20:00+09:00</published><updated>2024-03-26T21:20:00+09:00</updated><id>http://localhost:4000/nestjs/2024/03/26/NestJS-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0</id><content type="html" xml:base="http://localhost:4000/nestjs/2024/03/26/NestJS-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0.html"><![CDATA[<ol id="markdown-toc">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2024-03-29T17:07:23+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">NicoDora</title><subtitle>백엔드 개발을 중심으로 포스트 하고 있는 NicoDora의 블로그입니다.</subtitle><author><name>NicoDora</name></author><entry><title type="html">NestJS 설치 및 시작하기</title><link href="http://localhost:4000/nestjs/2024/03/29/NestJS-%EC%84%A4%EC%B9%98-%EB%B0%8F-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0.html" rel="alternate" type="text/html" title="NestJS 설치 및 시작하기" /><published>2024-03-29T09:57:00+09:00</published><updated>2024-03-29T09:57:00+09:00</updated><id>http://localhost:4000/nestjs/2024/03/29/NestJS-%EC%84%A4%EC%B9%98-%EB%B0%8F-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0</id><content type="html" xml:base="http://localhost:4000/nestjs/2024/03/29/NestJS-%EC%84%A4%EC%B9%98-%EB%B0%8F-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0.html"><![CDATA[<ol id="markdown-toc">
   <li><a href="#시작하기-전에" id="markdown-toc-시작하기-전에">시작하기 전에</a></li>
   <li><a href="#nestjs-설치하기" id="markdown-toc-nestjs-설치하기">NestJS 설치하기</a></li>
   <li><a href="#nestjs-기본-프로젝트-구조-살펴보기" id="markdown-toc-nestjs-기본-프로젝트-구조-살펴보기">NestJS 기본 프로젝트 구조 살펴보기</a></li>
@@ -14,7 +14,7 @@
 <p><br />
 Node.js 공식 다운로드 페이지에 들어가면 아래와 같은 화면이 보이게 됩니다.</p>
 
-<p><img src="/assets/img/2024-03-26-NestJS-시작하기/nodejs-download-page.png" alt="Node.js 공식 홈페이지" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/2024-03-29-NestJS-설치-및-시작하기/nodejs-download-page.png" alt="Node.js 공식 홈페이지" /></p>
 
 <p>LTS 버전과 Current 버전이 있는데, LTS 버전은 장기 지원되는 안정적인 버전이고 Current 버전은 최신 기능이 추가된 버전입니다.<br />
 Current 버전에서는 예상치 못한 에러가 발생할 수 있으므로 보통은 LTS 버전을 권장합니다.</p>
@@ -32,14 +32,14 @@ Current 버전에서는 예상치 못한 에러가 발생할 수 있으므로 �
 node <span class="nt">-v</span>
 </code></pre></div></div>
 
-<p><img src="/assets/img/2024-03-26-NestJS-시작하기/node-version-check.png" width="500" alt="node 버전 확인" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/2024-03-29-NestJS-설치-및-시작하기/node-version-check.png" width="500" alt="node 버전 확인" /></p>
 
 <p><br /></p>
 <div class="language-zsh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># file: "terminal"</span>
 npm <span class="nt">-v</span>
 </code></pre></div></div>
 
-<p><img src="/assets/img/2024-03-26-NestJS-시작하기/npm-version-check.png" width="500" alt="npm 버전 확인" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/2024-03-29-NestJS-설치-및-시작하기/npm-version-check.png" width="500" alt="npm 버전 확인" /></p>
 
 <p><br />
 명령어를 입력했을 때 Node.js와 npm의 버전이 출력된다면 정상적으로 설치가 완료된 것입니다.</p>
@@ -49,14 +49,14 @@ npm <span class="nt">-v</span>
 
 <h2 id="nestjs-설치하기">NestJS 설치하기</h2>
 
-<p><a href="https://docs.nestjs.com">NestJS 공식 문서</a>를 참고하여 해당 포스트를 작성하니 공식 문서를 함께 참고하시면서 따라와주세요 😊</p>
+<p><a href="https://docs.nestjs.com">NestJS 공식 문서</a>를 참고하여 해당 포스트를 작성하니 공식 문서를 함께 참고하시면서 따라와주세요. 😊</p>
 
 <p><br />
 먼저 NestJS를 설치할 디렉토리를 생성하고 해당 디렉토리로 이동합니다.</p>
 
 <p>저는 간단하게 <code class="language-plaintext highlighter-rouge">nest-project</code>라는 이름으로 디렉토리를 생성해봤습니다.</p>
 
-<p><img src="/assets/img/2024-03-26-NestJS-시작하기/create-directory.png" width="500" alt="디렉토리 생성" />
+<p><img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/2024-03-29-NestJS-설치-및-시작하기/create-directory.png" width="500" alt="디렉토리 생성" />
 <br />
 <br />
 <br />
@@ -74,7 +74,7 @@ npm i <span class="nt">-g</span> @nestjs/cli
 <p><br />
 NestJS CLI를 설치하고 <code class="language-plaintext highlighter-rouge">nest</code>명령어를 입력하면 아래와 같이 사용할 수 있는 명령어들이 출력됩니다.</p>
 
-<p><img src="/assets/img/2024-03-26-NestJS-시작하기/nest-command.png" alt="nest 명령어 확인" />
+<p><img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/2024-03-29-NestJS-설치-및-시작하기/nest-command.png" alt="nest 명령어 확인" />
 <br />
 <br />
 <br />
@@ -82,7 +82,7 @@ NestJS CLI를 설치하고 <code class="language-plaintext highlighter-rouge">ne
 
 <p>필자는 <code class="language-plaintext highlighter-rouge">blog-nest</code>라는 이름으로 프로젝트를 생성해보겠습니다.</p>
 
-<p><img src="/assets/img/2024-03-26-NestJS-시작하기/nest-new-project.png" width="700" alt="nest new 명령어로 프로젝트 생성" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/2024-03-29-NestJS-설치-및-시작하기/nest-new-project.png" width="700" alt="nest new 명령어로 프로젝트 생성" /></p>
 
 <p>패키지 매니저를 선택하라는 메시지가 나오는데 필자는 <code class="language-plaintext highlighter-rouge">npm</code>을 선택했습니다.<br />
 (화살표 키를 이용해 선택하고 엔터키를 누르면 됩니다.)
@@ -90,20 +90,20 @@ NestJS CLI를 설치하고 <code class="language-plaintext highlighter-rouge">ne
 <br />
 <br /></p>
 
-<p class="figcaption"><img src="/assets/img/2024-03-26-NestJS-시작하기/new-project-create-loading.png" width="700" alt="프로젝트 생성중" /><br />
+<p class="figcaption"><img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/2024-03-29-NestJS-설치-및-시작하기/new-project-create-loading.png" width="700" alt="프로젝트 생성중" /><br />
 프로젝트 생성중인 모습</p>
 
 <p><br />
 프로젝트 생성이 완료되면 아래와 같이 성공적으로 프로젝트가 생성되었다고 메세지가 출력되네요!</p>
 
-<p><img src="/assets/img/2024-03-26-NestJS-시작하기/install-success.png" width="700" alt="프로젝트 생성 성공" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/2024-03-29-NestJS-설치-및-시작하기/install-success.png" width="700" alt="프로젝트 생성 성공" /></p>
 
 <p><br />
 이제 <code class="language-plaintext highlighter-rouge">code .</code> 명령어를 통해 해당 프로젝트 디렉토리를 VSCode에서 열어 구조를 살펴보러 가봅시다.</p>
 
 <h2 id="nestjs-기본-프로젝트-구조-살펴보기">NestJS 기본 프로젝트 구조 살펴보기</h2>
 
-<p><img src="/assets/img/2024-03-26-NestJS-시작하기/open-vscode.png" width="300" alt="VSCode에서 프로젝트 열기" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/2024-03-29-NestJS-설치-및-시작하기/open-vscode.png" width="300" alt="VSCode에서 프로젝트 열기" /></p>
 
 <p>VSCode에서 자세히 살펴보면 위 사진처럼 <code class="language-plaintext highlighter-rouge">blog-nest</code>라는 프로젝트 디렉토리가 생성되었고, 그 안에 노드 모듈과 src/ 디렉토리 안에 NestJS의 핵심 파일이 생성된 것을 확인할 수 있습니다.</p>
 
@@ -173,7 +173,7 @@ NestJS로 프로젝트를 진행하기 위해선 반드시 Controller, Service, 
 <p>이제 프로젝트를 실행해 볼텐데, <code class="language-plaintext highlighter-rouge">package.json</code> 파일을 열어봅시다.</p>
 
 <p><br />
-<img src="/assets/img/2024-03-26-NestJS-시작하기/package-json-scripts.png" alt="package.json 파일" /></p>
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/2024-03-29-NestJS-설치-및-시작하기/package-json-scripts.png" alt="package.json 파일" /></p>
 
 <p><code class="language-plaintext highlighter-rouge">scripts</code> 부분을 보면 다양한 명령어들이 적혀있는데, <code class="language-plaintext highlighter-rouge">npm run</code>과 함께 해당 명령어를 입력하면 옵션에 따라 다르게 서버를 실행할 수 있습니다.</p>
 
@@ -186,7 +186,7 @@ NestJS로 프로젝트를 진행하기 위해선 반드시 Controller, Service, 
 <br />
 혹시나 아래와 같은 에러가 발생한다면 <code class="language-plaintext highlighter-rouge">cd {프로젝트 이름}</code> 명령어를 통해 프로젝트 디렉토리 안으로 이동 한 후 명령어를 입력해주세요!</p>
 
-<p><img src="/assets/img/2024-03-26-NestJS-시작하기/missing-script-error.png" alt="missing script error" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/2024-03-29-NestJS-설치-및-시작하기/missing-script-error.png" alt="missing script error" /></p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>npm ERR! Missing script: "start:dev"
 npm ERR! 
@@ -199,20 +199,20 @@ npm ERR! A complete log of this run can be found in: /Users/nicodora/.npm/_logs/
 <br />
 서버를 성공적으로 실행했다면 아래와 같이 서버가 정상적으로 실행되었다는 메세지가 출력됩니다.</p>
 
-<p><img src="/assets/img/2024-03-26-NestJS-시작하기/server-start-success.png" alt="서버 실행 성공" />
+<p><img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/2024-03-29-NestJS-설치-및-시작하기/server-start-success.png" alt="서버 실행 성공" />
 <br />
 <br />
 <br />
 브라우저에서 <a href="http://localhost:3000"><code class="language-plaintext highlighter-rouge">http://localhost:3000</code></a> 혹은 <code class="language-plaintext highlighter-rouge">http://127.0.0.1:3000</code>으로 접속하면 아래와 같이 <code class="language-plaintext highlighter-rouge">Hello World!</code>라는 메세지가 출력되는 것을 확인할 수 있습니다.</p>
 
-<p><img src="/assets/img/2024-03-26-NestJS-시작하기/localhost.png" width="700" alt="localhost 접속" /></p>
+<p><img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/2024-03-29-NestJS-설치-및-시작하기/localhost.png" width="700" alt="localhost 접속" /></p>
 
 <h2 id="마치며">마치며</h2>
 
 <p>오늘은 NestJS를 설치하고 기본 구조를 살펴보며 <code class="language-plaintext highlighter-rouge">Hello World!</code>서버를 실행시켜봤습니다.
 <br />
 <br />
-NestJS를 설치하고 단 한 줄의 코드를 작성하지 않았음에도 간단하게 서버를 구동할 수 있었습니다 👍<br />
+NestJS를 설치하고 단 한 줄의 코드를 작성하지 않았음에도 간단하게 서버를 구동할 수 있었습니다. 👍<br />
 (역시 킹갓 NestJS 😎)</p>
 
 <p>다음 포스트에서는 NestJS의 핵심인 Controller, Service, Module에 대해 자세히 알아보고 직접 코드를 작성해보는 시간을 갖도록 하겠습니다.</p>
@@ -220,7 +220,7 @@ NestJS를 설치하고 단 한 줄의 코드를 작성하지 않았음에도 간
 <p>그럼 다음 포스트에서 뵙겠습니다! 뾰로롱~
 <br />
 <br />
-<img src="https://github.com/NicoDora/nicodora.github.io/assets/76510679/9315135e-08d4-48ac-876b-c96c3222f0e9" width="300" height="300" alt="프리렌 움짤1" /></p>
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/frieren1.gif" width="300" height="300" alt="프리렌 움짤1" /></p>
 
 <div class="footnotes" role="doc-endnotes">
   <ol>
@@ -228,7 +228,7 @@ NestJS를 설치하고 단 한 줄의 코드를 작성하지 않았음에도 간
       <p>CLI(Command Line Interface)는 명령어를 통해 프로그램을 제어하는 인터페이스를 의미합니다. NestJS CLI는 NestJS 프로젝트를 생성하고 관리하는 명령어를 제공합니다. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
-</div>]]></content><author><name>NicoDora</name></author><category term="nestjs" /><summary type="html"><![CDATA[NestJS를 설치하고 기본 구조를 살펴보며 NestJS를 사용해서 프로젝트를 시작해봅시다.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/img/2024-03-26-NestJS-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0/nestjs-logo.png" /><media:content medium="image" url="http://localhost:4000/assets/img/2024-03-26-NestJS-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0/nestjs-logo.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">NestJS를 선택한 이유 (NestJS란?)</title><link href="http://localhost:4000/nestjs/2024/03/22/NestJS%EB%A5%BC-%EC%84%A0%ED%83%9D%ED%95%9C-%EC%9D%B4%EC%9C%A0.html" rel="alternate" type="text/html" title="NestJS를 선택한 이유 (NestJS란?)" /><published>2024-03-22T21:20:00+09:00</published><updated>2024-03-22T21:20:00+09:00</updated><id>http://localhost:4000/nestjs/2024/03/22/NestJS%EB%A5%BC-%EC%84%A0%ED%83%9D%ED%95%9C-%EC%9D%B4%EC%9C%A0</id><content type="html" xml:base="http://localhost:4000/nestjs/2024/03/22/NestJS%EB%A5%BC-%EC%84%A0%ED%83%9D%ED%95%9C-%EC%9D%B4%EC%9C%A0.html"><![CDATA[<ol id="markdown-toc">
+</div>]]></content><author><name>NicoDora</name></author><category term="nestjs" /><summary type="html"><![CDATA[NestJS를 설치하고 기본 구조를 살펴보며 NestJS를 사용해서 프로젝트를 시작해봅시다.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/2024-03-29-NestJS-설치-및-시작하기/nestjs-logo.png" /><media:content medium="image" url="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/2024-03-29-NestJS-설치-및-시작하기/nestjs-logo.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">NestJS를 선택한 이유 (NestJS란?)</title><link href="http://localhost:4000/nestjs/2024/03/22/NestJS%EB%A5%BC-%EC%84%A0%ED%83%9D%ED%95%9C-%EC%9D%B4%EC%9C%A0.html" rel="alternate" type="text/html" title="NestJS를 선택한 이유 (NestJS란?)" /><published>2024-03-22T21:20:00+09:00</published><updated>2024-03-22T21:20:00+09:00</updated><id>http://localhost:4000/nestjs/2024/03/22/NestJS%EB%A5%BC-%EC%84%A0%ED%83%9D%ED%95%9C-%EC%9D%B4%EC%9C%A0</id><content type="html" xml:base="http://localhost:4000/nestjs/2024/03/22/NestJS%EB%A5%BC-%EC%84%A0%ED%83%9D%ED%95%9C-%EC%9D%B4%EC%9C%A0.html"><![CDATA[<ol id="markdown-toc">
   <li><a href="#nestjs란" id="markdown-toc-nestjs란">NestJS란?</a></li>
   <li><a href="#nestjs를-선택하기-전에" id="markdown-toc-nestjs를-선택하기-전에">NestJS를 선택하기 전에</a></li>
   <li><a href="#nestjs를-선택한-이유" id="markdown-toc-nestjs를-선택한-이유">NestJS를 선택한 이유</a></li>
