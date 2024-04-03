@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Docker 설치하기 for macOS"
-date: 2024-04-03 15:46:00 +0900
+date: 2024-04-03 15:50:00 +0900
 categories: docker
 description: >
   Docker 컨테이너와 이미지에 대해 간단히 살펴보고 macOS환경에서 Docker를 설치해봅시다.
