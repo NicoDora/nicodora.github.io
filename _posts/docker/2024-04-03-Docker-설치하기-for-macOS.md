@@ -109,4 +109,4 @@ docker --version
 그럼 다음 포스트에서 뵙겠습니다! 뾰로롱~
 <br>
 <br>
-<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/docker/frieren1.gif" width="300" height="300" alt="프리렌 움짤1">
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/frieren1.gif" width="300" height="300" alt="프리렌 움짤1">
