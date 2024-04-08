@@ -5,7 +5,7 @@ date: 2024-04-03 15:50:00 +0900
 categories: docker
 description: >
   Docker 컨테이너와 이미지에 대해 간단히 살펴보고 macOS환경에서 Docker를 설치해봅시다.
-image: https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/2024-04-03-Docker-설치하기-for-macOS/docker-logo.png
+image: https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/docker/2024-04-03-Docker-설치하기-for-macOS/docker-logo.png
 ---
 
 1. TOC
@@ -54,13 +54,13 @@ image: https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/2024-0
 
 [Docker 다운로드](https://www.docker.com/products/docker-desktop/) 페이지에 접속하여 본인의 컴퓨터 환경에 맞춰 도커를 다운로드 받습니다.
 
-![Docker 다운로드 페이지](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/2024-04-03-Docker-설치하기-for-macOS/docker-download-page.png)
+![Docker 다운로드 페이지](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/docker/2024-04-03-Docker-설치하기-for-macOS/docker-download-page.png)
 <br>
 <br>
 <br>
 다운로드가 완료되었다면 다운로드 받은 `Docker.dmg`파일을 실행하여 설치를 진행합니다.
 
-![Docker 설치 화면](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/2024-04-03-Docker-설치하기-for-macOS/docker-install.png)
+![Docker 설치 화면](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/docker/2024-04-03-Docker-설치하기-for-macOS/docker-install.png)
 <br>
 <br>
 <br>
@@ -68,24 +68,24 @@ image: https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/2024-0
 
 도커 앱을 실행해봅시다.
 
-![Docker 앱 실행](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/2024-04-03-Docker-설치하기-for-macOS/docker-start.png)
+![Docker 앱 실행](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/docker/2024-04-03-Docker-설치하기-for-macOS/docker-start.png)
 <br>
 `Accept`를 눌러 도커 약관에 동의하고 넘어갑니다.
 <br>
 <br>
-![Docker 초기 설정](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/2024-04-03-Docker-설치하기-for-macOS/docker-setting.png)
+![Docker 초기 설정](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/docker/2024-04-03-Docker-설치하기-for-macOS/docker-setting.png)
 <br>
 초기 설정은 기본값(추천)으로 설정하고 `Finish`를 눌러 다음 단계로 넘어갑니다.
 <br>
 <br>
-![Docker 로그인](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/2024-04-03-Docker-설치하기-for-macOS/docker-signin.png)
+![Docker 로그인](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/docker/2024-04-03-Docker-설치하기-for-macOS/docker-signin.png)
 
 도커 허브 계정이 있다면 로그인을 하고, 없다면 스킵하셔도 됩니다.\
 어짜피 도커는 계속 사용할테니 저는 계정을 새로 만들어서 로그인했습니다.
 <br>
 <br>
 <br>
-![Docker 메인화면](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/2024-04-03-Docker-설치하기-for-macOS/docker-main.png)
+![Docker 메인화면](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/docker/2024-04-03-Docker-설치하기-for-macOS/docker-main.png)
 <br>
 이제 도커 설치가 완료되었습니다!
 <br>
@@ -97,7 +97,7 @@ image: https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/2024-0
 docker --version
 ```
 
-![Docker 버전 확인](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/2024-04-03-Docker-설치하기-for-macOS/docker-version-check.png)
+![Docker 버전 확인](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/docker/2024-04-03-Docker-설치하기-for-macOS/docker-version-check.png)
 <br>
 도커 버전이 출력된다면 정상적으로 설치완료 된 것입니다! 👍
 
@@ -109,4 +109,4 @@ docker --version
 그럼 다음 포스트에서 뵙겠습니다! 뾰로롱~
 <br>
 <br>
-<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/frieren1.gif" width="300" height="300" alt="프리렌 움짤1">
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/docker/frieren1.gif" width="300" height="300" alt="프리렌 움짤1">
