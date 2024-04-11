@@ -30,10 +30,10 @@ Powered by Hydejack v9.1.6 <https://hydejack.com/>
   
     
 
-<title>The first test post | NicoDora</title>
-<meta name="description" content="초안 포스트 테스트 중
+<title>Docker 설치하기 for macOS | NicoDora</title>
+<meta name="description" content="Docker 컨테이너와 이미지에 대해 간단히 살펴보고 macOS환경에서 Docker를 설치해봅시다.
 ">
-<link rel="canonical" href="http://localhost:4000/drafts/2024-03-21-%EC%B4%88%EC%95%88%20%ED%85%8C%EC%8A%A4%ED%8A%B8.html">
+<link rel="canonical" href="http://localhost:4000/docker/2024/04/03/Docker-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0-for-macOS.html">
 
   
 
@@ -59,7 +59,7 @@ Powered by Hydejack v9.1.6 <https://hydejack.com/>
 <meta name="generator" content="Hydejack v9.1.6" />
 
 
-<link rel="alternate" href="http://localhost:4000/drafts/2024-03-21-%EC%B4%88%EC%95%88%20%ED%85%8C%EC%8A%A4%ED%8A%B8.html" hreflang="ko">
+<link rel="alternate" href="http://localhost:4000/docker/2024/04/03/Docker-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0-for-macOS.html" hreflang="ko">
 
 
 
@@ -192,14 +192,41 @@ html{--accent-color: rgb(79,177,186);--accent-color-faded: rgba(79, 177, 186, 0.
           <span>/</span>
           
           
-          <a href="/drafts/">drafts</a>
+          <a href="/docker/">docker</a>
         
       </li>
     
       <li>
         
           <span>/</span>
-          <span>2024-03-21-초안 테스트.html</span>
+          
+          
+          <a href="/docker/2024/">2024</a>
+        
+      </li>
+    
+      <li>
+        
+          <span>/</span>
+          
+          
+          <a href="/docker/2024/04/">04</a>
+        
+      </li>
+    
+      <li>
+        
+          <span>/</span>
+          
+          
+          <a href="/docker/2024/04/03/">03</a>
+        
+      </li>
+    
+      <li>
+        
+          <span>/</span>
+          <span>Docker-설치하기-for-macOS.html</span>
         
       </li>
     
@@ -216,18 +243,18 @@ html{--accent-color: rgb(79,177,186);--accent-color-faded: rgba(79, 177, 186, 0.
 
 
 
-<article id="post" class="page post mb6" role="article">
+<article id="post-docker-2024-04-03-Docker-설치하기-for-macOS" class="page post mb6" role="article">
   <header>
     <h1 class="post-title flip-project-title">
       
-        The first test post
+        Docker 설치하기 for macOS
       
     </h1>
 
     <div class="post-date">
       
       <span class="ellipsis mr1">
-        <time datetime="2024-03-19T21:31:00+09:00">2024-03-19 21:31</time> in <span>Draft</span> 
+        <time datetime="2024-04-03T15:50:00+09:00">2024-04-03 15:50</time> in <a href="/docker/" class="flip-title">Docker</a> 
       </span>
       
         
@@ -236,6 +263,27 @@ html{--accent-color: rgb(79,177,186);--accent-color-faded: rgba(79, 177, 186, 0.
 
     
     
+      
+        <div class="img-wrapper lead aspect-ratio sixteen-nine flip-project-img">
+          
+
+
+<img
+  
+    src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/docker/2024-04-03-Docker-설치하기-for-macOS/docker-logo.png"
+  
+  alt="Docker 설치하기 for macOS"
+  
+  
+  width="864"
+  height="486"
+  loading="lazy"
+/>
+
+        </div>
+      
+      
+    
 
     
 
@@ -243,7 +291,7 @@ html{--accent-color: rgb(79,177,186);--accent-color-faded: rgba(79, 177, 186, 0.
 
   
     <p class="note-sm" >
-      초안 포스트 테스트 중
+      Docker 컨테이너와 이미지에 대해 간단히 살펴보고 macOS환경에서 Docker를 설치해봅시다.
 
     </p>
   
@@ -252,7 +300,117 @@ html{--accent-color: rgb(79,177,186);--accent-color-faded: rgba(79, 177, 186, 0.
   </header>
 
   
-    아아아
+    <ol id="markdown-toc">
+  <li><a href="#docker란" id="markdown-toc-docker란">Docker란?</a></li>
+  <li><a href="#macos에-docker-설치하기" id="markdown-toc-macos에-docker-설치하기">macOS에 Docker 설치하기</a></li>
+  <li><a href="#마치며" id="markdown-toc-마치며">마치며</a></li>
+</ol>
+
+<h2 id="docker란">Docker란?</h2>
+
+<p>도커(Docker)는 리눅스 컨테이너를 사용하여 애플리케이션을 더 쉽게 만들고 배포할 수 있도록 해주는 플랫폼입니다. 도커는 컨테이너 이미지를 사용하여 애플리케이션을 빌드하고 배포할 수 있습니다.
+<br />
+<br />
+여기서 <b>컨테이너</b>는 격리된 환경에서 애플리케이션을 실행할 수 있도록 하는 기술입니다.<br />
+컨테이너는 필요한 모든 라이브러리, 종속성 및 설정을 포함하는 격리된 패키지로서, 개발자는 개발 환경과 운영 환경 간의 일관성을 유지할 수 있습니다. 또한, 컨테이너는 빠르게 시작되고 쉽게 이동할 수 있어서 애플리케이션을 더 쉽게 배포하고 확장할 수 있습니다.
+<br />
+<br />
+컨테이너 기술의 주요 장점은 다음과 같습니다.</p>
+<ol>
+  <li>
+    <p><b>경량화</b><br />
+   가상화된 운영 체제를 사용하는 가상 머신에 비해 더 적은 자원을 사용합니다.</p>
+  </li>
+  <li>
+    <p><b>이식성</b><br />
+   컨테이너는 호스트 시스템과 상관없이 동일한 방식으로 동작하므로 이식성이 뛰어납니다.</p>
+  </li>
+  <li>
+    <p><b>일관성</b><br />
+   컨테이너는 필요한 라이브러리 및 종속성을 포함하므로 환경이 일관되며, 개발 및 배포 과정이 표준화됩니다.</p>
+  </li>
+  <li>
+    <p><b>확장성</b><br />
+   컨테이너는 쉽게 배포되고 확장될 수 있어서 애플리케이션의 요구 사항에 따라 빠르게 조정할 수 있습니다.</p>
+  </li>
+</ol>
+
+<p><br />
+<br />
+도커 로고를 보시면 고래가 그려져 있고 그 위에 컨테이너가 올려져 있는 모습을 볼 수 있습니다.<br />
+<b>“바다 위에 배가 떠다니면서 그 위에 컨테이너를 올려 놓고 필요할 때마다 컨테이너에 접근하여 사용한다.”</b>라고 생각하시면 좋을 것 같습니다! 😊
+<br />
+<br />
+<br />
+<b>이미지</b>는 우리가 흔히 알고 있는 사진이나 그림 파일을 의미하는 것이 아니라, 컨테이너 실행에 필요한 파일과 설정 등을 포함하는 템플릿 입니다.
+<br />
+<br />
+이미지는 값이 변하지 않는 정적인 파일이며, 컨테이너는 이미지를 실행한 상태입니다.<br />
+때문에 컨테이너를 삭제하더라도 이미지는 영향을 받지 않고 그대로 남아있습니다.</p>
+
+<p>또, 이미지에는 컨테이너를 실행하기 위해 필요한 모든 파일을 가지고 있기 때문에 복잡하게 이것저것 설정해주지 않아도 간편하게 컨테이너를 실행할 수 있으며, 하나의 이미지로 여러 개의 컨테이너를 실행할 수도 있습니다.</p>
+
+<h2 id="macos에-docker-설치하기">macOS에 Docker 설치하기</h2>
+
+<p>도커에 대한 설명은 간략하게 이 정도로 마치고, 이제 macOS에 도커를 설치해봅시다!</p>
+
+<p><a href="https://www.docker.com/products/docker-desktop/">Docker 다운로드</a> 페이지에 접속하여 본인의 컴퓨터 환경에 맞춰 도커를 다운로드 받습니다.</p>
+
+<p><img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/docker/2024-04-03-Docker-설치하기-for-macOS/docker-download-page.png" alt="Docker 다운로드 페이지" />
+<br />
+<br />
+<br />
+다운로드가 완료되었다면 다운로드 받은 <code class="language-plaintext highlighter-rouge">Docker.dmg</code>파일을 실행하여 설치를 진행합니다.</p>
+
+<p><img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/docker/2024-04-03-Docker-설치하기-for-macOS/docker-install.png" alt="Docker 설치 화면" />
+<br />
+<br />
+<br />
+설치가 완료되면 ‘응용프로그램’에서 도커 앱이 추가된 것을 확인할 수 있습니다.</p>
+
+<p>도커 앱을 실행해봅시다.</p>
+
+<p><img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/docker/2024-04-03-Docker-설치하기-for-macOS/docker-start.png" alt="Docker 앱 실행" />
+<br />
+<code class="language-plaintext highlighter-rouge">Accept</code>를 눌러 도커 약관에 동의하고 넘어갑니다.
+<br />
+<br />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/docker/2024-04-03-Docker-설치하기-for-macOS/docker-setting.png" alt="Docker 초기 설정" />
+<br />
+초기 설정은 기본값(추천)으로 설정하고 <code class="language-plaintext highlighter-rouge">Finish</code>를 눌러 다음 단계로 넘어갑니다.
+<br />
+<br />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/docker/2024-04-03-Docker-설치하기-for-macOS/docker-signin.png" alt="Docker 로그인" /></p>
+
+<p>도커 허브 계정이 있다면 로그인을 하고, 없다면 스킵하셔도 됩니다.<br />
+어짜피 도커는 계속 사용할테니 저는 계정을 새로 만들어서 로그인했습니다.
+<br />
+<br />
+<br />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/docker/2024-04-03-Docker-설치하기-for-macOS/docker-main.png" alt="Docker 메인화면" />
+<br />
+이제 도커 설치가 완료되었습니다!
+<br />
+<br />
+<br />
+터미널을 열어 아래 명령어를 입력하여 도커가 정상적으로 설치되었는지 확인해봅시다.</p>
+
+<div class="language-zsh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker <span class="nt">--version</span>
+</code></pre></div></div>
+
+<p><img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/docker/2024-04-03-Docker-설치하기-for-macOS/docker-version-check.png" alt="Docker 버전 확인" />
+<br />
+도커 버전이 출력된다면 정상적으로 설치완료 된 것입니다! 👍</p>
+
+<h2 id="마치며">마치며</h2>
+
+<p>오늘은 도커에 대해 알아보고 macOS에 도커를 설치해봤습니다.<br />
+다음 포스트에서는 도커 이미지를 다운받은 후 컨테이너를 실행하고 관리하는 방법에 대해 알아보겠습니다.</p>
+
+<p>그럼 다음 포스트에서 뵙겠습니다! 뾰로롱~
+<br />
+<br />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/frieren1.gif" width="300" height="300" alt="프리렌 움짤1" /></p>
 
   
 </article>
@@ -289,6 +447,8 @@ html{--accent-color: rgb(79,177,186);--accent-color-faded: rgba(79, 177, 186, 0.
     
 
 
+  <aside class="related mb4" role="complementary">  <h2 class="hr-bottom">Related Posts</h2>  <ul class="related-posts">                  <li class="h4">  <a href="/nestjs/2024/03/29/NestJS-%EC%84%A4%EC%B9%98-%EB%B0%8F-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0.html" class="flip-title"><span>NestJS 설치 및 시작하기</span></a>  <time class="faded fine" datetime="2024-03-29T09:57:00+09:00">2024-03-29 09:57</time></li>                        <li class="h4">  <a href="/nestjs/2024/03/22/NestJS%EB%A5%BC-%EC%84%A0%ED%83%9D%ED%95%9C-%EC%9D%B4%EC%9C%A0.html" class="flip-title"><span>NestJS를 선택한 이유 (NestJS란?)</span></a>  <time class="faded fine" datetime="2024-03-22T21:20:00+09:00">2024-03-22 21:20</time></li>            </ul></aside>
+
   
 
   
@@ -296,6 +456,27 @@ html{--accent-color: rgb(79,177,186);--accent-color-faded: rgba(79, 177, 186, 0.
 
   
     
+<aside class="comments related" role="complementary">
+  <h2 class="hr-bottom">Comments</h2>
+  <!-- 
+ -->
+<script src="https://giscus.app/client.js"
+        data-repo="NicoDora/NicoDora.github.io"
+        data-repo-id="R_kgDOLeHHqA"
+        data-category="Comments"
+        data-category-id="DIC_kwDOLeHHqM4CeGWL"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="dark_dimmed"
+        data-lang="en"
+        crossorigin="anonymous"
+        async>
+</script>
+</aside>
+
 
   
 

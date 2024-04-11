@@ -4,5 +4,5 @@ title: "NestJS"
 slug: nestjs
 menu: true
 order: 8
-description: "NestJS 관련 포스트입니다."
+description: "NestJS에 대해 공부하고 지식을 정리하는 공간입니다."
 ---
