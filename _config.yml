@@ -105,8 +105,6 @@ menu:
     url:                /
   - title:              NestJS
     url:                /nestjs/
-  - title:              Toss Payments
-    url:                /tosspayments/
   - title:              Docker
     url:                /docker/
 
