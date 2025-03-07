@@ -5,7 +5,7 @@ date: 2025-03-07 14:31:00 +0900
 categories: aws
 description: >
   AWS EC2 인스턴스에서 Nginx와 Certbot을 사용하여 SSL 인증서를 발급받고 자동갱신까지 설정하는 방법을 다룹니다.
-image: /assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/letsencrypt-logo.png
+image: https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/letsencrypt-logo.png
 ---
 
 1. TOC
@@ -27,7 +27,7 @@ image: /assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encr
 일단 저의 환경은 아래와 같습니다.
 <br>
 <br>
-![dev 서버 아키텍쳐1](/assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/dev-server-architecture1.png)
+![dev 서버 아키텍쳐1](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/dev-server-architecture1.png)
 
 - AWS EC2 인스턴스 (Ubuntu)
 - 도메인 구매 및 연결 (가비아, AWS Route53)
@@ -38,7 +38,7 @@ image: /assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encr
 해당 환경을 다음과 같이 수정해보려 합니다.
 <br>
 <br>
-![dev 서버 아키텍쳐2](/assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/dev-server-architecture2.png)
+![dev 서버 아키텍쳐2](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/dev-server-architecture2.png)
 
 <br>
 여기서 도메인 구매는 필수가 아니기 때문에 EC2 인스턴스에 할당된 퍼블릭 IPv4 주소를 사용해도 괜찮지만, 저는 도메인을 구매했기 때문에 도메인을 사용해서 진행하겠습니다.
@@ -91,7 +91,7 @@ $ dig dev.honeymoa.kr
 ```
 
 정상적으로 설정되었다면 아래와 같이 `status`가 `NOERROR`로 나오고, `ANSWER SECTION`에 도메인과 연결된 IP 주소가 나옵니다.
-![DNS 설정 확인](/assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/dns-check.png)
+![DNS 설정 확인](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/dns-check.png)
 <br>
 <br>
 혹시나 `status`가 `NXDOMAIN`으로 나오신다면 도메인 설정이 잘못되었거나, DNS 서버에 도메인 정보가 전파되지 않은 것입니다.\
@@ -229,7 +229,7 @@ http {
 $ docker-compose up -d nginx
 ```
 
-![nginx 실행](/assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/nginx-up.png)
+![nginx 실행](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/nginx-up.png)
 
 <br>
 컨테이너가 정상적으로 실행되었는지 확인합니다.
@@ -245,7 +245,7 @@ $ docker-compose exec nginx nginx -t
 $ docker ps
 ```
 
-![nginx 실행 확인](/assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/nginx-check.png)
+![nginx 실행 확인](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/nginx-check.png)
 <br>
 
 ## Certbot으로 SSL 인증서 발급
@@ -336,7 +336,7 @@ If you like Certbot, please consider supporting our work by:
 # 인증서 확인
 $ ls -al /nginx/ssl/live/{도메인}
 ```
-![인증서 확인](/assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/cert-check.png)
+![인증서 확인](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/cert-check.png)
 <br>
 
 ## docker-compose.yaml 파일 업데이트
@@ -346,7 +346,7 @@ $ ls -al /nginx/ssl/live/{도메인}
 ```zsh
 $ docker-compose down
 ```
-![nginx 종료](/assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/nginx-down.png)
+![nginx 종료](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/nginx-down.png)
 <br>
 <br>
 이제 `docker-compose.yaml` 파일을 완성해봅시다.
@@ -483,7 +483,7 @@ http {
 ```zsh
 $ docker-compose up -d
 ```
-![docker-compose 실행](/assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/docker-compose-up.png)
+![docker-compose 실행](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/docker-compose-up.png)
 <br>
 
 `Nginx` 컨테이너가 정상적으로 실행되었는지 확인:
@@ -496,7 +496,7 @@ $ docker-compose exec nginx nginx -t
 # curl -I https://{도메인}
 $ curl -I https://dev.honeymoa.kr
 ```
-![docker-compose nginx 실행 확인](/assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/docker-compose-nginx-check.png)
+![docker-compose nginx 실행 확인](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/docker-compose-nginx-check.png)
 <br>
 
 `Certbot` 컨테이너가 정상적으로 실행되었는지 확인:
@@ -505,7 +505,7 @@ $ curl -I https://dev.honeymoa.kr
 # certbot 컨테이너 실행 확인
 $ docker logs certbot
 ```
-![docker-compose certbot 실행 확인](/assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/docker-compose-certbot-check.png)
+![docker-compose certbot 실행 확인](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/docker-compose-certbot-check.png)
 <br>
 
 각 컨테이너들의 실행 확인까지 마치셨다면 SSL 인증서 적용 후, Certbot을 이용한 자동 갱신까지 완성입니다! 🎉
