@@ -105,6 +105,8 @@ menu:
     url:                /
   - title:              NestJS
     url:                /nestjs/
+  - title:              AWS
+    url:                /aws/
   - title:              Docker
     url:                /docker/
 
