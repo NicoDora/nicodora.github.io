@@ -5,7 +5,7 @@ date: 2025-03-18 18:3:00 +0900
 categories: github
 description: >
   GitHub Actions를 사용하여 CI/CD를 구축하는 방법에 대해 알아보겠습니다.
-image: /assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-actions.png
+image: https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-actions.png
 ---
 
 1. TOC
@@ -42,7 +42,7 @@ GitHub에서는 이러한 민감한 정보를 `Secrets`라는 기능을 통해 �
 GitHub Secrets는 GitHub repository의 `Settings` > `Secrets and variables` > `Actions`에서 설정할 수 있습니다.
 <br>
 <br>
-![GitHub Secrets 접속](/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets.png)
+![GitHub Secrets 접속](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets.png)
 <br>
 <br>
 
@@ -67,14 +67,14 @@ GitHub Secrets는 GitHub repository의 `Settings` > `Secrets and variables` > `A
 `Manage environment secrets` 버튼을 클릭합니다.
 <br>
 <br>
-![GitHub Secrets 설정](/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-setting.png)
+![GitHub Secrets 설정](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-setting.png)
 <br>
 <br>
 <br>
 `New environment` 를 클릭하여 새 Environments를 생성합니다.
 <br>
 <br>
-![GitHub Secrets New Environment](/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment.png)
+![GitHub Secrets New Environment](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment.png)
 <br>
 <br>
 <br>
@@ -82,7 +82,7 @@ Environments에 대한 이름을 설정할 수 있는데, 저는 develop 브랜�
 입력 후 `Configure environment` 버튼을 클릭합니다.
 <br>
 <br>
-![GitHub Secrets New Environment Name](/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-name.png)
+![GitHub Secrets New Environment Name](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-name.png)
 <br>
 <br>
 <br>
@@ -90,7 +90,7 @@ Environments가 생성되면 아래와 같은 화면이 보이게 됩니다.\
 여기서 배포 보호 규칙을 설정할 수도 있지만 이 부분은 스킵하겠습니다. `Deployment branches and tags`에서 `Select branches and tags`로 바꿔 배포할 브랜치를 설정해보겠습니다.
 <br>
 <br>
-![GitHub Secrets New Environment Setting](/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-setting.png)
+![GitHub Secrets New Environment Setting](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-setting.png)
 <br>
 <br>
 <br>
@@ -98,10 +98,10 @@ Environments가 생성되면 아래와 같은 화면이 보이게 됩니다.\
 저는 `develop` 브랜치를 추가하겠습니다.
 <br>
 <br>
-![GitHub Secrets New Environment Setting2](/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-setting2.png)
+![GitHub Secrets New Environment Setting2](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-setting2.png)
 <br>
 <br>
-![GitHub Secrets New Environment Setting3](/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-setting3.png)
+![GitHub Secrets New Environment Setting3](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-setting3.png)
 <br>
 <br>
 <br>
@@ -109,7 +109,7 @@ Environments가 생성되면 아래와 같은 화면이 보이게 됩니다.\
 바로 아래 `Environment secrets` 탭에서 `New environment secret` 버튼을 클릭합니다.
 <br>
 <br>
-![GitHub Secrets New Environment Secret](/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-secret.png)
+![GitHub Secrets New Environment Secret](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-secret.png)
 <br>
 <br>
 <br>
@@ -118,7 +118,7 @@ Environments가 생성되면 아래와 같은 화면이 보이게 됩니다.\
 저는 `DOCKER_USERNAME`, `DOCKER_PASSWORD`, `EC2_HOST`, `EC2_USER`, `SSH_PRIVATE_KEY`를 추가하겠습니다.
 <br>
 <br>
-![GitHub Secrets New Environment Secret Setting](/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-secret-setting.png)
+![GitHub Secrets New Environment Secret Setting](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-secret-setting.png)
 <br>
 <br>
 <br>
@@ -133,7 +133,7 @@ macOS에서는 `cat` 명령어를 사용하여 개인키를 확인할 수 있습
 $ cat ~/.ssh/your-key.pem
 ```
 
-![ec2 ssh private key](/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/ec2-ssh-private-key.png)
+![ec2 ssh private key](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/ec2-ssh-private-key.png)
 <br>
 📍 <b>ssh 키를 복사할 때는 반드시 Header와 Footer를 포함해서 복사해야 합니다!</b>
 
@@ -233,7 +233,7 @@ jobs:
 Actions 탭에서 작성한 workflow 파일을 클릭해 보면 CI/CD가 실행되는 것을 확인할 수 있습니다.
 <br>
 <br>
-![GitHub Actions 실행 확인](/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-actions-run.png)
+![GitHub Actions 실행 확인](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-actions-run.png)
 <br>
 <br>
 <br>
@@ -241,7 +241,7 @@ build 탭에 들어가보면 각 단계별로 자세한 로그를 확인할 수 
 아래와 같이 ✅ 표시가 뜨면 성공적으로 실행된 것입니다!
 <br>
 <br>
-![GitHub Actions 실행 확인2](/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-actions-run2.png)
+![GitHub Actions 실행 확인2](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-actions-run2.png)
 
 ## 마치며
 
