@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="ko"><!--
+ __  __                __                                     __
+/\ \/\ \              /\ \             __                    /\ \
+\ \ \_\ \   __  __    \_\ \      __   /\_\      __       ___ \ \ \/'\
+ \ \  _  \ /\ \/\ \   /'_` \   /'__`\ \/\ \   /'__`\    /'___\\ \ , <
+  \ \ \ \ \\ \ \_\ \ /\ \L\ \ /\  __/  \ \ \ /\ \L\.\_ /\ \__/ \ \ \\`\
+   \ \_\ \_\\/`____ \\ \___,_\\ \____\ _\ \ \\ \__/.\_\\ \____\ \ \_\ \_\
+    \/_/\/_/ `/___/> \\/__,_ / \/____//\ \_\ \\/__/\/_/ \/____/  \/_/\/_/
+                /\___/                \ \____/
+                \/__/                  \/___/
+
+Powered by Hydejack v9.1.6 <https://hydejack.com/>
+-->
+
+
+
+
+
+
+
+<head>
+  
+
+
+
+
+
+
+  
+    
+
+<title>GitHub Actions로 CI/CD 구축하기 | NicoDora</title>
+<meta name="description" content="GitHub Actions를 사용하여 CI/CD를 구축하는 방법에 대해 알아보겠습니다.
+">
+<link rel="canonical" href="http://localhost:4000/github/2025/03/18/GitHub-Actions%EB%A1%9C-CICD-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0.html">
+
+  
+
+  
+
+
+
+  <meta name="theme-color" content="rgb(25,55,71)">
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="NicoDora">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<meta name="application-name" content="NicoDora">
+
+<meta name="generator" content="Hydejack v9.1.6" />
+
+
+<link rel="alternate" href="http://localhost:4000/github/2025/03/18/GitHub-Actions%EB%A1%9C-CICD-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0.html" hreflang="ko">
+
+
+
+<link rel="shortcut icon"    href="/assets/icons/favicon.ico">
+<link rel="apple-touch-icon" href="/assets/icons/icon-192x192.png">
+
+<link rel="manifest" href="/assets/site.webmanifest">
+
+<link rel="dns-prefetch" href="https://fonts.googleapis.com"><link rel="dns-prefetch" href="https://fonts.gstatic.com">
+
+
+  <link rel="dns-prefetch" href="https://www.google-analytics.com">
+
+
+<link rel="preload" href="/assets/img/swipe.svg" as="image" id="_hrefSwipeSVG">
+  <link rel="dns-prefetch" href="/assets/js/search-worker-9.1.6.js" as="worker" id="_hrefSearch">
+
+
+
+
+
+
+<script>!function(r,c){"use strict";function a(e,t,n,o){e.addEventListener?e.addEventListener(t,n,o):e.attachEvent?e.attachEvent("on"+t,n):e["on"+t]=n}r.loadJS=function(e,t){var n=c.createElement("script"),e=(n.src=e,t&&a(n,"load",t,{once:!0}),c.scripts[0]);return e.parentNode.insertBefore(n,e),n},r._loaded=!1,r.loadJSDeferred=function(e,t){var n=c.createElement("script");function o(){r._loaded=!0,t&&a(n,"load",t,{once:!0});var e=c.scripts[0];e.parentNode.insertBefore(n,e)}return n.src=e,r._loaded?o():a(r,"load",o,{once:!0}),n},r.setRel=r.setRelStylesheet=function(e){a(c.getElementById(e),"load",function(){this.rel="stylesheet"},{once:!0})}}(window,document);
+!function(a){"use strict";var b=function(b,c,d){function e(a){return h.body?a():void setTimeout(function(){e(a)})}function f(){i.addEventListener&&i.removeEventListener("load",f),i.media=d||"all"}var g,h=a.document,i=h.createElement("link");if(c)g=c;else{var j=(h.body||h.getElementsByTagName("head")[0]).childNodes;g=j[j.length-1]}var k=h.styleSheets;i.rel="stylesheet",i.href=b,i.media="only x",e(function(){g.parentNode.insertBefore(i,c?g:g.nextSibling)});var l=function(a){for(var b=i.href,c=k.length;c--;)if(k[c].href===b)return a();setTimeout(function(){l(a)})};return i.addEventListener&&i.addEventListener("load",f),i.onloadcssdefined=l,l(f),i};"undefined"!=typeof exports?exports.loadCSS=b:a.loadCSS=b}("undefined"!=typeof global?global:this);
+!function(a){if(a.loadCSS){var b=loadCSS.relpreload={};if(b.support=function(){try{return a.document.createElement("link").relList.supports("preload")}catch(b){return!1}},b.poly=function(){for(var b=a.document.getElementsByTagName("link"),c=0;c<b.length;c++){var d=b[c];"preload"===d.rel&&"style"===d.getAttribute("as")&&(a.loadCSS(d.href,d,d.getAttribute("media")),d.rel=null)}},!b.support()){b.poly();var c=a.setInterval(b.poly,300);a.addEventListener&&a.addEventListener("load",function(){b.poly(),a.clearInterval(c)}),a.attachEvent&&a.attachEvent("onload",function(){a.clearInterval(c)})}}}(this);
+!function(w) {
+  w._baseURL = '/';
+  w._publicPath = '/assets/js/';
+  w._noPushState = false;
+  w._noDrawer = false;
+  w._noNavbar = false;
+  w._noToc = false;
+  w._noSearch = false;
+  w._search = {
+    DATA_URL: '/assets/sitedata.json?no-cache',
+    STORAGE_KEY: 'mini-search/',
+    INDEX_KEY: 'index--2025-03-18T18:03:57+09:00',
+  };
+  w._clapButton = true;
+}(window);</script>
+
+
+
+<!--[if gt IE 8]><!---->
+
+  
+
+
+
+
+<link rel="stylesheet" href="/assets/css/hydejack-9.1.6.css" id="_stylePreload">
+<link rel="stylesheet" href="/assets/icomoon/style.css" id="_iconsPreload">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab:700%7CNoto+Sans:400,400i,700,700i&display=swap" id="_fontsPreload">
+
+
+
+  <style id="_pageStyle">
+
+html{--accent-color: rgb(79,177,186);--accent-color-faded: rgba(79, 177, 186, 0.5);--accent-color-highlight: rgba(79, 177, 186, 0.1);--accent-color-darkened: #409ba3;--theme-color: rgb(25,55,71);--dark-mode-body-bg: hsl(200.8695652174, 5.9895833333%, 17.5%);--dark-mode-border-color: hsl(200.8695652174, 5.9895833333%, 22.5%)}
+</style>
+
+
+<!--<![endif]-->
+
+
+
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script src="/assets/js/sidebar-folder.js"></script>
+
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D9VF7EQWGG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-D9VF7EQWGG');
+</script>
+</head>
+
+<body class="dark-mode no-break-layout">
+  
+<script>
+  window._sunrise = 6;
+  window._sunset =  18;
+  !function(e,s){var d="light-mode",o="dark-mode",a=(new Date).getHours();"matchMedia"in e&&e.matchMedia("(prefers-color-scheme)")||(e=(a=a<=e._sunrise||a>=e._sunset?o:d)==o?d:o,s.body.classList.add(a),s.body.classList.remove(e))}(window,document);
+
+</script>
+
+
+
+<hy-push-state
+  id="_pushState"
+  replace-selector="#_main"
+  link-selector="a[href]:not([href^='/assets/']):not(.external):not(.no-push-state)"
+  script-selector="script"
+  duration="500"
+  hashchange
+>
+  
+  
+  <div id="_navbar" class="navbar fixed-top">
+  <div class="content">
+    <span class="sr-only">Jump to:</span>
+    <div class="nav-btn-bar">
+      <a id="_menu" class="nav-btn no-hover" href="#_drawer--opened">
+        <span class="sr-only">Navigation</span>
+        <span class="icon-menu"></span>
+      </a>
+      <div class="nav-span"></div>
+    </div>
+  </div>
+</div>
+<hr class="sr-only" hidden />
+
+  <main
+  id="_main"
+  class="content layout-post"
+  role="main"
+>
+  <nav id="breadcrumbs" class="screen-only"><ul>
+  
+  
+    <li><a href="/">home</a></li>
+    
+      <li>
+        
+          <span>/</span>
+          
+          
+          <a href="/github/">github</a>
+        
+      </li>
+    
+      <li>
+        
+          <span>/</span>
+          
+          
+          <a href="/github/2025/">2025</a>
+        
+      </li>
+    
+      <li>
+        
+          <span>/</span>
+          
+          
+          <a href="/github/2025/03/">03</a>
+        
+      </li>
+    
+      <li>
+        
+          <span>/</span>
+          
+          
+          <a href="/github/2025/03/18/">18</a>
+        
+      </li>
+    
+      <li>
+        
+          <span>/</span>
+          <span>GitHub-Actions로-CICD-구축하기.html</span>
+        
+      </li>
+    
+  
+</ul></nav>
+  
+
+
+
+
+
+
+
+
+
+
+<article id="post-github-2025-03-18-GitHub-Actions로-CICD-구축하기" class="page post mb6" role="article">
+  <header>
+    <h1 class="post-title flip-project-title">
+      
+        GitHub Actions로 CI/CD 구축하기
+      
+    </h1>
+
+    <div class="post-date">
+      
+      <span class="ellipsis mr1">
+        <time datetime="2025-03-18T18:03:00+09:00">2025-03-18 18:03</time> in <a href="/github/" class="flip-title">GitHub</a> 
+      </span>
+      
+        
+      
+    </div>
+
+    
+    
+      
+        <div class="img-wrapper lead aspect-ratio sixteen-nine flip-project-img">
+          
+
+
+<img
+  
+    src="/assets/img/github/2025-03-18-GitHub-Actions%EB%A1%9C-CICD-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0/github-actions.png"
+  
+  alt="GitHub Actions로 CI/CD 구축하기"
+  
+  
+  width="864"
+  height="486"
+  loading="lazy"
+/>
+
+        </div>
+      
+      
+    
+
+    
+
+
+
+  
+    <p class="note-sm" >
+      GitHub Actions를 사용하여 CI/CD를 구축하는 방법에 대해 알아보겠습니다.
+
+    </p>
+  
+
+
+  </header>
+
+  
+    <ol id="markdown-toc">
+  <li><a href="#지금까지의-이야기" id="markdown-toc-지금까지의-이야기">지금까지의 이야기</a></li>
+  <li><a href="#cicd란" id="markdown-toc-cicd란">CI/CD란?</a></li>
+  <li><a href="#actions-secrets-설정하기" id="markdown-toc-actions-secrets-설정하기">Actions Secrets 설정하기</a></li>
+  <li><a href="#github-actions-workflow-생성하기" id="markdown-toc-github-actions-workflow-생성하기">GitHub Actions Workflow 생성하기</a></li>
+  <li><a href="#github-actions-실행-확인하기" id="markdown-toc-github-actions-실행-확인하기">GitHub Actions 실행 확인하기</a></li>
+  <li><a href="#마치며" id="markdown-toc-마치며">마치며</a></li>
+</ol>
+
+<h2 id="지금까지의-이야기">지금까지의 이야기</h2>
+
+<p>이전 포스팅에서 AWS EC2에 Nginx와 Certbot을 설치하여 Let’s Encrypt SSL 인증서를 발급 및 자동 갱신까지 하는 방법에 대해 알아보았습니다. 서버를 구축하고 어느정도 사용해보시면 알겠지만, 서버 코드가 수정될 때 마다 수동으로 EC2에 접속하여 컨테이너를 내리고 수정된 코드를 이미지로 만들어 다시 컨테이너를 실행시키는 작업이 매우 비효율적이라는 것을 깨닫게 됩니다.
+<br />
+<br />
+몇번 이 작업을 반복하다보면, ‘이 작업을 자동화 하면 좋겠다’ 하는 생각이 드실겁니다.<br />
+보통 이러한 과정을 CI/CD라고 부르고, GitHub에서는 Actions라는 서비스를 통해 개발자들이 편하게 CI/CD를 구축할 수 있도록 환경을 제공하고 있습니다. 이번 포스팅에서는 GitHub Actions를 사용하여 CI/CD를 구축하는 방법에 대해 알아보겠습니다.</p>
+
+<h2 id="cicd란">CI/CD란?</h2>
+
+<p>CI/CD는 ‘Continuous Integration/Continuous Delivery’의 약자로, 지속적인 통합과 지속적인 배포를 의미합니다. 즉, 코드 변경 사항을 자동으로 빌드하고 테스트하여 배포하는 과정을 자동화한다 라고 생각하시면 됩니다.</p>
+
+<ul>
+  <li><b>CI (Continuous Integration) - 지속적인 통합</b>
+    <ul>
+      <li>개발자들이 작성한 코드를 정기적으로 통합하여 빌드하고 테스트하는 과정입니다. 이를 통해 코드의 품질을 높이고, 버그를 조기에 발견할 수 있습니다.</li>
+    </ul>
+  </li>
+  <li><b>CD (Continuous Delivery) - 지속적인 배포</b>
+    <ul>
+      <li>CI 과정에서 빌드된 코드를 자동으로 배포하는 과정입니다. 이를 통해 코드 변경 사항을 빠르게 사용자에게 전달할 수 있습니다.</li>
+    </ul>
+  </li>
+</ul>
+
+<p><br />
+GitHub Actions는 이러한 CI/CD를 구현하기 위한 도구로, GitHub 저장소에서 직접 워크플로우를 정의하고 실행할 수 있습니다. GitHub는 개발자가 가장 많이 사용하는 서비스 중 하나이기 때문에 GitHub Actions에 대해 배우는 것은 크게 어렵지 않으실 겁니다.</p>
+
+<h2 id="actions-secrets-설정하기">Actions Secrets 설정하기</h2>
+
+<p>GitHub Actions를 사용하기 전에 먼저 GitHub 저장소에 <code class="language-plaintext highlighter-rouge">Secrets</code>를 설정해보려 합니다. GitHub Actions는 GitHub repository에 올린 <code class="language-plaintext highlighter-rouge">workflow/</code> 폴더 내의 파일을 통해 CI/CD를 실행하게 되는데 여기서 Docker ID/PW나 AWS EC2에 SSH로 접속하기 위한 비밀번호 등과 같이 민감한 정보가 필요합니다.
+<br />
+<br />
+GitHub에서는 이러한 민감한 정보를 <code class="language-plaintext highlighter-rouge">Secrets</code>라는 기능을 통해 안전하게 저장하고 사용할 수 있도록 지원하고 있습니다.
+<br />
+<br />
+GitHub Secrets는 GitHub repository의 <code class="language-plaintext highlighter-rouge">Settings</code> &gt; <code class="language-plaintext highlighter-rouge">Secrets and variables</code> &gt; <code class="language-plaintext highlighter-rouge">Actions</code>에서 설정할 수 있습니다.
+<br />
+<br />
+<img src="/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets.png" alt="GitHub Secrets 접속" />
+<br />
+<br /></p>
+
+<p><code class="language-plaintext highlighter-rouge">Secrets</code> 탭에서 시크릿 환경변수를 관리할 수 있는데요. 여기서 <code class="language-plaintext highlighter-rouge">Environment secrets</code>, <code class="language-plaintext highlighter-rouge">Repository secrets</code>, <code class="language-plaintext highlighter-rouge">Organization secrets</code>라는 세가지 종류의 시크릿 환경변수를 보실 수 있습니다.</p>
+
+<ul>
+  <li><b>Environment secrets</b>
+    <ul>
+      <li>특정 환경에 대한 시크릿을 설정합니다.</li>
+      <li>예) <code class="language-plaintext highlighter-rouge">development</code>, <code class="language-plaintext highlighter-rouge">staging</code>, <code class="language-plaintext highlighter-rouge">production</code> 등에 대한 시크릿.</li>
+    </ul>
+  </li>
+  <li><b>Repository secrets</b>
+    <ul>
+      <li>특정 repository에 대한 시크릿을 설정합니다. 해당 repository에서 공통으로 사용되는 시크릿을 설정할 수 있습니다.</li>
+      <li>예) <code class="language-plaintext highlighter-rouge">Docker ID/PW</code>, <code class="language-plaintext highlighter-rouge">AWS ID/PW</code>에 대한 시크릿.</li>
+    </ul>
+  </li>
+  <li><b>Organization secrets</b>
+    <ul>
+      <li>조직에 대한 시크릿을 설정합니다. 조직 내의 모든 repository에서 공통으로 사용되는 시크릿을 설정할 수 있습니다.</li>
+      <li>예) <code class="language-plaintext highlighter-rouge">AWS ID/PW</code>에 대한 시크릿.
+<br />
+<br /></li>
+    </ul>
+  </li>
+</ul>
+
+<p>본인의 상황에 맞게 시크릿을 설정하시면 되는데, 보통 <code class="language-plaintext highlighter-rouge">production</code>, <code class="language-plaintext highlighter-rouge">development</code>과 같이 환경을 나누어 관리하는 경우가 많기 때문에 <code class="language-plaintext highlighter-rouge">Environment secrets</code>를 사용하여 시크릿을 설정하는 것을 추천드립니다.
+<br />
+<br />
+<code class="language-plaintext highlighter-rouge">development</code> 환경에서 사용할 시크릿을 설정해보겠습니다.<br />
+<code class="language-plaintext highlighter-rouge">Manage environment secrets</code> 버튼을 클릭합니다.
+<br />
+<br />
+<img src="/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-setting.png" alt="GitHub Secrets 설정" />
+<br />
+<br />
+<br />
+<code class="language-plaintext highlighter-rouge">New environment</code> 를 클릭하여 새 Environments를 생성합니다.
+<br />
+<br />
+<img src="/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment.png" alt="GitHub Secrets New Environment" />
+<br />
+<br />
+<br />
+Environments에 대한 이름을 설정할 수 있는데, 저는 develop 브랜치의 CI/CD를 구현할 예정이므로 <code class="language-plaintext highlighter-rouge">development</code> 로 입력하겠습니다.<br />
+입력 후 <code class="language-plaintext highlighter-rouge">Configure environment</code> 버튼을 클릭합니다.
+<br />
+<br />
+<img src="/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-name.png" alt="GitHub Secrets New Environment Name" />
+<br />
+<br />
+<br />
+Environments가 생성되면 아래와 같은 화면이 보이게 됩니다.<br />
+여기서 배포 보호 규칙을 설정할 수도 있지만 이 부분은 스킵하겠습니다. <code class="language-plaintext highlighter-rouge">Deployment branches and tags</code>에서 <code class="language-plaintext highlighter-rouge">Select branches and tags</code>로 바꿔 배포할 브랜치를 설정해보겠습니다.
+<br />
+<br />
+<img src="/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-setting.png" alt="GitHub Secrets New Environment Setting" />
+<br />
+<br />
+<br />
+그런 다음 Environments를 사용할 브랜치를 추가하면 됩니다.<br />
+저는 <code class="language-plaintext highlighter-rouge">develop</code> 브랜치를 추가하겠습니다.
+<br />
+<br />
+<img src="/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-setting2.png" alt="GitHub Secrets New Environment Setting2" />
+<br />
+<br />
+<img src="/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-setting3.png" alt="GitHub Secrets New Environment Setting3" />
+<br />
+<br />
+<br />
+이제 <code class="language-plaintext highlighter-rouge">development</code> 환경에 대한 설정이 완료되었으므로 시크릿 변수를 추가해봅시다.<br />
+바로 아래 <code class="language-plaintext highlighter-rouge">Environment secrets</code> 탭에서 <code class="language-plaintext highlighter-rouge">New environment secret</code> 버튼을 클릭합니다.
+<br />
+<br />
+<img src="/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-secret.png" alt="GitHub Secrets New Environment Secret" />
+<br />
+<br />
+<br />
+이름과 값을 입력할 수 있는 화면이 보이는데 여기에 CI/CD에 필요한 시크릿 변수를 추가하면 됩니다.<br />
+참고로 한번 설정된 시크릿 변수는 수정만 가능하고 볼 수 없으므로 주의하시기 바랍니다.<br />
+저는 <code class="language-plaintext highlighter-rouge">DOCKER_USERNAME</code>, <code class="language-plaintext highlighter-rouge">DOCKER_PASSWORD</code>, <code class="language-plaintext highlighter-rouge">EC2_HOST</code>, <code class="language-plaintext highlighter-rouge">EC2_USER</code>, <code class="language-plaintext highlighter-rouge">SSH_PRIVATE_KEY</code>를 추가하겠습니다.
+<br />
+<br />
+<img src="/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-secret-setting.png" alt="GitHub Secrets New Environment Secret Setting" />
+<br />
+<br />
+<br />
+<code class="language-plaintext highlighter-rouge">EC2_HOST</code>는 EC2의 <code class="language-plaintext highlighter-rouge">퍼블릭 IPv4 DNS</code>를, <code class="language-plaintext highlighter-rouge">EC2_USER</code>는 EC2에 접속하기 위한 사용자 이름을 입력하시면 됩니다.<br />
+<code class="language-plaintext highlighter-rouge">SSH_PRIVATE_KEY</code>는 EC2에 접속하기 위한 개인키를 말하는데요. <code class="language-plaintext highlighter-rouge">.pem</code> 파일이나 <code class="language-plaintext highlighter-rouge">.ppk</code> 파일을 열어 개인키를 복사하여 붙여넣으면 됩니다.
+<br />
+<br />
+macOS에서는 <code class="language-plaintext highlighter-rouge">cat</code> 명령어를 사용하여 개인키를 확인할 수 있습니다.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># cat {파일위치}</span>
+<span class="nv">$ </span><span class="nb">cat</span> ~/.ssh/your-key.pem
+</code></pre></div></div>
+
+<p><img src="/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/ec2-ssh-private-key.png" alt="ec2 ssh private key" />
+<br />
+📍 <b>ssh 키를 복사할 때는 반드시 Header와 Footer를 포함해서 복사해야 합니다!</b></p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-----BEGIN RSA PRIVATE KEY-----
+MIIEpAIBAAKCAQEAu06IpZklZ5W9L/AS56LAE95FvmmPhmO9MeyUItiw2jDfwaiR
+...
+-----END RSA PRIVATE KEY-----
+</code></pre></div></div>
+
+<h2 id="github-actions-workflow-생성하기">GitHub Actions Workflow 생성하기</h2>
+
+<p>시크릿 변수를 모두 추가하셨다면 CI/CD를 실행할 파일을 생성해봅시다.<br />
+GitHub Actions는 <code class="language-plaintext highlighter-rouge">.github/workflows</code> 폴더 내에 <code class="language-plaintext highlighter-rouge">yaml</code> 파일을 통해 CI/CD를 실행합니다.
+<br />
+<br />
+프로젝트 repository 내에 <code class="language-plaintext highlighter-rouge">Actions</code> 탭에서 <code class="language-plaintext highlighter-rouge">New workflow</code> 버튼을 클릭하여 미리 정의된 템플릿을 사용할 수 있는데 대부분 템플릿을 사용하지 않고 직접 작성하시더라구요? 사실 템플릿을 사용할 만큼 파일을 작성하는게 어렵지 않아서 그런거 같습니다.<br />
+그래서 저도 직접 작성해보려 합니다. 별로 어렵지 않으니… ㅎㅎ
+<br />
+<br />
+일단 <code class="language-plaintext highlighter-rouge">.github/workflows</code> 폴더를 생성하고 그 안에 <code class="language-plaintext highlighter-rouge">.yml</code> 파일을 생성합니다.<br />
+참고로 <code class="language-plaintext highlighter-rouge">.yml</code>, <code class="language-plaintext highlighter-rouge">.yaml</code> 둘다 같은 확장자이니 편하신걸로 사용하시면 됩니다. 만들어져 있는 production 환경 CI/CD 파일이 <code class="language-plaintext highlighter-rouge">.yml</code> 확장자라서 일관성을 위해 저도 <code class="language-plaintext highlighter-rouge">.yml</code>로 작성하겠습니다.<br />
+파일 이름도 원하시는대로 작성하시면 되고, 저는 production 환경과 구분하기 위해 파일 이름은 <code class="language-plaintext highlighter-rouge">app-dev.yml</code>로 작성하겠습니다.
+<br />
+<br /></p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># file: ".github/workflows/app-dev.yml"</span>
+<span class="na">name</span><span class="pi">:</span> <span class="s">app-dev</span>
+
+<span class="na">on</span><span class="pi">:</span>
+  <span class="na">push</span><span class="pi">:</span>
+    <span class="na">branches</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">develop</span><span class="pi">]</span>
+
+<span class="na">jobs</span><span class="pi">:</span>
+  <span class="na">build</span><span class="pi">:</span>
+    <span class="na">runs-on</span><span class="pi">:</span> <span class="s">ubuntu-latest</span>
+    <span class="na">environment</span><span class="pi">:</span> <span class="s">development</span>
+    <span class="na">steps</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Checkout repository</span>
+        <span class="na">uses</span><span class="pi">:</span> <span class="s">actions/checkout@v3</span>
+
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Set up Docker Buildx</span>
+        <span class="na">uses</span><span class="pi">:</span> <span class="s">docker/setup-buildx-action@v2</span>
+
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Login to Docker Hub</span>
+        <span class="na">uses</span><span class="pi">:</span> <span class="s">docker/login-action@v2</span>
+        <span class="na">with</span><span class="pi">:</span>
+          <span class="na">username</span><span class="pi">:</span> <span class="s">${ { secrets.DOCKER_USERNAME } }</span>
+          <span class="na">password</span><span class="pi">:</span> <span class="s">${ { secrets.DOCKER_PASSWORD } }</span>
+
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Build Docker image (development)</span>
+        <span class="na">run</span><span class="pi">:</span> <span class="pi">|</span>
+          <span class="s">docker build --platform linux/amd64 -f Dockerfile.dev -t nicodora/honey-moa-dev:latest .</span>
+
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Push Docker image</span>
+        <span class="na">run</span><span class="pi">:</span> <span class="pi">|</span>
+          <span class="s">docker push nicodora/honey-moa-dev:latest</span>
+
+      <span class="c1"># 배포 단계: EC2에 SSH로 접속하여 컨테이너 업데이트</span>
+      <span class="pi">-</span> <span class="na">name</span><span class="pi">:</span> <span class="s">Deploy to EC2</span>
+        <span class="na">uses</span><span class="pi">:</span> <span class="s">appleboy/ssh-action@v0.1.8</span>
+        <span class="na">with</span><span class="pi">:</span>
+          <span class="na">host</span><span class="pi">:</span> <span class="s">${ { secrets.EC2_HOST } }</span>
+          <span class="na">username</span><span class="pi">:</span> <span class="s">${ { secrets.EC2_USER } }</span>
+          <span class="na">key</span><span class="pi">:</span> <span class="s">${ { secrets.SSH_PRIVATE_KEY } }</span>
+          <span class="na">script</span><span class="pi">:</span> <span class="pi">|</span>
+            <span class="s"># 기존 컨테이너 중지 및 삭제</span>
+            <span class="s">sudo docker-compose -f docker-compose.dev.yaml down</span>
+
+            <span class="s"># 오래된 이미지 정리</span>
+            <span class="s">sudo docker rmi -f nicodora/honey-moa-dev:latest || true</span>
+
+            <span class="s"># 최신 이미지 pull</span>
+            <span class="s">sudo docker pull nicodora/honey-moa-dev:latest</span>
+
+            <span class="s"># 최신 이미지로 Docker Compose 실행</span>
+            <span class="s">sudo docker-compose -f docker-compose.dev.yaml up -d</span>
+</code></pre></div></div>
+
+<details>
+<summary><b>코드 흐름</b></summary>
+<div>
+
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">develop</code> 브랜치에 push가 발생하면 <code class="language-plaintext highlighter-rouge">app-dev.yml</code> 파일이 실행됩니다.</li>
+      <li><code class="language-plaintext highlighter-rouge">ubuntu-latest</code> 환경에서 실행되며, <code class="language-plaintext highlighter-rouge">development</code> 환경을 사용합니다.</li>
+      <li>도커에 로그인 하고 이미지를 빌드하여 <code class="language-plaintext highlighter-rouge">Docker Hub</code>에 푸시합니다.</li>
+      <li><code class="language-plaintext highlighter-rouge">appleboy/ssh-action</code>을 사용하여 EC2에 SSH로 접속하여 컨테이너를 업데이트합니다.</li>
+    </ul>
+  </div>
+</details>
+<p><br />
+<br />
+이제 <code class="language-plaintext highlighter-rouge">app-dev.yml</code> 파일을 커밋하고 <code class="language-plaintext highlighter-rouge">develop</code> 브랜치에 푸시하면 CI/CD가 실행됩니다.</p>
+
+<h2 id="github-actions-실행-확인하기">GitHub Actions 실행 확인하기</h2>
+
+<p>Actions 탭에서 작성한 workflow 파일을 클릭해 보면 CI/CD가 실행되는 것을 확인할 수 있습니다.
+<br />
+<br />
+<img src="/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-actions-run.png" alt="GitHub Actions 실행 확인" />
+<br />
+<br />
+<br />
+build 탭에 들어가보면 각 단계별로 자세한 로그를 확인할 수 있습니다.<br />
+아래와 같이 ✅ 표시가 뜨면 성공적으로 실행된 것입니다!
+<br />
+<br />
+<img src="/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-actions-run2.png" alt="GitHub Actions 실행 확인2" /></p>
+
+<h2 id="마치며">마치며</h2>
+
+<p>이번 포스팅에서는 GitHub Actions를 사용하여 CI/CD를 구축하는 방법에 대해 알아보았습니다.<br />
+큰 노력 없이 CI/CD를 구축하여 배포 자동화를 할 수 있기에 지속적으로 코드를 배포한다고 하면 거의 필수 작업이라고 생각합니다.</p>
+
+<p>그럼 다음 포스트에서 뵙겠습니다! 뾰로롱~
+<br />
+<br />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/frieren1.gif" width="300" height="300" alt="프리렌 움짤1" /></p>
+
+  
+</article>
+
+
+
+  <hr class="dingbat related mb6" />
+
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D9VF7EQWGG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-D9VF7EQWGG');
+</script>
+
+
+
+
+  
+     
+
+
+
+  
+
+  
+  
+
+  
+    
+
+
+  <aside class="related mb4" role="complementary">  <h2 class="hr-bottom">Related Posts</h2>  <ul class="related-posts">                  <li class="h4">  <a href="/aws/2025/03/07/AWS-EC2%EC%97%90%EC%84%9C-Nginx%EC%99%80-Certbot%EC%9C%BC%EB%A1%9C-Lets-encrypt-SSL-%EC%9D%B8%EC%A6%9D%EC%84%9C-%EB%B0%9C%EA%B8%89%ED%95%98%EA%B8%B0.html" class="flip-title"><span>AWS EC2에서 Nginx와 Certbot으로 Let's encrypt SSL 인증서 발급하기</span></a>  <time class="faded fine" datetime="2025-03-07T14:31:00+09:00">2025-03-07 14:31</time></li>                        <li class="h4">  <a href="/docker/2024/04/03/Docker-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0-for-macOS.html" class="flip-title"><span>Docker 설치하기 for macOS</span></a>  <time class="faded fine" datetime="2024-04-03T15:50:00+09:00">2024-04-03 15:50</time></li>                        <li class="h4">  <a href="/nestjs/2024/03/29/NestJS-%EC%84%A4%EC%B9%98-%EB%B0%8F-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0.html" class="flip-title"><span>NestJS 설치 및 시작하기</span></a>  <time class="faded fine" datetime="2024-03-29T09:57:00+09:00">2024-03-29 09:57</time></li>            </ul></aside>
+
+  
+
+  
+  
+
+  
+    
+<aside class="comments related" role="complementary">
+  <h2 class="hr-bottom">Comments</h2>
+  <!-- 
+ -->
+<script src="https://giscus.app/client.js"
+        data-repo="NicoDora/NicoDora.github.io"
+        data-repo-id="R_kgDOLeHHqA"
+        data-category="Comments"
+        data-category-id="DIC_kwDOLeHHqM4CeGWL"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="dark_dimmed"
+        data-lang="en"
+        crossorigin="anonymous"
+        async>
+</script>
+</aside>
+
+
+  
+
+  
+<footer class="content" role="contentinfo">
+  <hr/>
+  
+    <p><small class="copyright">© 2024 NicoDora. All rights reserved.
+</small></p>
+  
+  
+    <p><small>Powered by <a class="external" href="https://hydejack.com/">Hydejack</a> v<span id="_version">9.1.6</span></small></p>
+  <hr class="sr-only"/>
+</footer>
+
+
+</main>
+
+  <hy-drawer
+  id="_drawer"
+  class=""
+  side="left"
+  threshold="10"
+  noscroll
+  
+>
+  <header id="_sidebar" class="sidebar" role="banner">
+    
+
+
+
+
+<div class="sidebar-bg sidebar-overlay" style="background-color:rgb(25,55,71);background-image:url(https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/sidebar-bg.jpg)"></div>
+
+    <div class="sidebar-sticky">
+  <div class="sidebar-about">
+    
+      <a class="no-hover" href="/" tabindex="-1">
+        <img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/logo.png" class="avatar" alt="NicoDora" width="120" height="120" loading="lazy" />
+      </a>
+    
+    <a class="sidebar-title" href="/"><h2 class="h2">NicoDora</h2></a>
+    
+    
+      <p class="">
+        keep moving
+
+      </p>
+    
+  </div>
+
+  <nav class="sidebar-nav heading" role="navigation">
+    <span class="sr-only">Navigation:</span>
+<ul>
+  
+    
+      
+      <li>
+        <a
+          id="_drawer--opened"
+          href="/"
+          class="sidebar-nav-item "
+          
+        >
+          Home
+        </a>
+      </li>
+    
+      
+      <li>
+        <a
+          
+          href="/aws/"
+          class="sidebar-nav-item "
+          
+        >
+          AWS
+        </a>
+      </li>
+    
+      
+      <li>
+        <a
+          
+          href="/docker/"
+          class="sidebar-nav-item "
+          
+        >
+          Docker
+        </a>
+      </li>
+    
+      
+      <li>
+        <a
+          
+          href="/github/"
+          class="sidebar-nav-item "
+          
+        >
+          GitHub
+        </a>
+      </li>
+    
+      
+      <li>
+        <a
+          
+          href="/nestjs/"
+          class="sidebar-nav-item "
+          
+        >
+          NestJS
+        </a>
+      </li>
+    
+  
+</ul>
+
+  </nav>
+
+  
+  <div class="sidebar-social">
+    <span class="sr-only">Social</span>
+<ul>
+  
+    
+    
+
+    
+    
+      
+
+
+
+  
+
+  
+  
+  
+  
+
+  
+
+  
+
+  <li>
+    <a href="https://github.com/NicoDora" title="GitHub" class="no-mark-external">
+      <span class="icon-github"></span>
+      <span class="sr-only">GitHub</span>
+    </a>
+  </li>
+
+
+    
+
+    
+    
+  
+</ul>
+
+  </div>
+</div>
+  </header>
+</hy-drawer>
+<hr class="sr-only" hidden />
+
+</hy-push-state>
+
+
+  <!--[if gt IE 10]><!---->
+  <script nomodule>!function(){var t,n=document.createElement("script");!("noModule"in n)&&"onbeforeload"in n&&(t=!1,document.addEventListener("beforeload",function(e){if(e.target===n)t=!0;else if(!e.target.hasAttribute("nomodule")||!t)return;e.preventDefault()},!0),n.type="module",n.src=".",document.head.appendChild(n),n.remove())}();
+</script>
+  <script src="/assets/js/hydejack-9.1.6.js" type="module"></script>
+  <script src="/assets/js/LEGACY-hydejack-9.1.6.js" nomodule defer></script>
+  
+
+  
+  <script>!function(w, d) {
+    w.ga=w.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+
+    /**/
+      if (navigator.CookiesOK) {
+        ga('create', 'G-D9VF7EQWGG', 'auto');
+      } else if (d.cookie.indexOf("hy--cookies-ok=true") > -1) {
+        ga('create', 'G-D9VF7EQWGG', {
+          'storage': 'none',
+          'clientId': localStorage ? localStorage.getItem('ga--client-id') : undefined
+        });
+      } else {
+        ga('create', 'G-D9VF7EQWGG', {
+          'storage': 'none'
+        });
+        ga('set', 'forceSSL', true);
+        ga('set', 'anonymizeIp', true);
+      }
+    /**/
+
+    var pushStateEl = d.getElementById('_pushState');
+    var timeoutId;
+    pushStateEl.addEventListener('hy-push-state-load', function() {
+      w.clearTimeout(timeoutId);
+      timeoutId = w.setTimeout(function() {
+        ga('set', 'page', w.location.pathname);
+        ga('send', 'pageview');
+      }, 500);
+    });
+
+    d.addEventListener('hy--cookies-ok', function () {
+      w.ga(function(tracker) {
+        w.ga("set", "anonymizeIp", undefined);
+        localStorage && localStorage.setItem("ga--client-id", tracker.get("clientId"));
+      });
+    });
+
+    w.loadJSDeferred('https://www.google-analytics.com/analytics.js');
+  }(window, document);</script>
+
+
+<!--<![endif]-->
+  
+
+
+
+<div hidden>
+  
+  <h2 class="sr-only">Templates:</h2>
+
+  <template id="_animation-template">
+  <div class="animation-main fixed-top">
+    <nav id="breadcrumbs" class="screen-only"><ul>
+  
+  
+</ul></nav>
+    <div class="content">
+      <div class="page"></div>
+    </div>
+  </div>
+</template>
+
+  <template id="_loading-template">
+  <div class="loading nav-btn fr">
+    <span class="sr-only">Loading…</span>
+    <span class="icon-cog"></span>
+  </div>
+</template>
+
+  <template id="_error-template">
+  <div class="page">
+    <h2 class="page-title">Error</h2>
+    
+    
+    <p class="lead">
+      Sorry, an error occurred while loading: <a class="this-link" href=""></a>.
+    </p>
+  </div>
+</template>
+
+  <template id="_permalink-template">
+  <a href="#" class="permalink">
+    <span class="sr-only">Permalink</span>
+    <span class="content-hash"></span>
+  </a>
+</template>
+
+  
+    <template id="_cookies-banner-template">
+  <div id="_cookies-banner" class="navbar fixed-bottom CookiesOK">
+    <div class="content">
+      <div class="nav-btn-bar">
+        <small class="faded">
+          <span>This site uses cookies.
+</span>
+          <button id="_cookies-ok" class="btn btn-primary btn-sm">Okay</button>
+        </small>
+      </div>
+    </div>
+  </div>
+</template>
+
+  
+  
+    <template id="_dark-mode-template">
+  <button id="_dark-mode" class="nav-btn no-hover" >
+    <span class="sr-only">Dark Mode</span>
+    <span class="icon-brightness-contrast"></span>
+  </button>
+</template>
+
+  
+  
+    <template id="_search-template">
+  <button id="_search" class="nav-btn no-hover">
+    <label class="sr-only" for="_search-input">Search</label>
+    <span class="icon-search"></span>
+  </button>
+  <div id="_search-box">
+    <div class="nav-btn">
+      <span class="icon-search"></span>
+    </div>
+    <input
+      id="_search-input"
+      type="search"
+      class="form-control form-control-lg nav-btn"
+      placeholder="Build with JEKYLL_ENV=production to enable search."
+    />
+    <button type="reset" class="nav-btn no-hover">
+      <span class="sr-only">Close</span>
+      <span class="icon-cross"></span>
+    </button>
+  </div>
+  <div id="_hits"></div>
+</template>
+
+  
+</div>
+
+
+</body>
+</html>

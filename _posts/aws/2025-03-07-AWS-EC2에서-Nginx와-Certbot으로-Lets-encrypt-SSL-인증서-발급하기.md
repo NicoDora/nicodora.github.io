@@ -4,7 +4,7 @@ title: "AWS EC2에서 Nginx와 Certbot으로 Let's encrypt SSL 인증서 발급�
 date: 2025-03-07 14:31:00 +0900
 categories: aws
 description: >
-  AWS EC2 인스턴스에서 Nginx와 Certbot을 사용하여 SSL 인증서를 발급받고 자동갱신까지 설정하는 방법을 다룹니다.
+  AWS EC2 인스턴스에서 Nginx를 사용하여 Let's encrypt SSL 인증서를 발급받고 Certbot으로 인증서 자동갱신까지 설정하는 방법을 다룹니다.
 image: https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/letsencrypt-logo.png
 ---
 

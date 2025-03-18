@@ -103,12 +103,14 @@ defaults:
 menu:
   - title:              Home
     url:                /
-  - title:              NestJS
-    url:                /nestjs/
   - title:              AWS
     url:                /aws/
   - title:              Docker
     url:                /docker/
+  - title:              GitHub
+    url:                /github/
+  - title:              NestJS
+    url:                /nestjs/
 
 collections:
   featured_categories:
