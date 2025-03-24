@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="ko"><!--
+ __  __                __                                     __
+/\ \/\ \              /\ \             __                    /\ \
+\ \ \_\ \   __  __    \_\ \      __   /\_\      __       ___ \ \ \/'\
+ \ \  _  \ /\ \/\ \   /'_` \   /'__`\ \/\ \   /'__`\    /'___\\ \ , <
+  \ \ \ \ \\ \ \_\ \ /\ \L\ \ /\  __/  \ \ \ /\ \L\.\_ /\ \__/ \ \ \\`\
+   \ \_\ \_\\/`____ \\ \___,_\\ \____\ _\ \ \\ \__/.\_\\ \____\ \ \_\ \_\
+    \/_/\/_/ `/___/> \\/__,_ / \/____//\ \_\ \\/__/\/_/ \/____/  \/_/\/_/
+                /\___/                \ \____/
+                \/__/                  \/___/
+
+Powered by Hydejack v9.1.6 <https://hydejack.com/>
+-->
+
+
+
+
+
+
+
+<head>
+  
+
+
+
+
+
+
+  
+    
+
+<title>[Nest.js] websocket 클라이언트로 ack 보내기 | NicoDora</title>
+<meta name="description" content="NestJS의 websocket 라이브러리를 사용해 웹소켓을 구현할 때 클라이언트로 ack를 보내는 방법을 알아봅시다.
+">
+<link rel="canonical" href="http://localhost:4000/nestjs/2025/03/24/Nest.js-websocket-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8%EB%A1%9C-ack-%EB%B3%B4%EB%82%B4%EA%B8%B0.html">
+
+  
+
+  
+
+
+
+  <meta name="theme-color" content="rgb(25,55,71)">
+
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="NicoDora">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<meta name="application-name" content="NicoDora">
+
+<meta name="generator" content="Hydejack v9.1.6" />
+
+
+<link rel="alternate" href="http://localhost:4000/nestjs/2025/03/24/Nest.js-websocket-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8%EB%A1%9C-ack-%EB%B3%B4%EB%82%B4%EA%B8%B0.html" hreflang="ko">
+
+
+
+<link rel="shortcut icon"    href="/assets/icons/favicon.ico">
+<link rel="apple-touch-icon" href="/assets/icons/icon-192x192.png">
+
+<link rel="manifest" href="/assets/site.webmanifest">
+
+<link rel="dns-prefetch" href="https://fonts.googleapis.com"><link rel="dns-prefetch" href="https://fonts.gstatic.com">
+
+
+  <link rel="dns-prefetch" href="https://www.google-analytics.com">
+
+
+<link rel="preload" href="/assets/img/swipe.svg" as="image" id="_hrefSwipeSVG">
+  <link rel="dns-prefetch" href="/assets/js/search-worker-9.1.6.js" as="worker" id="_hrefSearch">
+
+
+
+
+
+
+<script>!function(r,c){"use strict";function a(e,t,n,o){e.addEventListener?e.addEventListener(t,n,o):e.attachEvent?e.attachEvent("on"+t,n):e["on"+t]=n}r.loadJS=function(e,t){var n=c.createElement("script"),e=(n.src=e,t&&a(n,"load",t,{once:!0}),c.scripts[0]);return e.parentNode.insertBefore(n,e),n},r._loaded=!1,r.loadJSDeferred=function(e,t){var n=c.createElement("script");function o(){r._loaded=!0,t&&a(n,"load",t,{once:!0});var e=c.scripts[0];e.parentNode.insertBefore(n,e)}return n.src=e,r._loaded?o():a(r,"load",o,{once:!0}),n},r.setRel=r.setRelStylesheet=function(e){a(c.getElementById(e),"load",function(){this.rel="stylesheet"},{once:!0})}}(window,document);
+!function(a){"use strict";var b=function(b,c,d){function e(a){return h.body?a():void setTimeout(function(){e(a)})}function f(){i.addEventListener&&i.removeEventListener("load",f),i.media=d||"all"}var g,h=a.document,i=h.createElement("link");if(c)g=c;else{var j=(h.body||h.getElementsByTagName("head")[0]).childNodes;g=j[j.length-1]}var k=h.styleSheets;i.rel="stylesheet",i.href=b,i.media="only x",e(function(){g.parentNode.insertBefore(i,c?g:g.nextSibling)});var l=function(a){for(var b=i.href,c=k.length;c--;)if(k[c].href===b)return a();setTimeout(function(){l(a)})};return i.addEventListener&&i.addEventListener("load",f),i.onloadcssdefined=l,l(f),i};"undefined"!=typeof exports?exports.loadCSS=b:a.loadCSS=b}("undefined"!=typeof global?global:this);
+!function(a){if(a.loadCSS){var b=loadCSS.relpreload={};if(b.support=function(){try{return a.document.createElement("link").relList.supports("preload")}catch(b){return!1}},b.poly=function(){for(var b=a.document.getElementsByTagName("link"),c=0;c<b.length;c++){var d=b[c];"preload"===d.rel&&"style"===d.getAttribute("as")&&(a.loadCSS(d.href,d,d.getAttribute("media")),d.rel=null)}},!b.support()){b.poly();var c=a.setInterval(b.poly,300);a.addEventListener&&a.addEventListener("load",function(){b.poly(),a.clearInterval(c)}),a.attachEvent&&a.attachEvent("onload",function(){a.clearInterval(c)})}}}(this);
+!function(w) {
+  w._baseURL = '/';
+  w._publicPath = '/assets/js/';
+  w._noPushState = false;
+  w._noDrawer = false;
+  w._noNavbar = false;
+  w._noToc = false;
+  w._noSearch = false;
+  w._search = {
+    DATA_URL: '/assets/sitedata.json?no-cache',
+    STORAGE_KEY: 'mini-search/',
+    INDEX_KEY: 'index--2025-03-24T19:55:48+09:00',
+  };
+  w._clapButton = true;
+}(window);</script>
+
+
+
+<!--[if gt IE 8]><!---->
+
+  
+
+
+
+
+<link rel="stylesheet" href="/assets/css/hydejack-9.1.6.css" id="_stylePreload">
+<link rel="stylesheet" href="/assets/icomoon/style.css" id="_iconsPreload">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Slab:700%7CNoto+Sans:400,400i,700,700i&display=swap" id="_fontsPreload">
+
+
+
+  <style id="_pageStyle">
+
+html{--accent-color: rgb(79,177,186);--accent-color-faded: rgba(79, 177, 186, 0.5);--accent-color-highlight: rgba(79, 177, 186, 0.1);--accent-color-darkened: #409ba3;--theme-color: rgb(25,55,71);--dark-mode-body-bg: hsl(200.8695652174, 5.9895833333%, 17.5%);--dark-mode-border-color: hsl(200.8695652174, 5.9895833333%, 22.5%)}
+</style>
+
+
+<!--<![endif]-->
+
+
+
+
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<script src="/assets/js/sidebar-folder.js"></script>
+
+
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D9VF7EQWGG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-D9VF7EQWGG');
+</script>
+</head>
+
+<body class="dark-mode no-break-layout">
+  
+<script>
+  window._sunrise = 6;
+  window._sunset =  18;
+  !function(e,s){var d="light-mode",o="dark-mode",a=(new Date).getHours();"matchMedia"in e&&e.matchMedia("(prefers-color-scheme)")||(e=(a=a<=e._sunrise||a>=e._sunset?o:d)==o?d:o,s.body.classList.add(a),s.body.classList.remove(e))}(window,document);
+
+</script>
+
+
+
+<hy-push-state
+  id="_pushState"
+  replace-selector="#_main"
+  link-selector="a[href]:not([href^='/assets/']):not(.external):not(.no-push-state)"
+  script-selector="script"
+  duration="500"
+  hashchange
+>
+  
+  
+  <div id="_navbar" class="navbar fixed-top">
+  <div class="content">
+    <span class="sr-only">Jump to:</span>
+    <div class="nav-btn-bar">
+      <a id="_menu" class="nav-btn no-hover" href="#_drawer--opened">
+        <span class="sr-only">Navigation</span>
+        <span class="icon-menu"></span>
+      </a>
+      <div class="nav-span"></div>
+    </div>
+  </div>
+</div>
+<hr class="sr-only" hidden />
+
+  <main
+  id="_main"
+  class="content layout-post"
+  role="main"
+>
+  <nav id="breadcrumbs" class="screen-only"><ul>
+  
+  
+    <li><a href="/">home</a></li>
+    
+      <li>
+        
+          <span>/</span>
+          
+          
+          <a href="/nestjs/">nestjs</a>
+        
+      </li>
+    
+      <li>
+        
+          <span>/</span>
+          
+          
+          <a href="/nestjs/2025/">2025</a>
+        
+      </li>
+    
+      <li>
+        
+          <span>/</span>
+          
+          
+          <a href="/nestjs/2025/03/">03</a>
+        
+      </li>
+    
+      <li>
+        
+          <span>/</span>
+          
+          
+          <a href="/nestjs/2025/03/24/">24</a>
+        
+      </li>
+    
+      <li>
+        
+          <span>/</span>
+          <span>Nest.js-websocket-클라이언트로-ack-보내기.html</span>
+        
+      </li>
+    
+  
+</ul></nav>
+  
+
+
+
+
+
+
+
+
+
+
+<article id="post-nestjs-2025-03-24-[Nest.js]-websocket-클라이언트로-ack-보내기" class="page post mb6" role="article">
+  <header>
+    <h1 class="post-title flip-project-title">
+      
+        [Nest.js] websocket 클라이언트로 ack 보내기
+      
+    </h1>
+
+    <div class="post-date">
+      
+      <span class="ellipsis mr1">
+        <time datetime="2025-03-24T19:55:00+09:00">2025-03-24 19:55</time> in <a href="/nestjs/" class="flip-title">NestJS</a> 
+      </span>
+      
+        
+      
+    </div>
+
+    
+    
+      
+        <div class="img-wrapper lead aspect-ratio sixteen-nine flip-project-img">
+          
+
+
+<img
+  
+    src="/assets/img/nestjs/2025-03-24-Nestjs-websocket-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8%EB%A1%9C-ack-%EB%B3%B4%EB%82%B4%EA%B8%B0/send-ack.png"
+  
+  alt="[Nest.js] websocket 클라이언트로 ack 보내기"
+  
+  
+  width="864"
+  height="486"
+  loading="lazy"
+/>
+
+        </div>
+      
+      
+    
+
+    
+
+
+
+  
+    <p class="note-sm" >
+      NestJS의 websocket 라이브러리를 사용해 웹소켓을 구현할 때 클라이언트로 ack를 보내는 방법을 알아봅시다.
+
+    </p>
+  
+
+
+  </header>
+
+  
+    <ol id="markdown-toc">
+  <li><a href="#문제" id="markdown-toc-문제">문제</a></li>
+  <li><a href="#해결방법-ack-보내기" id="markdown-toc-해결방법-ack-보내기">해결방법 (ack 보내기)</a></li>
+  <li><a href="#마치며" id="markdown-toc-마치며">마치며</a></li>
+</ol>
+
+<h2 id="문제">문제</h2>
+
+<p>프로젝트에서 웹소켓을 사용해서 1대1 채팅을 구현하고 있었는데 일단 코드는 이렇게 구현했었는데요.</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">class</span> <span class="nc">ChatMessageGateway</span>
+  <span class="k">implements</span> <span class="nx">OnGatewayConnection</span><span class="p">,</span> <span class="nx">OnGatewayDisconnect</span>
+<span class="p">{</span>
+  <span class="nf">constructor</span><span class="p">(</span>
+    <span class="p">@</span><span class="nd">Inject</span><span class="p">(</span><span class="nx">CHAT_ROOM_REPOSITORY_DI_TOKEN</span><span class="p">)</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">chatRoomRepository</span><span class="p">:</span> <span class="nx">ChatRoomRepositoryPort</span><span class="p">,</span>
+    <span class="p">@</span><span class="nd">Inject</span><span class="p">(</span><span class="nx">APP_JWT_SERVICE_DI_TOKEN</span><span class="p">)</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">appJwtService</span><span class="p">:</span> <span class="nx">AppJwtServicePort</span><span class="p">,</span>
+    <span class="p">@</span><span class="nd">Inject</span><span class="p">(</span><span class="nx">WINSTON_MODULE_NEST_PROVIDER</span><span class="p">)</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">logger</span><span class="p">:</span> <span class="nx">Logger</span><span class="p">,</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">commandBus</span><span class="p">:</span> <span class="nx">CommandBus</span><span class="p">,</span>
+  <span class="p">)</span> <span class="p">{}</span>
+
+  <span class="p">@</span><span class="nd">WebSocketServer</span><span class="p">()</span>
+  <span class="nx">server</span><span class="p">:</span> <span class="nx">Server</span><span class="p">;</span>
+
+  <span class="k">async</span> <span class="nf">handleConnection</span><span class="p">(</span><span class="nx">socket</span><span class="p">:</span> <span class="nx">SocketWithUserDto</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">...</span>
+  <span class="p">}</span>
+
+  <span class="k">async</span> <span class="nf">handleDisconnect</span><span class="p">(</span><span class="nx">socket</span><span class="p">:</span> <span class="nx">SocketWithUserDto</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">...</span>
+  <span class="p">}</span>
+
+  <span class="p">@</span><span class="nd">UsePipes</span><span class="p">(</span><span class="nx">customValidationPipe</span><span class="p">)</span>
+  <span class="p">@</span><span class="nd">UseFilters</span><span class="p">(</span><span class="nx">SocketCatchHttpExceptionFilter</span><span class="p">)</span>
+  <span class="p">@</span><span class="nd">SubscribeMessage</span><span class="p">(</span><span class="dl">'</span><span class="s1">enter_chat_room</span><span class="dl">'</span><span class="p">)</span>
+  <span class="k">async</span> <span class="nf">enterChat</span><span class="p">(</span>
+    <span class="p">@</span><span class="nd">MessageBody</span><span class="p">()</span> <span class="nx">data</span><span class="p">:</span> <span class="nx">EnterChatDto</span><span class="p">,</span>
+    <span class="p">@</span><span class="nd">ConnectedSocket</span><span class="p">()</span> <span class="nx">socket</span><span class="p">:</span> <span class="nx">SocketWithUserDto</span><span class="p">,</span>
+  <span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">roomId</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+
+    <span class="kd">const</span> <span class="nx">chatRoom</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">chatRoomRepository</span><span class="p">.</span><span class="nf">findOneById</span><span class="p">(</span><span class="nx">roomId</span><span class="p">);</span>
+
+    <span class="k">if </span><span class="p">(</span><span class="nf">isNil</span><span class="p">(</span><span class="nx">chatRoom</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nf">error</span><span class="p">(</span>
+        <span class="s2">`[Socket] enter_chat_room failed: Room </span><span class="p">${</span><span class="nx">roomId</span><span class="p">}</span><span class="s2"> does not exist`</span><span class="p">,</span>
+      <span class="p">);</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nc">WsException</span><span class="p">(</span><span class="dl">'</span><span class="s1">Does not exist room</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="nx">socket</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="nc">String</span><span class="p">(</span><span class="nx">roomId</span><span class="p">));</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="s2">`[Socket] User </span><span class="p">${</span><span class="nx">socket</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">sub</span><span class="p">}</span><span class="s2"> joined room </span><span class="p">${</span><span class="nx">roomId</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="p">@</span><span class="nd">UsePipes</span><span class="p">(</span><span class="nx">customValidationPipe</span><span class="p">)</span>
+  <span class="p">@</span><span class="nd">UseFilters</span><span class="p">(</span><span class="nx">SocketCatchHttpExceptionFilter</span><span class="p">)</span>
+  <span class="p">@</span><span class="nd">SubscribeMessage</span><span class="p">(</span><span class="dl">'</span><span class="s1">send_message</span><span class="dl">'</span><span class="p">)</span>
+  <span class="k">async</span> <span class="nf">sendMessage</span><span class="p">(</span>
+    <span class="p">@</span><span class="nd">MessageBody</span><span class="p">()</span> <span class="nx">data</span><span class="p">:</span> <span class="nx">CreateChatMessageDto</span><span class="p">,</span>
+    <span class="p">@</span><span class="nd">ConnectedSocket</span><span class="p">()</span> <span class="nx">socket</span><span class="p">:</span> <span class="nx">SocketWithUserDto</span><span class="p">,</span>
+  <span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">roomId</span><span class="p">,</span> <span class="nx">message</span><span class="p">,</span> <span class="nx">blogPostUrl</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="na">sub</span><span class="p">:</span> <span class="nx">userId</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">socket</span><span class="p">.</span><span class="nx">user</span><span class="p">;</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span>
+      <span class="s2">`[Socket] Received message from </span><span class="p">${</span><span class="nx">userId</span><span class="p">}</span><span class="s2"> in room </span><span class="p">${</span><span class="nx">roomId</span><span class="p">}</span><span class="s2">: </span><span class="p">${</span><span class="nx">message</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+    <span class="p">);</span>
+
+    <span class="kd">const</span> <span class="nx">command</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">CreateChatMessageCommand</span><span class="p">({</span>
+      <span class="na">roomId</span><span class="p">:</span> <span class="nc">BigInt</span><span class="p">(</span><span class="nx">roomId</span><span class="p">),</span>
+      <span class="na">userId</span><span class="p">:</span> <span class="nc">BigInt</span><span class="p">(</span><span class="nx">userId</span><span class="p">),</span>
+      <span class="nx">message</span><span class="p">,</span>
+      <span class="nx">blogPostUrl</span><span class="p">,</span>
+    <span class="p">});</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span>
+      <span class="s2">`[Socket] Sending message from </span><span class="p">${</span><span class="nx">userId</span><span class="p">}</span><span class="s2"> in room </span><span class="p">${</span><span class="nx">roomId</span><span class="p">}</span><span class="s2">: </span><span class="p">${</span><span class="nx">message</span><span class="p">}</span><span class="s2">, </span><span class="p">${</span><span class="nx">blogPostUrl</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+    <span class="p">);</span>
+
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">commandBus</span><span class="p">.</span><span class="nx">execute</span><span class="o">&lt;</span><span class="nx">CreateChatMessageCommand</span><span class="p">,</span> <span class="k">void</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">command</span><span class="p">);</span>
+
+    <span class="nx">socket</span>
+      <span class="p">.</span><span class="nf">to</span><span class="p">(</span><span class="nc">String</span><span class="p">(</span><span class="nx">roomId</span><span class="p">))</span>
+      <span class="p">.</span><span class="nf">emit</span><span class="p">(</span><span class="dl">'</span><span class="s1">receive_message</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span> <span class="na">senderId</span><span class="p">:</span> <span class="nx">userId</span><span class="p">,</span> <span class="nx">message</span><span class="p">,</span> <span class="nx">blogPostUrl</span> <span class="p">});</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span>
+      <span class="s2">`[Socket] Message emitted to room </span><span class="p">${</span><span class="nx">roomId</span><span class="p">}</span><span class="s2"> from </span><span class="p">${</span><span class="nx">userId</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p><br />
+<br />
+postman에서 <code class="language-plaintext highlighter-rouge">enter_chat_room</code> 이벤트와 <code class="language-plaintext highlighter-rouge">send_message</code> 이벤트를 테스트 해보면 결과는 아래와 같습니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2025-03-24-Nestjs-websocket-클라이언트로-ack-보내기/enter-chat-room-test.png" alt="enter-chat-room-테스트" />
+<br />
+<br />
+<img src="/assets/img/nestjs/2025-03-24-Nestjs-websocket-클라이언트로-ack-보내기/send-message-test.png" alt="send-message-테스트" />
+<br />
+<br />
+postman에서는 이벤트 결과를 확인할 수 있지만 실제로 클라이언트에서는 이벤트 결과를 확인하기 힘들다고 하더라구요. 소켓 통신 테스트 과정에서 <code class="language-plaintext highlighter-rouge">send_message</code> 이벤트를 보냈을 때 메시지가 전송되지 않는 문제가 있었는데 이게 채팅방에 입장이 안된건지, 진짜 메시지가 전송이 안된건지 확인하기 힘들었습니다.
+<br />
+<br />
+그래서 웹소켓에서도 http 요청처럼 응답을 보낼 수 있는 방법이 있나 찾아보다가 ack(acknowledgement)를 응답으로 보내는 방법을 발견하게 되었습니다.</p>
+
+<h2 id="해결방법-ack-보내기">해결방법 (ack 보내기)</h2>
+
+<p>ack를 보내게 되면 클라이언트에서 callback 함수를 통해서 응답을 받을 수 있습니다.<br />
+ack를 보내는 방법은 생각보다 간단했습니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2025-03-24-Nestjs-websocket-클라이언트로-ack-보내기/add-ack.png" alt="ack-보내기" />
+<br />
+<br />
+그냥 이렇게 이벤트 함수 안에 return값을 추가해주면 됩니다!
+<br />
+<br />
+클라이언트에선 callback 함수를 통해서 ack를 확인할 수 있는데, 일단 코드를 커밋하기 전에 postman에서 테스트를 해봐야겠죠?<br />
+postman에서 ack를 받는 방법도 엄청 간단합니다. 그냥 <code class="language-plaintext highlighter-rouge">Ack</code> 버튼을 눌러 활성화해주면 됩니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2025-03-24-Nestjs-websocket-클라이언트로-ack-보내기/postman-ack-check.png" alt="postman-ack-테스트" />
+<br />
+<br />
+이제 postman에서 <code class="language-plaintext highlighter-rouge">enter_chat_room</code> 이벤트를 테스트 해보면 아래와 같이 ack를 받을 수 있습니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2025-03-24-Nestjs-websocket-클라이언트로-ack-보내기/ack-test.png" alt="ack-테스트" /></p>
+
+<h2 id="마치며">마치며</h2>
+
+<p>ack를 보내게 되면 클라이언트 입장에서 메시지가 전송이 되었는지 확인할 수 있기 때문에 소켓 통신을 테스트할 때 유용하게 사용할 수 있을거 같습니다.
+<br />
+<br />
+그럼 다음 포스트에서 뵙겠습니다! 뾰로롱~
+<br />
+<br />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/frieren1.gif" width="300" height="300" alt="프리렌 움짤1" /></p>
+
+  
+</article>
+
+
+
+  <hr class="dingbat related mb6" />
+
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D9VF7EQWGG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-D9VF7EQWGG');
+</script>
+
+
+
+
+  
+     
+
+
+
+  
+
+  
+  
+
+  
+    
+
+
+  <aside class="related mb4" role="complementary">  <h2 class="hr-bottom">Related Posts</h2>  <ul class="related-posts">                  <li class="h4">  <a href="/github/2025/03/18/GitHub-Actions%EB%A1%9C-CICD-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0.html" class="flip-title"><span>GitHub Actions로 CI/CD 구축하기</span></a>  <time class="faded fine" datetime="2025-03-18T18:03:00+09:00">2025-03-18 18:03</time></li>                        <li class="h4">  <a href="/aws/2025/03/07/AWS-EC2%EC%97%90%EC%84%9C-Nginx%EC%99%80-Certbot%EC%9C%BC%EB%A1%9C-Lets-encrypt-SSL-%EC%9D%B8%EC%A6%9D%EC%84%9C-%EB%B0%9C%EA%B8%89%ED%95%98%EA%B8%B0.html" class="flip-title"><span>AWS EC2에서 Nginx와 Certbot으로 Let's encrypt SSL 인증서 발급하기</span></a>  <time class="faded fine" datetime="2025-03-07T14:31:00+09:00">2025-03-07 14:31</time></li>                        <li class="h4">  <a href="/docker/2024/04/03/Docker-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0-for-macOS.html" class="flip-title"><span>Docker 설치하기 for macOS</span></a>  <time class="faded fine" datetime="2024-04-03T15:50:00+09:00">2024-04-03 15:50</time></li>            </ul></aside>
+
+  
+
+  
+  
+
+  
+    
+<aside class="comments related" role="complementary">
+  <h2 class="hr-bottom">Comments</h2>
+  <!-- 
+ -->
+<script src="https://giscus.app/client.js"
+        data-repo="NicoDora/NicoDora.github.io"
+        data-repo-id="R_kgDOLeHHqA"
+        data-category="Comments"
+        data-category-id="DIC_kwDOLeHHqM4CeGWL"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="top"
+        data-theme="dark_dimmed"
+        data-lang="en"
+        crossorigin="anonymous"
+        async>
+</script>
+</aside>
+
+
+  
+
+  
+<footer class="content" role="contentinfo">
+  <hr/>
+  
+    <p><small class="copyright">© 2024 NicoDora. All rights reserved.
+</small></p>
+  
+  
+    <p><small>Powered by <a class="external" href="https://hydejack.com/">Hydejack</a> v<span id="_version">9.1.6</span></small></p>
+  <hr class="sr-only"/>
+</footer>
+
+
+</main>
+
+  <hy-drawer
+  id="_drawer"
+  class=""
+  side="left"
+  threshold="10"
+  noscroll
+  
+>
+  <header id="_sidebar" class="sidebar" role="banner">
+    
+
+
+
+
+<div class="sidebar-bg sidebar-overlay" style="background-color:rgb(25,55,71);background-image:url(https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/sidebar-bg.jpg)"></div>
+
+    <div class="sidebar-sticky">
+  <div class="sidebar-about">
+    
+      <a class="no-hover" href="/" tabindex="-1">
+        <img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/logo.png" class="avatar" alt="NicoDora" width="120" height="120" loading="lazy" />
+      </a>
+    
+    <a class="sidebar-title" href="/"><h2 class="h2">NicoDora</h2></a>
+    
+    
+      <p class="">
+        keep moving
+
+      </p>
+    
+  </div>
+
+  <nav class="sidebar-nav heading" role="navigation">
+    <span class="sr-only">Navigation:</span>
+<ul>
+  
+    
+      
+      <li>
+        <a
+          id="_drawer--opened"
+          href="/"
+          class="sidebar-nav-item "
+          
+        >
+          Home
+        </a>
+      </li>
+    
+      
+      <li>
+        <a
+          
+          href="/aws/"
+          class="sidebar-nav-item "
+          
+        >
+          AWS
+        </a>
+      </li>
+    
+      
+      <li>
+        <a
+          
+          href="/docker/"
+          class="sidebar-nav-item "
+          
+        >
+          Docker
+        </a>
+      </li>
+    
+      
+      <li>
+        <a
+          
+          href="/github/"
+          class="sidebar-nav-item "
+          
+        >
+          GitHub
+        </a>
+      </li>
+    
+      
+      <li>
+        <a
+          
+          href="/nestjs/"
+          class="sidebar-nav-item "
+          
+        >
+          NestJS
+        </a>
+      </li>
+    
+  
+</ul>
+
+  </nav>
+
+  
+  <div class="sidebar-social">
+    <span class="sr-only">Social</span>
+<ul>
+  
+    
+    
+
+    
+    
+      
+
+
+
+  
+
+  
+  
+  
+  
+
+  
+
+  
+
+  <li>
+    <a href="https://github.com/NicoDora" title="GitHub" class="no-mark-external">
+      <span class="icon-github"></span>
+      <span class="sr-only">GitHub</span>
+    </a>
+  </li>
+
+
+    
+
+    
+    
+  
+</ul>
+
+  </div>
+</div>
+  </header>
+</hy-drawer>
+<hr class="sr-only" hidden />
+
+</hy-push-state>
+
+
+  <!--[if gt IE 10]><!---->
+  <script nomodule>!function(){var t,n=document.createElement("script");!("noModule"in n)&&"onbeforeload"in n&&(t=!1,document.addEventListener("beforeload",function(e){if(e.target===n)t=!0;else if(!e.target.hasAttribute("nomodule")||!t)return;e.preventDefault()},!0),n.type="module",n.src=".",document.head.appendChild(n),n.remove())}();
+</script>
+  <script src="/assets/js/hydejack-9.1.6.js" type="module"></script>
+  <script src="/assets/js/LEGACY-hydejack-9.1.6.js" nomodule defer></script>
+  
+
+  
+  <script>!function(w, d) {
+    w.ga=w.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+
+    /**/
+      if (navigator.CookiesOK) {
+        ga('create', 'G-D9VF7EQWGG', 'auto');
+      } else if (d.cookie.indexOf("hy--cookies-ok=true") > -1) {
+        ga('create', 'G-D9VF7EQWGG', {
+          'storage': 'none',
+          'clientId': localStorage ? localStorage.getItem('ga--client-id') : undefined
+        });
+      } else {
+        ga('create', 'G-D9VF7EQWGG', {
+          'storage': 'none'
+        });
+        ga('set', 'forceSSL', true);
+        ga('set', 'anonymizeIp', true);
+      }
+    /**/
+
+    var pushStateEl = d.getElementById('_pushState');
+    var timeoutId;
+    pushStateEl.addEventListener('hy-push-state-load', function() {
+      w.clearTimeout(timeoutId);
+      timeoutId = w.setTimeout(function() {
+        ga('set', 'page', w.location.pathname);
+        ga('send', 'pageview');
+      }, 500);
+    });
+
+    d.addEventListener('hy--cookies-ok', function () {
+      w.ga(function(tracker) {
+        w.ga("set", "anonymizeIp", undefined);
+        localStorage && localStorage.setItem("ga--client-id", tracker.get("clientId"));
+      });
+    });
+
+    w.loadJSDeferred('https://www.google-analytics.com/analytics.js');
+  }(window, document);</script>
+
+
+<!--<![endif]-->
+  
+
+
+
+<div hidden>
+  
+  <h2 class="sr-only">Templates:</h2>
+
+  <template id="_animation-template">
+  <div class="animation-main fixed-top">
+    <nav id="breadcrumbs" class="screen-only"><ul>
+  
+  
+</ul></nav>
+    <div class="content">
+      <div class="page"></div>
+    </div>
+  </div>
+</template>
+
+  <template id="_loading-template">
+  <div class="loading nav-btn fr">
+    <span class="sr-only">Loading…</span>
+    <span class="icon-cog"></span>
+  </div>
+</template>
+
+  <template id="_error-template">
+  <div class="page">
+    <h2 class="page-title">Error</h2>
+    
+    
+    <p class="lead">
+      Sorry, an error occurred while loading: <a class="this-link" href=""></a>.
+    </p>
+  </div>
+</template>
+
+  <template id="_permalink-template">
+  <a href="#" class="permalink">
+    <span class="sr-only">Permalink</span>
+    <span class="content-hash"></span>
+  </a>
+</template>
+
+  
+    <template id="_cookies-banner-template">
+  <div id="_cookies-banner" class="navbar fixed-bottom CookiesOK">
+    <div class="content">
+      <div class="nav-btn-bar">
+        <small class="faded">
+          <span>This site uses cookies.
+</span>
+          <button id="_cookies-ok" class="btn btn-primary btn-sm">Okay</button>
+        </small>
+      </div>
+    </div>
+  </div>
+</template>
+
+  
+  
+    <template id="_dark-mode-template">
+  <button id="_dark-mode" class="nav-btn no-hover" >
+    <span class="sr-only">Dark Mode</span>
+    <span class="icon-brightness-contrast"></span>
+  </button>
+</template>
+
+  
+  
+    <template id="_search-template">
+  <button id="_search" class="nav-btn no-hover">
+    <label class="sr-only" for="_search-input">Search</label>
+    <span class="icon-search"></span>
+  </button>
+  <div id="_search-box">
+    <div class="nav-btn">
+      <span class="icon-search"></span>
+    </div>
+    <input
+      id="_search-input"
+      type="search"
+      class="form-control form-control-lg nav-btn"
+      placeholder="Build with JEKYLL_ENV=production to enable search."
+    />
+    <button type="reset" class="nav-btn no-hover">
+      <span class="sr-only">Close</span>
+      <span class="icon-cross"></span>
+    </button>
+  </div>
+  <div id="_hits"></div>
+</template>
+
+  
+</div>
+
+
+</body>
+</html>

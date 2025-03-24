@@ -36,19 +36,39 @@ layout: default
     </ul>
   {% endif %}
 
-  {% assign nestjs_posts = site.posts | where:"categories", "nestjs" %}
-  {% if nestjs_posts.size > 0 %}
-    <h2 class="hr-bottom">{{ strings.nestjs | default:"NestJS" }}</h2>
+  {% assign aws_posts = site.posts | where:"categories", "aws" %}
+  {% if aws_posts.size > 0 %}
+    <h2 class="hr-bottom">{{ strings.aws | default:"AWS" }}</h2>
     <ul class="related-posts">
-      {% for post in nestjs_posts limit:5 %}
+      {% for post in aws_posts limit:5 %}
         {% include_cached components/post-list-item.html post=post %}
       {% endfor %}
     </ul>
   {% endif %}
 
-  {% assign nestjs_posts = site.posts | where:"categories", "docker" %}
+  {% assign docker_posts = site.posts | where:"categories", "docker" %}
+  {% if docker_posts.size > 0 %}
+    <h2 class="hr-bottom">{{ strings.docker | default:"Docker" }}</h2>
+    <ul class="related-posts">
+      {% for post in docker_posts limit:5 %}
+        {% include_cached components/post-list-item.html post=post %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% assign github_posts = site.posts | where:"categories", "github" %}
+  {% if github_posts.size > 0 %}
+    <h2 class="hr-bottom">{{ strings.github | default:"GitHub" }}</h2>
+    <ul class="related-posts">
+      {% for post in github_posts limit:5 %}
+        {% include_cached components/post-list-item.html post=post %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% assign nestjs_posts = site.posts | where:"categories", "nestjs" %}
   {% if nestjs_posts.size > 0 %}
-    <h2 class="hr-bottom">{{ strings.nestjs | default:"Docker" }}</h2>
+    <h2 class="hr-bottom">{{ strings.nestjs | default:"NestJS" }}</h2>
     <ul class="related-posts">
       {% for post in nestjs_posts limit:5 %}
         {% include_cached components/post-list-item.html post=post %}

@@ -1,4 +1,146 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ko"><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="ko" /><updated>2025-03-18T18:03:57+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">NicoDora</title><subtitle>백엔드 개발을 중심으로 포스트 하고 있는 NicoDora의 블로그입니다.</subtitle><author><name>NicoDora</name></author><entry><title type="html">GitHub Actions로 CI/CD 구축하기</title><link href="http://localhost:4000/github/2025/03/18/GitHub-Actions%EB%A1%9C-CICD-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0.html" rel="alternate" type="text/html" title="GitHub Actions로 CI/CD 구축하기" /><published>2025-03-18T18:03:00+09:00</published><updated>2025-03-18T18:03:00+09:00</updated><id>http://localhost:4000/github/2025/03/18/GitHub-Actions%EB%A1%9C-CICD-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0</id><content type="html" xml:base="http://localhost:4000/github/2025/03/18/GitHub-Actions%EB%A1%9C-CICD-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0.html"><![CDATA[<ol id="markdown-toc">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ko"><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="ko" /><updated>2025-03-24T19:55:48+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">NicoDora</title><subtitle>백엔드 개발을 중심으로 포스트 하고 있는 NicoDora의 블로그입니다.</subtitle><author><name>NicoDora</name></author><entry><title type="html">[Nest.js] websocket 클라이언트로 ack 보내기</title><link href="http://localhost:4000/nestjs/2025/03/24/Nest.js-websocket-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8%EB%A1%9C-ack-%EB%B3%B4%EB%82%B4%EA%B8%B0.html" rel="alternate" type="text/html" title="[Nest.js] websocket 클라이언트로 ack 보내기" /><published>2025-03-24T19:55:00+09:00</published><updated>2025-03-24T19:55:00+09:00</updated><id>http://localhost:4000/nestjs/2025/03/24/%5BNest.js%5D-websocket-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8%EB%A1%9C-ack-%EB%B3%B4%EB%82%B4%EA%B8%B0</id><content type="html" xml:base="http://localhost:4000/nestjs/2025/03/24/Nest.js-websocket-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8%EB%A1%9C-ack-%EB%B3%B4%EB%82%B4%EA%B8%B0.html"><![CDATA[<ol id="markdown-toc">
+  <li><a href="#문제" id="markdown-toc-문제">문제</a></li>
+  <li><a href="#해결방법-ack-보내기" id="markdown-toc-해결방법-ack-보내기">해결방법 (ack 보내기)</a></li>
+  <li><a href="#마치며" id="markdown-toc-마치며">마치며</a></li>
+</ol>
+
+<h2 id="문제">문제</h2>
+
+<p>프로젝트에서 웹소켓을 사용해서 1대1 채팅을 구현하고 있었는데 일단 코드는 이렇게 구현했었는데요.</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">export</span> <span class="kd">class</span> <span class="nc">ChatMessageGateway</span>
+  <span class="k">implements</span> <span class="nx">OnGatewayConnection</span><span class="p">,</span> <span class="nx">OnGatewayDisconnect</span>
+<span class="p">{</span>
+  <span class="nf">constructor</span><span class="p">(</span>
+    <span class="p">@</span><span class="nd">Inject</span><span class="p">(</span><span class="nx">CHAT_ROOM_REPOSITORY_DI_TOKEN</span><span class="p">)</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">chatRoomRepository</span><span class="p">:</span> <span class="nx">ChatRoomRepositoryPort</span><span class="p">,</span>
+    <span class="p">@</span><span class="nd">Inject</span><span class="p">(</span><span class="nx">APP_JWT_SERVICE_DI_TOKEN</span><span class="p">)</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">appJwtService</span><span class="p">:</span> <span class="nx">AppJwtServicePort</span><span class="p">,</span>
+    <span class="p">@</span><span class="nd">Inject</span><span class="p">(</span><span class="nx">WINSTON_MODULE_NEST_PROVIDER</span><span class="p">)</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">logger</span><span class="p">:</span> <span class="nx">Logger</span><span class="p">,</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">commandBus</span><span class="p">:</span> <span class="nx">CommandBus</span><span class="p">,</span>
+  <span class="p">)</span> <span class="p">{}</span>
+
+  <span class="p">@</span><span class="nd">WebSocketServer</span><span class="p">()</span>
+  <span class="nx">server</span><span class="p">:</span> <span class="nx">Server</span><span class="p">;</span>
+
+  <span class="k">async</span> <span class="nf">handleConnection</span><span class="p">(</span><span class="nx">socket</span><span class="p">:</span> <span class="nx">SocketWithUserDto</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">...</span>
+  <span class="p">}</span>
+
+  <span class="k">async</span> <span class="nf">handleDisconnect</span><span class="p">(</span><span class="nx">socket</span><span class="p">:</span> <span class="nx">SocketWithUserDto</span><span class="p">)</span> <span class="p">{</span>
+    <span class="p">...</span>
+  <span class="p">}</span>
+
+  <span class="p">@</span><span class="nd">UsePipes</span><span class="p">(</span><span class="nx">customValidationPipe</span><span class="p">)</span>
+  <span class="p">@</span><span class="nd">UseFilters</span><span class="p">(</span><span class="nx">SocketCatchHttpExceptionFilter</span><span class="p">)</span>
+  <span class="p">@</span><span class="nd">SubscribeMessage</span><span class="p">(</span><span class="dl">'</span><span class="s1">enter_chat_room</span><span class="dl">'</span><span class="p">)</span>
+  <span class="k">async</span> <span class="nf">enterChat</span><span class="p">(</span>
+    <span class="p">@</span><span class="nd">MessageBody</span><span class="p">()</span> <span class="nx">data</span><span class="p">:</span> <span class="nx">EnterChatDto</span><span class="p">,</span>
+    <span class="p">@</span><span class="nd">ConnectedSocket</span><span class="p">()</span> <span class="nx">socket</span><span class="p">:</span> <span class="nx">SocketWithUserDto</span><span class="p">,</span>
+  <span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">roomId</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+
+    <span class="kd">const</span> <span class="nx">chatRoom</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">chatRoomRepository</span><span class="p">.</span><span class="nf">findOneById</span><span class="p">(</span><span class="nx">roomId</span><span class="p">);</span>
+
+    <span class="k">if </span><span class="p">(</span><span class="nf">isNil</span><span class="p">(</span><span class="nx">chatRoom</span><span class="p">))</span> <span class="p">{</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nf">error</span><span class="p">(</span>
+        <span class="s2">`[Socket] enter_chat_room failed: Room </span><span class="p">${</span><span class="nx">roomId</span><span class="p">}</span><span class="s2"> does not exist`</span><span class="p">,</span>
+      <span class="p">);</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nc">WsException</span><span class="p">(</span><span class="dl">'</span><span class="s1">Does not exist room</span><span class="dl">'</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="nx">socket</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="nc">String</span><span class="p">(</span><span class="nx">roomId</span><span class="p">));</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="s2">`[Socket] User </span><span class="p">${</span><span class="nx">socket</span><span class="p">.</span><span class="nx">user</span><span class="p">.</span><span class="nx">sub</span><span class="p">}</span><span class="s2"> joined room </span><span class="p">${</span><span class="nx">roomId</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="p">@</span><span class="nd">UsePipes</span><span class="p">(</span><span class="nx">customValidationPipe</span><span class="p">)</span>
+  <span class="p">@</span><span class="nd">UseFilters</span><span class="p">(</span><span class="nx">SocketCatchHttpExceptionFilter</span><span class="p">)</span>
+  <span class="p">@</span><span class="nd">SubscribeMessage</span><span class="p">(</span><span class="dl">'</span><span class="s1">send_message</span><span class="dl">'</span><span class="p">)</span>
+  <span class="k">async</span> <span class="nf">sendMessage</span><span class="p">(</span>
+    <span class="p">@</span><span class="nd">MessageBody</span><span class="p">()</span> <span class="nx">data</span><span class="p">:</span> <span class="nx">CreateChatMessageDto</span><span class="p">,</span>
+    <span class="p">@</span><span class="nd">ConnectedSocket</span><span class="p">()</span> <span class="nx">socket</span><span class="p">:</span> <span class="nx">SocketWithUserDto</span><span class="p">,</span>
+  <span class="p">)</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">roomId</span><span class="p">,</span> <span class="nx">message</span><span class="p">,</span> <span class="nx">blogPostUrl</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">data</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="na">sub</span><span class="p">:</span> <span class="nx">userId</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">socket</span><span class="p">.</span><span class="nx">user</span><span class="p">;</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span>
+      <span class="s2">`[Socket] Received message from </span><span class="p">${</span><span class="nx">userId</span><span class="p">}</span><span class="s2"> in room </span><span class="p">${</span><span class="nx">roomId</span><span class="p">}</span><span class="s2">: </span><span class="p">${</span><span class="nx">message</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+    <span class="p">);</span>
+
+    <span class="kd">const</span> <span class="nx">command</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">CreateChatMessageCommand</span><span class="p">({</span>
+      <span class="na">roomId</span><span class="p">:</span> <span class="nc">BigInt</span><span class="p">(</span><span class="nx">roomId</span><span class="p">),</span>
+      <span class="na">userId</span><span class="p">:</span> <span class="nc">BigInt</span><span class="p">(</span><span class="nx">userId</span><span class="p">),</span>
+      <span class="nx">message</span><span class="p">,</span>
+      <span class="nx">blogPostUrl</span><span class="p">,</span>
+    <span class="p">});</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span>
+      <span class="s2">`[Socket] Sending message from </span><span class="p">${</span><span class="nx">userId</span><span class="p">}</span><span class="s2"> in room </span><span class="p">${</span><span class="nx">roomId</span><span class="p">}</span><span class="s2">: </span><span class="p">${</span><span class="nx">message</span><span class="p">}</span><span class="s2">, </span><span class="p">${</span><span class="nx">blogPostUrl</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+    <span class="p">);</span>
+
+    <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">commandBus</span><span class="p">.</span><span class="nx">execute</span><span class="o">&lt;</span><span class="nx">CreateChatMessageCommand</span><span class="p">,</span> <span class="k">void</span><span class="o">&gt;</span><span class="p">(</span><span class="nx">command</span><span class="p">);</span>
+
+    <span class="nx">socket</span>
+      <span class="p">.</span><span class="nf">to</span><span class="p">(</span><span class="nc">String</span><span class="p">(</span><span class="nx">roomId</span><span class="p">))</span>
+      <span class="p">.</span><span class="nf">emit</span><span class="p">(</span><span class="dl">'</span><span class="s1">receive_message</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span> <span class="na">senderId</span><span class="p">:</span> <span class="nx">userId</span><span class="p">,</span> <span class="nx">message</span><span class="p">,</span> <span class="nx">blogPostUrl</span> <span class="p">});</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span>
+      <span class="s2">`[Socket] Message emitted to room </span><span class="p">${</span><span class="nx">roomId</span><span class="p">}</span><span class="s2"> from </span><span class="p">${</span><span class="nx">userId</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p><br />
+<br />
+postman에서 <code class="language-plaintext highlighter-rouge">enter_chat_room</code> 이벤트와 <code class="language-plaintext highlighter-rouge">send_message</code> 이벤트를 테스트 해보면 결과는 아래와 같습니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2025-03-24-Nestjs-websocket-클라이언트로-ack-보내기/enter-chat-room-test.png" alt="enter-chat-room-테스트" />
+<br />
+<br />
+<img src="/assets/img/nestjs/2025-03-24-Nestjs-websocket-클라이언트로-ack-보내기/send-message-test.png" alt="send-message-테스트" />
+<br />
+<br />
+postman에서는 이벤트 결과를 확인할 수 있지만 실제로 클라이언트에서는 이벤트 결과를 확인하기 힘들다고 하더라구요. 소켓 통신 테스트 과정에서 <code class="language-plaintext highlighter-rouge">send_message</code> 이벤트를 보냈을 때 메시지가 전송되지 않는 문제가 있었는데 이게 채팅방에 입장이 안된건지, 진짜 메시지가 전송이 안된건지 확인하기 힘들었습니다.
+<br />
+<br />
+그래서 웹소켓에서도 http 요청처럼 응답을 보낼 수 있는 방법이 있나 찾아보다가 ack(acknowledgement)를 응답으로 보내는 방법을 발견하게 되었습니다.</p>
+
+<h2 id="해결방법-ack-보내기">해결방법 (ack 보내기)</h2>
+
+<p>ack를 보내게 되면 클라이언트에서 callback 함수를 통해서 응답을 받을 수 있습니다.<br />
+ack를 보내는 방법은 생각보다 간단했습니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2025-03-24-Nestjs-websocket-클라이언트로-ack-보내기/add-ack.png" alt="ack-보내기" />
+<br />
+<br />
+그냥 이렇게 이벤트 함수 안에 return값을 추가해주면 됩니다!
+<br />
+<br />
+클라이언트에선 callback 함수를 통해서 ack를 확인할 수 있는데, 일단 코드를 커밋하기 전에 postman에서 테스트를 해봐야겠죠?<br />
+postman에서 ack를 받는 방법도 엄청 간단합니다. 그냥 <code class="language-plaintext highlighter-rouge">Ack</code> 버튼을 눌러 활성화해주면 됩니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2025-03-24-Nestjs-websocket-클라이언트로-ack-보내기/postman-ack-check.png" alt="postman-ack-테스트" />
+<br />
+<br />
+이제 postman에서 <code class="language-plaintext highlighter-rouge">enter_chat_room</code> 이벤트를 테스트 해보면 아래와 같이 ack를 받을 수 있습니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2025-03-24-Nestjs-websocket-클라이언트로-ack-보내기/ack-test.png" alt="ack-테스트" /></p>
+
+<h2 id="마치며">마치며</h2>
+
+<p>ack를 보내게 되면 클라이언트 입장에서 메시지가 전송이 되었는지 확인할 수 있기 때문에 소켓 통신을 테스트할 때 유용하게 사용할 수 있을거 같습니다.
+<br />
+<br />
+그럼 다음 포스트에서 뵙겠습니다! 뾰로롱~
+<br />
+<br />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/frieren1.gif" width="300" height="300" alt="프리렌 움짤1" /></p>]]></content><author><name>NicoDora</name></author><category term="nestjs" /><summary type="html"><![CDATA[NestJS의 websocket 라이브러리를 사용해 웹소켓을 구현할 때 클라이언트로 ack를 보내는 방법을 알아봅시다.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/img/nestjs/2025-03-24-Nestjs-websocket-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8%EB%A1%9C-ack-%EB%B3%B4%EB%82%B4%EA%B8%B0/send-ack.png" /><media:content medium="image" url="http://localhost:4000/assets/img/nestjs/2025-03-24-Nestjs-websocket-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8%EB%A1%9C-ack-%EB%B3%B4%EB%82%B4%EA%B8%B0/send-ack.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">GitHub Actions로 CI/CD 구축하기</title><link href="http://localhost:4000/github/2025/03/18/GitHub-Actions%EB%A1%9C-CICD-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0.html" rel="alternate" type="text/html" title="GitHub Actions로 CI/CD 구축하기" /><published>2025-03-18T18:03:00+09:00</published><updated>2025-03-18T18:03:00+09:00</updated><id>http://localhost:4000/github/2025/03/18/GitHub-Actions%EB%A1%9C-CICD-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0</id><content type="html" xml:base="http://localhost:4000/github/2025/03/18/GitHub-Actions%EB%A1%9C-CICD-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0.html"><![CDATA[<ol id="markdown-toc">
   <li><a href="#지금까지의-이야기" id="markdown-toc-지금까지의-이야기">지금까지의 이야기</a></li>
   <li><a href="#cicd란" id="markdown-toc-cicd란">CI/CD란?</a></li>
   <li><a href="#actions-secrets-설정하기" id="markdown-toc-actions-secrets-설정하기">Actions Secrets 설정하기</a></li>
@@ -46,7 +188,7 @@ GitHub에서는 이러한 민감한 정보를 <code class="language-plaintext hi
 GitHub Secrets는 GitHub repository의 <code class="language-plaintext highlighter-rouge">Settings</code> &gt; <code class="language-plaintext highlighter-rouge">Secrets and variables</code> &gt; <code class="language-plaintext highlighter-rouge">Actions</code>에서 설정할 수 있습니다.
 <br />
 <br />
-<img src="/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets.png" alt="GitHub Secrets 접속" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets.png" alt="GitHub Secrets 접속" />
 <br />
 <br /></p>
 
@@ -82,14 +224,14 @@ GitHub Secrets는 GitHub repository의 <code class="language-plaintext highlight
 <code class="language-plaintext highlighter-rouge">Manage environment secrets</code> 버튼을 클릭합니다.
 <br />
 <br />
-<img src="/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-setting.png" alt="GitHub Secrets 설정" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-setting.png" alt="GitHub Secrets 설정" />
 <br />
 <br />
 <br />
 <code class="language-plaintext highlighter-rouge">New environment</code> 를 클릭하여 새 Environments를 생성합니다.
 <br />
 <br />
-<img src="/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment.png" alt="GitHub Secrets New Environment" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment.png" alt="GitHub Secrets New Environment" />
 <br />
 <br />
 <br />
@@ -97,7 +239,7 @@ Environments에 대한 이름을 설정할 수 있는데, 저는 develop 브랜�
 입력 후 <code class="language-plaintext highlighter-rouge">Configure environment</code> 버튼을 클릭합니다.
 <br />
 <br />
-<img src="/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-name.png" alt="GitHub Secrets New Environment Name" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-name.png" alt="GitHub Secrets New Environment Name" />
 <br />
 <br />
 <br />
@@ -105,7 +247,7 @@ Environments가 생성되면 아래와 같은 화면이 보이게 됩니다.<br 
 여기서 배포 보호 규칙을 설정할 수도 있지만 이 부분은 스킵하겠습니다. <code class="language-plaintext highlighter-rouge">Deployment branches and tags</code>에서 <code class="language-plaintext highlighter-rouge">Select branches and tags</code>로 바꿔 배포할 브랜치를 설정해보겠습니다.
 <br />
 <br />
-<img src="/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-setting.png" alt="GitHub Secrets New Environment Setting" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-setting.png" alt="GitHub Secrets New Environment Setting" />
 <br />
 <br />
 <br />
@@ -113,10 +255,10 @@ Environments가 생성되면 아래와 같은 화면이 보이게 됩니다.<br 
 저는 <code class="language-plaintext highlighter-rouge">develop</code> 브랜치를 추가하겠습니다.
 <br />
 <br />
-<img src="/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-setting2.png" alt="GitHub Secrets New Environment Setting2" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-setting2.png" alt="GitHub Secrets New Environment Setting2" />
 <br />
 <br />
-<img src="/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-setting3.png" alt="GitHub Secrets New Environment Setting3" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-setting3.png" alt="GitHub Secrets New Environment Setting3" />
 <br />
 <br />
 <br />
@@ -124,7 +266,7 @@ Environments가 생성되면 아래와 같은 화면이 보이게 됩니다.<br 
 바로 아래 <code class="language-plaintext highlighter-rouge">Environment secrets</code> 탭에서 <code class="language-plaintext highlighter-rouge">New environment secret</code> 버튼을 클릭합니다.
 <br />
 <br />
-<img src="/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-secret.png" alt="GitHub Secrets New Environment Secret" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-secret.png" alt="GitHub Secrets New Environment Secret" />
 <br />
 <br />
 <br />
@@ -133,7 +275,7 @@ Environments가 생성되면 아래와 같은 화면이 보이게 됩니다.<br 
 저는 <code class="language-plaintext highlighter-rouge">DOCKER_USERNAME</code>, <code class="language-plaintext highlighter-rouge">DOCKER_PASSWORD</code>, <code class="language-plaintext highlighter-rouge">EC2_HOST</code>, <code class="language-plaintext highlighter-rouge">EC2_USER</code>, <code class="language-plaintext highlighter-rouge">SSH_PRIVATE_KEY</code>를 추가하겠습니다.
 <br />
 <br />
-<img src="/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-secret-setting.png" alt="GitHub Secrets New Environment Secret Setting" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-secrets-new-environment-secret-setting.png" alt="GitHub Secrets New Environment Secret Setting" />
 <br />
 <br />
 <br />
@@ -147,7 +289,7 @@ macOS에서는 <code class="language-plaintext highlighter-rouge">cat</code> 명
 <span class="nv">$ </span><span class="nb">cat</span> ~/.ssh/your-key.pem
 </code></pre></div></div>
 
-<p><img src="/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/ec2-ssh-private-key.png" alt="ec2 ssh private key" />
+<p><img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/ec2-ssh-private-key.png" alt="ec2 ssh private key" />
 <br />
 📍 <b>ssh 키를 복사할 때는 반드시 Header와 Footer를 포함해서 복사해야 합니다!</b></p>
 
@@ -247,7 +389,7 @@ GitHub Actions는 <code class="language-plaintext highlighter-rouge">.github/wor
 <p>Actions 탭에서 작성한 workflow 파일을 클릭해 보면 CI/CD가 실행되는 것을 확인할 수 있습니다.
 <br />
 <br />
-<img src="/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-actions-run.png" alt="GitHub Actions 실행 확인" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-actions-run.png" alt="GitHub Actions 실행 확인" />
 <br />
 <br />
 <br />
@@ -255,7 +397,7 @@ build 탭에 들어가보면 각 단계별로 자세한 로그를 확인할 수 
 아래와 같이 ✅ 표시가 뜨면 성공적으로 실행된 것입니다!
 <br />
 <br />
-<img src="/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-actions-run2.png" alt="GitHub Actions 실행 확인2" /></p>
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-actions-run2.png" alt="GitHub Actions 실행 확인2" /></p>
 
 <h2 id="마치며">마치며</h2>
 
@@ -265,7 +407,7 @@ build 탭에 들어가보면 각 단계별로 자세한 로그를 확인할 수 
 <p>그럼 다음 포스트에서 뵙겠습니다! 뾰로롱~
 <br />
 <br />
-<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/frieren1.gif" width="300" height="300" alt="프리렌 움짤1" /></p>]]></content><author><name>NicoDora</name></author><category term="github" /><summary type="html"><![CDATA[GitHub Actions를 사용하여 CI/CD를 구축하는 방법에 대해 알아보겠습니다.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/assets/img/github/2025-03-18-GitHub-Actions%EB%A1%9C-CICD-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0/github-actions.png" /><media:content medium="image" url="http://localhost:4000/assets/img/github/2025-03-18-GitHub-Actions%EB%A1%9C-CICD-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0/github-actions.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">AWS EC2에서 Nginx와 Certbot으로 Let’s encrypt SSL 인증서 발급하기</title><link href="http://localhost:4000/aws/2025/03/07/AWS-EC2%EC%97%90%EC%84%9C-Nginx%EC%99%80-Certbot%EC%9C%BC%EB%A1%9C-Lets-encrypt-SSL-%EC%9D%B8%EC%A6%9D%EC%84%9C-%EB%B0%9C%EA%B8%89%ED%95%98%EA%B8%B0.html" rel="alternate" type="text/html" title="AWS EC2에서 Nginx와 Certbot으로 Let’s encrypt SSL 인증서 발급하기" /><published>2025-03-07T14:31:00+09:00</published><updated>2025-03-07T14:31:00+09:00</updated><id>http://localhost:4000/aws/2025/03/07/AWS-EC2%EC%97%90%EC%84%9C-Nginx%EC%99%80-Certbot%EC%9C%BC%EB%A1%9C-Lets-encrypt-SSL-%EC%9D%B8%EC%A6%9D%EC%84%9C-%EB%B0%9C%EA%B8%89%ED%95%98%EA%B8%B0</id><content type="html" xml:base="http://localhost:4000/aws/2025/03/07/AWS-EC2%EC%97%90%EC%84%9C-Nginx%EC%99%80-Certbot%EC%9C%BC%EB%A1%9C-Lets-encrypt-SSL-%EC%9D%B8%EC%A6%9D%EC%84%9C-%EB%B0%9C%EA%B8%89%ED%95%98%EA%B8%B0.html"><![CDATA[<ol id="markdown-toc">
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/frieren1.gif" width="300" height="300" alt="프리렌 움짤1" /></p>]]></content><author><name>NicoDora</name></author><category term="github" /><summary type="html"><![CDATA[GitHub Actions를 사용하여 CI/CD를 구축하는 방법에 대해 알아보겠습니다.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-actions.png" /><media:content medium="image" url="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-actions.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">AWS EC2에서 Nginx와 Certbot으로 Let’s encrypt SSL 인증서 발급하기</title><link href="http://localhost:4000/aws/2025/03/07/AWS-EC2%EC%97%90%EC%84%9C-Nginx%EC%99%80-Certbot%EC%9C%BC%EB%A1%9C-Lets-encrypt-SSL-%EC%9D%B8%EC%A6%9D%EC%84%9C-%EB%B0%9C%EA%B8%89%ED%95%98%EA%B8%B0.html" rel="alternate" type="text/html" title="AWS EC2에서 Nginx와 Certbot으로 Let’s encrypt SSL 인증서 발급하기" /><published>2025-03-07T14:31:00+09:00</published><updated>2025-03-07T14:31:00+09:00</updated><id>http://localhost:4000/aws/2025/03/07/AWS-EC2%EC%97%90%EC%84%9C-Nginx%EC%99%80-Certbot%EC%9C%BC%EB%A1%9C-Lets-encrypt-SSL-%EC%9D%B8%EC%A6%9D%EC%84%9C-%EB%B0%9C%EA%B8%89%ED%95%98%EA%B8%B0</id><content type="html" xml:base="http://localhost:4000/aws/2025/03/07/AWS-EC2%EC%97%90%EC%84%9C-Nginx%EC%99%80-Certbot%EC%9C%BC%EB%A1%9C-Lets-encrypt-SSL-%EC%9D%B8%EC%A6%9D%EC%84%9C-%EB%B0%9C%EA%B8%89%ED%95%98%EA%B8%B0.html"><![CDATA[<ol id="markdown-toc">
   <li><a href="#들어가기-전에" id="markdown-toc-들어가기-전에">들어가기 전에</a></li>
   <li><a href="#사전-준비-환경" id="markdown-toc-사전-준비-환경">사전 준비 환경</a></li>
   <li><a href="#dns-체크" id="markdown-toc-dns-체크">DNS 체크</a></li>
