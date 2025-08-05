@@ -248,7 +248,7 @@ build 탭에 들어가보면 각 단계별로 자세한 로그를 확인할 수 
 이전에 수동으로 배포할 때는 약 5분정도 소요되었지만, GitHub Actions를 사용하여 CI/CD를 구축하니 평균 2분 10초 정도에 배포가 완료되는 모습입니다. 결과적으로 이전 수동 배포에 비해 53% 정도의 시간을 단축할 수 있었습니다.
 <br>
 <br>
-![GitHub Actions 실행 확인3](/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-actions-run3.png)
+![GitHub Actions 실행 확인3](https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-actions-run3.png)
 
 ## 마치며
 
