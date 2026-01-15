@@ -1,4 +1,838 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ko"><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="ko" /><updated>2025-08-05T15:02:56+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">NicoDora</title><subtitle>백엔드 개발을 중심으로 포스트 하고 있는 NicoDora의 블로그입니다.</subtitle><author><name>NicoDora</name></author><entry><title type="html">[Nest.js] websocket 클라이언트로 ack 보내기</title><link href="http://localhost:4000/nestjs/2025/03/24/Nest.js-websocket-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8%EB%A1%9C-ack-%EB%B3%B4%EB%82%B4%EA%B8%B0.html" rel="alternate" type="text/html" title="[Nest.js] websocket 클라이언트로 ack 보내기" /><published>2025-03-24T20:00:00+09:00</published><updated>2025-03-24T20:00:00+09:00</updated><id>http://localhost:4000/nestjs/2025/03/24/%5BNest.js%5D-websocket-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8%EB%A1%9C-ack-%EB%B3%B4%EB%82%B4%EA%B8%B0</id><content type="html" xml:base="http://localhost:4000/nestjs/2025/03/24/Nest.js-websocket-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8%EB%A1%9C-ack-%EB%B3%B4%EB%82%B4%EA%B8%B0.html"><![CDATA[<ol id="markdown-toc">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ko"><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="ko" /><updated>2026-01-15T20:09:48+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">NicoDora</title><subtitle>백엔드 개발을 중심으로 포스트 하고 있는 NicoDora의 블로그입니다.</subtitle><author><name>NicoDora</name></author><entry><title type="html">[Nest.js] Google OAuth2.0 (OIDC) 로그인 구현하기</title><link href="http://localhost:4000/nestjs/Nest.js-Google-OAuth20-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0/" rel="alternate" type="text/html" title="[Nest.js] Google OAuth2.0 (OIDC) 로그인 구현하기" /><published>2026-01-15T20:03:00+09:00</published><updated>2026-01-15T20:03:00+09:00</updated><id>http://localhost:4000/nestjs/%5BNest.js%5D-Google-OAuth20-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0</id><content type="html" xml:base="http://localhost:4000/nestjs/Nest.js-Google-OAuth20-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0/"><![CDATA[<ol id="markdown-toc">
+  <li><a href="#oauth20과-oidc의-차이점" id="markdown-toc-oauth20과-oidc의-차이점">OAuth2.0과 OIDC의 차이점</a></li>
+  <li><a href="#oidc-인증-흐름-이해하기" id="markdown-toc-oidc-인증-흐름-이해하기">OIDC 인증 흐름 이해하기</a></li>
+  <li><a href="#google-cloud-console에서-oauth-20-클라이언트-설정하기" id="markdown-toc-google-cloud-console에서-oauth-20-클라이언트-설정하기">Google Cloud Console에서 OAuth 2.0 클라이언트 설정하기</a></li>
+  <li><a href="#백엔드-코드-작성하기" id="markdown-toc-백엔드-코드-작성하기">백엔드 코드 작성하기</a>    <ol>
+      <li><a href="#get-authgoogle-api-구현하기" id="markdown-toc-get-authgoogle-api-구현하기">GET /auth/google API 구현하기</a></li>
+      <li><a href="#state와-nonce의-역할" id="markdown-toc-state와-nonce의-역할">State와 Nonce의 역할</a></li>
+      <li><a href="#post-authgoogleauthenticate-api-구현하기" id="markdown-toc-post-authgoogleauthenticate-api-구현하기">POST /auth/google/authenticate API 구현하기</a></li>
+    </ol>
+  </li>
+  <li><a href="#프론트엔드에서-필요한-작업" id="markdown-toc-프론트엔드에서-필요한-작업">프론트엔드에서 필요한 작업</a></li>
+  <li><a href="#구글-로그인-테스트하기" id="markdown-toc-구글-로그인-테스트하기">구글 로그인 테스트하기</a></li>
+  <li><a href="#마치며" id="markdown-toc-마치며">마치며</a>    <ol>
+      <li><a href="#state-값-저장방식-쿠키-vs-서버" id="markdown-toc-state-값-저장방식-쿠키-vs-서버">state 값 저장방식 (쿠키 vs 서버)</a></li>
+      <li><a href="#인가-코드-콜백은-어디로-클라이언트-vs-서버" id="markdown-toc-인가-코드-콜백은-어디로-클라이언트-vs-서버">인가 코드 콜백은 어디로? (클라이언트 vs 서버)</a></li>
+    </ol>
+  </li>
+  <li><a href="#참고-자료" id="markdown-toc-참고-자료">참고 자료</a></li>
+</ol>
+
+<h2 id="oauth20과-oidc의-차이점">OAuth2.0과 OIDC의 차이점</h2>
+
+<p>OAuth2.0을 사용하여 구글 로그인을 구현하기 전에, 많은 분들이 혼동하는 OAuth2.0과 OIDC(OpenID Connect)의 차이점에 대해 간단히 짚고 넘어가려 합니다.
+<br />
+<br />
+<strong>OAuth2.0</strong>은 권한 부여 프레임워크로, 사용자가 애플리케이션에 특정 리소스에 대한 접근 권한을 부여할 수 있도록 합니다. 반면, <strong>OIDC(OpenID Connect)</strong>는 OAuth2.0 위에 구축된 인증 프로토콜로, 사용자의 신원을 확인하고 인증 정보를 제공하는 데 중점을 둡니다.
+<br />
+<br /></p>
+<ul>
+  <li><b>OAuth2.0 - 권한 부여(Authorization)</b>
+    <ul>
+      <li>사용자가 애플리케이션에 특정 리소스에 대한 접근 권한을 부여.</li>
+      <li>예) 사용자가 애플리케이션에 자신의 구글 드라이브 파일에 접근할 수 있는 권한을 부여.</li>
+    </ul>
+  </li>
+  <li><b>OIDC (OpenID Connect) - 인증(Authentication)</b>
+    <ul>
+      <li>사용자의 신원을 확인하고 인증 정보를 제공.</li>
+      <li>예) 사용자가 애플리케이션에 구글 계정으로 로그인.</li>
+    </ul>
+  </li>
+</ul>
+
+<p><br />
+몇몇 개발자분들의 글을 보면 ‘OAuth2.0을 사용하여 소셜 로그인을 구현했다’ 라고 하는데 물론 OAuth2.0을 사용하여 로그인을 구현할 수 있지만, OAuth2.0을 사용하여 로그인을 구현하면 아래와 같은 문제가 발생할 수 있습니다.
+<br />
+<br />
+<b>OAuth 인증 시 주요 문제점</b></p>
+<ol>
+  <li><b>액세스 토큰을 인증 증거로 오해</b>
+    <ul>
+      <li>액세스 토큰은 보호된 리소스에 접근하기 위한 권한 부여 수단일 뿐, 그 자체로 사용자 인증을 증명하지는 않습니다.<br />
+클라이언트는 토큰의 내용을 알 수 없으므로 사용자 정보를 직접 유도하기 어렵습니다.<br />
+(쉬운 예시로, 놀이공원에 입장하는 티켓(액세스 토큰)을 통해 놀이공원(리소스 서버)에 들어갈 수는 있지만, 티켓만으로 그 사람이 누구인지(인증)를 알 수 없는 것과 같습니다.)</li>
+    </ul>
+  </li>
+  <li><b>API 접근 성공을 인증으로 간주</b>
+    <ul>
+      <li>유효한 토큰으로 사용자 정보를 가져올 수 있다고 해서 사용자가 현재 로그인 상태라고 단정할 수 없습니다.<br />
+리프레시 토큰이나 권한 위임을 통해 사용자 없이도 토큰 발급이 가능하며, 사용자가 떠난 후에도 토큰은 한동안 유효하기 때문입니다.</li>
+    </ul>
+  </li>
+</ol>
+
+<blockquote>
+  <p><a href="https://oauth.net/articles/authentication/#:~:text=Common%20pitfalls%20for%20authentication%20using%20OAuth">OAuth 공식 문서</a>에서 인증에 OAuth를 사용하는 것을 권장하지 않는 이유에 대해 자세히 살펴볼 수 있습니다.</p>
+</blockquote>
+
+<p><br />
+OAuth2.0과 OIDC 각각 사용자 정보를 얻는 흐름을 간단히 비교해보면 다음과 같습니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-vs-oidc.png" alt="OAuth2.0 vs OIDC" />
+<br />
+<br />
+OIDC의 경우, OAuth2.0의 흐름에 ID 토큰이 추가되어 사용자의 신원을 확인할 수 있도록 합니다. ID 토큰은 JWT(JSON Web Token) 형식으로 발급되며, 사용자의 정보(예: 이메일, 이름 등)를 포함하고 있습니다.
+<br />
+<br />
+ID 토큰을 통해 사용자 정보를 얻을 수 있기 때문에 사용자 정보를 가져오기 위한 별도의 API 호출이 필요하지 않아 네트워크 비용을 줄일 수 있고 더 안전하게 인증을 처리할 수 있습니다.
+<br />
+<br />
+따라서 이번 포스팅에서는 OIDC를 사용하여 구글 로그인을 구현하는 방법에 대해 알아보겠습니다.</p>
+
+<h2 id="oidc-인증-흐름-이해하기">OIDC 인증 흐름 이해하기</h2>
+
+<p>다음은 OIDC 인증 흐름을 나타낸 다이어그램입니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oidc-flow.png" alt="OIDC 인증 흐름" width="400" />
+<br />
+<br /></p>
+<details>
+<summary><b>OIDC 인증 흐름 설명 보기</b></summary>
+<div>
+    <ol>
+      <li><b>로그인 요청</b>
+        <ul>
+          <li>사용자가 ‘구글 로그인’ 버튼을 클릭합니다.</li>
+          <li>클라이언트는 서버에 로그인을 요청하고, 서버는 사용자를 구글의 인증 페이지로 리다이렉트(Redirect)시킵니다.\
+이때 scope 파라미터에 반드시 <strong><code class="language-plaintext highlighter-rouge">openid</code></strong>를 포함해야 하며, 추가로 <code class="language-plaintext highlighter-rouge">email</code>, <code class="language-plaintext highlighter-rouge">profile</code> 등을 요청합니다.</li>
+        </ul>
+      </li>
+      <li><b>인증 및 권한 승인</b>
+        <ul>
+          <li>사용자가 구글 로그인 페이지에서 아이디/비밀번호를 입력하고, 서비스가 요청한 정보 제공에 동의합니다.</li>
+          <li>구글 인증 서버는 사용자의 신원을 확인하고, 해당 서비스가 사용자의 정보를 가져가는 것에 동의했는지 체크합니다.</li>
+        </ul>
+      </li>
+      <li><b>인가 코드 발급</b>
+        <ul>
+          <li>구글 인증 서버가 브라우저를 통해 클라이언트의 콜백(Callback) URL로 <strong>인가 코드</strong>를 전달합니다.</li>
+          <li>이 코드는 일종의 ‘교환권’으로, 보안을 위해 짧은 시간 동안만 유효합니다.</li>
+        </ul>
+      </li>
+      <li><b>토큰 교환 요청</b>
+        <ul>
+          <li>클라이언트가 ‘인가 코드’를 들고 토큰을 발급받는 서버(Backend) API에 요청을 보냅니다. 그리고 서버에선 인가 코드를 들고 구글 인증 서버에 실제 토큰을 요청합니다.</li>
+          <li>이때 서버는 자신의 <code class="language-plaintext highlighter-rouge">Client ID</code>와 <code class="language-plaintext highlighter-rouge">Client Secret</code>을 함께 보내어 정당한 서버임을 증명합니다.</li>
+        </ul>
+      </li>
+      <li><b>ID 토큰 및 액세스 토큰 발급</b>
+        <ul>
+          <li>구글 인증 서버는 코드를 검증한 후, <strong>ID 토큰</strong>과 <strong>액세스 토큰</strong>을 서버에 발급합니다.</li>
+          <li>(OIDC에서는 유저 정보가 담긴 JWT 형태의 ID 토큰이 함께 돌아옵니다.)</li>
+        </ul>
+      </li>
+      <li><b>ID 토큰 검증 및 유저 정보 획득</b>
+        <ul>
+          <li>서버는 받은 ID 토큰을 디코딩하여 유저의 이메일, 이름, 고유 식별자(sub) 등을 추출합니다.</li>
+          <li>별도의 API 호출(구글 리소스 서버 요청) 없이도 토큰 자체를 검증(Signature 확인)함으로써 유저 정보를 즉시 확인할 수 있습니다. 이 과정에서 네트워크 비용이 절감됩니다.</li>
+        </ul>
+      </li>
+      <li><b>서비스 로그인 완료</b>
+        <ul>
+          <li>획득한 유저 정보를 DB에 저장하거나 확인한 후, 우리 서비스 전용 토큰(JWT 등)을 발급하여 사용자에게 응답합니다.</li>
+          <li>사용자는 최종적으로 서비스에 로그인된 상태가 됩니다.</li>
+        </ul>
+      </li>
+    </ol>
+  </div>
+</details>
+<p><br />
+<br />
+처음 설명을 보면 이해하기 어려울 수 있기에 <a href="https://developers.google.com/oauthplayground/">Google OAuth Playground</a>에서 직접 OAuth 관련 요청을 시도해보는걸 추천드립니다.
+<br />
+<br />
+사이트에 들어가보면 다음과 같은 화면이 나옵니다.<br />
+좌측 패널을 보시면 총 3단계로 나누어져 있습니다.
+<br />
+<br />
+Step 1에서는 다양한 구글 API에 대한 인증 요청을 선택하여 시도해볼 수 있습니다.<br />
+Step 2에서는 인가 코드를 교환하여 액세스 토큰을 발급받는 과정을 시도해볼 수 있습니다.<br />
+Step 3에서는 발급받은 액세스 토큰을 사용하여 구글 API를 호출해볼 수 있습니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground.png" alt="OAuth Playground" />
+<br />
+<br /></p>
+
+<p>오른쪽 톱니바퀴를 누르면 설정 창이 나오게 되는데 일단 기본 설정으로 두고 시작하겠습니다. (나중에 커스텀 설정을 통해 내 서비스의 구글 로그인을 테스트 해볼 수 있습니다.)
+<br />
+<br />
+<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground-setting.png" alt="OAuth Playground Setting" />
+<br />
+<br /></p>
+
+<p>Step 1에서 <b>Google OAuth2 API v2</b>를 선택하고 <code class="language-plaintext highlighter-rouge">https://www.googleapis.com/auth/userinfo.email</code>, <code class="language-plaintext highlighter-rouge">https://www.googleapis.com/auth/userinfo.profile</code>, <code class="language-plaintext highlighter-rouge">openid</code> 스코프를 추가합니다.<br />
+그리고 <b>Authorize APIs</b> 버튼을 클릭합니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground-scope.png" alt="OAuth Playground Scope" width="400" />
+<br />
+<br /></p>
+
+<p>그러면 구글 로그인 페이지로 리다이렉트되며, 로그인을 진행하고 권한을 승인합니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground-login.png" alt="OAuth Playground Login" />
+<br />
+<br /></p>
+
+<p>승인 후에는 다시 OAuth Playground로 리다이렉트 되고 인가 코드를 발급받게됩니다.
+<br />
+<br />
+여기까지가 ‘로그인 버튼 클릭’ 부터 ‘인가 코드 발급’까지의 흐름입니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground-authorized.png" alt="OAuth Playground Authorized" width="400" />
+<br />
+<br /></p>
+
+<p>이제 Step 2에서 인가 코드를 교환하여 액세스 토큰을 발급받을 수 있습니다.<br />
+<b>Exchange authorization code for tokens</b> 버튼을 클릭합니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground-exchange.png" alt="OAuth Playground Exchange" />
+<br />
+<br /></p>
+
+<p>그러면 액세스 토큰, 리프레시 토큰과 함께 <b>ID 토큰</b>도 발급받는 것을 확인할 수 있습니다.<br />
+액세스 토큰을 사용하여 Step 3에서 다른 구글 API를 호출해볼 수 있습니다만 지금은 구글 로그인 구현이 목적이기에 Step 3까지 진행하지 않아도 됩니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground-tokens.png" alt="OAuth Playground Tokens" />
+<br />
+<br /></p>
+
+<p>ID 토큰은 JWT 형식으로 되어 있으며, <a href="https://jwt.io/">jwt.io</a>에서 디코딩해보면 다음과 같이 사용자 정보가 포함되어 있는 것을 확인할 수 있습니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground-id-token.png" alt="OAuth Playground ID Token" />
+<br /></p>
+
+<blockquote>
+  <p>구글 ID 토큰의 페이로드에 대한 정보는 <a href="https://developers.google.com/identity/openid-connect/openid-connect?hl=ko#an-id-tokens-payload">ID 토큰의 페이로드</a> 문서를 참고해주세요.</p>
+</blockquote>
+
+<p><br />
+ID 토큰 디코딩은 실제 서버에서 수행하며, 여기까지가 ‘인가 코드를 가지고 서비스 토큰 발급 요청’부터 ‘ID 토큰을 디코딩하여 사용자 정보 획득’까지의 흐름입니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground-id-token-decoded.png" alt="OAuth Playground ID Token Decoded" width="400" /></p>
+
+<h2 id="google-cloud-console에서-oauth-20-클라이언트-설정하기">Google Cloud Console에서 OAuth 2.0 클라이언트 설정하기</h2>
+
+<p>구글 로그인을 구현하기 위해서는 먼저 <a href="https://console.cloud.google.com/">Google Cloud Console</a>에서 OAuth 2.0 클라이언트를 설정해야 합니다.<br />
+Google Cloud Console에 접속한 후, 새 프로젝트를 생성하고 ‘API 및 서비스’ &gt; ‘OAuth 동의 화면’ 메뉴를 클릭합니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-cloud-oauth-consent-screen.png" alt="Google Cloud Console OAuth Consent Screen" />
+<br />
+<br /></p>
+
+<p>OAuth 개요에서 ‘시작하기’ 버튼을 클릭하여 프로젝트 구성을 시작합니다.<br />
+앱 이름, 사용자 지원 이메일, 개발자 연락처 정보 등을 알맞게 입력하시고 대상 유형은 ‘외부’를 선택합니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-cloud-oauth-consent-start.png" alt="Google Cloud Console OAuth Consent Start" />
+<br />
+<br /></p>
+
+<p>프로젝트 구성을 완료한 후, ‘OAuth 클라이언트 만들기’를 클릭하여 OAuth 2.0 클라이언트를 생성합니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-cloud-create-oauth-client.png" alt="Google Cloud Console Create OAuth Client" />
+<br />
+<br /></p>
+
+<p>애플리케이션 유형은 ‘웹 애플리케이션’을 선택하고, 이름을 입력합니다.<br />
+‘승인된 JavaScript 원본’에는 클라이언트의 도메인을 입력하고, ‘승인된 리디렉션 URI’에는 구글 인증 후 리다이렉트될 클라이언트의 콜백 URL을 입력합니다.<br />
+(일단 로컬에서 테스트할 예정이기에 localhost를 사용하였지만, 실제 서비스에서는 배포된 도메인을 사용해야 합니다.)
+<br />
+<br />
+<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-cloud-oauth-client-settings.png" alt="Google Cloud Console Create OAuth Client Settings" width="600" />
+<br />
+<br /></p>
+
+<p>설정을 완료하고 ‘만들기’ 버튼을 클릭하면 클라이언트 ID와 클라이언트 보안 비밀번호가 발급됩니다.<br />
+클라이언트 보안 비밀번호는 모달 창을 닫으면 다시 볼 수 없으니 안전한 곳에 보관해주세요!
+<br />
+<br />
+다음으로 ‘데이터 액세스’ 탭으로 이동해서 ‘범위 추가 또는 삭제’ 버튼을 클릭합니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-cloud-oauth-scopes.png" alt="Google Cloud Console OAuth Scopes" />
+<br />
+<br /></p>
+
+<p><code class="language-plaintext highlighter-rouge">.../auth/userinfo.email</code>, <code class="language-plaintext highlighter-rouge">.../auth/userinfo.profile</code>, <code class="language-plaintext highlighter-rouge">openid</code> 범위를 선택하고 ‘업데이트’ 버튼을 클릭합니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-cloud-oauth-add-scopes.png" alt="Google Cloud Console OAuth Add Scopes" />
+<br />
+<br /></p>
+
+<p>‘민감하지 않는 범위’에 선택한 범위들이 추가되었다면 아래 ‘Save’ 버튼을 클릭하여 저장합니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-cloud-oauth-scopes-saved.png" alt="Google Cloud Console OAuth Scopes Saved" />
+<br />
+<br /></p>
+
+<p>이제 ‘대상’ 탭으로 이동하여 ‘Add users’ 버튼을 클릭하고 테스트 사용자로 사용할 구글 계정을 추가합니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-cloud-oauth-add-test-users.png" alt="Google Cloud Console OAuth Add Test Users" />
+<br />
+<br />
+이렇게 구글 OAuth 2.0 클라이언트 설정이 완료되었습니다.<br />
+이제 Nest.js 환경에서 구글 로그인을 구현해보겠습니다.</p>
+
+<h2 id="백엔드-코드-작성하기">백엔드 코드 작성하기</h2>
+
+<p>코드를 작성하기 전에 OIDC 인증을 위해 백엔드에서 구현해야 하는 기능들을 간단히 정리해보면 아래와 같습니다.</p>
+
+<ol>
+  <li><b>클라이언트에서 구글 로그인 요청을 처리하는 API 구현</b> (<code class="language-plaintext highlighter-rouge">GET /auth/google</code>)</li>
+  <li><b>클라이언트로부터 인가 코드를 받아 서비스 토큰을 발급하는 API 구현</b> (<code class="language-plaintext highlighter-rouge">POST /auth/google/authenticate</code>)
+    <ul>
+      <li>인가 코드를 구글 인증 서버에 전달하여 ID 토큰과 액세스 토큰 발급 요청</li>
+      <li>구글로부터 받은 ID 토큰을 검증하고 사용자 정보 추출</li>
+      <li>추출한 사용자 정보를 바탕으로 서비스 로그인 처리</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="get-authgoogle-api-구현하기">GET /auth/google API 구현하기</h3>
+
+<p>아래는 첫번째 기능인 <b>‘클라이언트에서 구글 로그인 요청을 처리하는 API’</b>를 구현한 코드입니다.</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// File: "auth.controller.ts"</span>
+<span class="c1">// ... import statements ...</span>
+
+<span class="p">@</span><span class="nd">ApiTags</span><span class="p">(</span><span class="dl">"</span><span class="s2">Auth (인증)</span><span class="dl">"</span><span class="p">)</span>
+<span class="p">@</span><span class="nd">Controller</span><span class="p">(</span><span class="dl">"</span><span class="s2">auth</span><span class="dl">"</span><span class="p">)</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nc">AuthController</span> <span class="p">{</span>
+  <span class="nf">constructor</span><span class="p">(</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">authService</span><span class="p">:</span> <span class="nx">AuthService</span><span class="p">,</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">googleAuthService</span><span class="p">:</span> <span class="nx">GoogleAuthService</span><span class="p">,</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">appConfigService</span><span class="p">:</span> <span class="nx">AppConfigService</span><span class="p">,</span>
+  <span class="p">)</span> <span class="p">{}</span>
+
+  <span class="c1">// ... other endpoints ...</span>
+
+  <span class="p">@</span><span class="nd">ApiAuth</span><span class="p">.</span><span class="nf">googleLogin</span><span class="p">()</span>
+  <span class="p">@</span><span class="nd">Get</span><span class="p">(</span><span class="dl">"</span><span class="s2">google</span><span class="dl">"</span><span class="p">)</span>
+  <span class="p">@</span><span class="nd">HttpCode</span><span class="p">(</span><span class="nx">HttpStatus</span><span class="p">.</span><span class="nx">FOUND</span><span class="p">)</span>
+  <span class="nf">googleLogin</span><span class="p">(@</span><span class="nd">Res</span><span class="p">()</span> <span class="nx">res</span><span class="p">:</span> <span class="nx">Response</span><span class="p">):</span> <span class="k">void</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">url</span><span class="p">,</span> <span class="nx">state</span><span class="p">,</span> <span class="nx">nonce</span> <span class="p">}:</span> <span class="nx">IGoogleAuthOptions</span> <span class="o">=</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">googleAuthService</span><span class="p">.</span><span class="nf">generateAuthOptions</span><span class="p">();</span>
+
+    <span class="kd">const</span> <span class="nx">cookieOptions</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nf">getCommonCookieOptions</span><span class="p">(</span>
+      <span class="nx">COOKIE_MAX_AGE</span><span class="p">.</span><span class="nx">GOOGLE_OAUTH</span><span class="p">,</span>
+    <span class="p">);</span>
+
+    <span class="c1">// 쿠키에 state와 nonce 저장</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nf">cookie</span><span class="p">(</span><span class="nx">COOKIE_NAME</span><span class="p">.</span><span class="nx">GOOGLE_STATE</span><span class="p">,</span> <span class="nx">state</span><span class="p">,</span> <span class="nx">cookieOptions</span><span class="p">);</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nf">cookie</span><span class="p">(</span><span class="nx">COOKIE_NAME</span><span class="p">.</span><span class="nx">GOOGLE_NONCE</span><span class="p">,</span> <span class="nx">nonce</span><span class="p">,</span> <span class="nx">cookieOptions</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="nx">res</span><span class="p">.</span><span class="nf">redirect</span><span class="p">(</span><span class="nx">url</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="c1">// ... other endpoints ...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>코드를 살펴보면, <code class="language-plaintext highlighter-rouge">GET /auth/google</code> 엔드포인트에서 <code class="language-plaintext highlighter-rouge">GoogleAuthService</code>의 <code class="language-plaintext highlighter-rouge">generateAuthOptions()</code> 메서드를 호출하여 구글 인증 URL과 함께 보안 파라미터인 <code class="language-plaintext highlighter-rouge">state</code>, <code class="language-plaintext highlighter-rouge">nonce</code>를 가져오고 있습니다.<br />
+그 후에 <code class="language-plaintext highlighter-rouge">state</code>와 <code class="language-plaintext highlighter-rouge">nonce</code>를 쿠키에 저장한 뒤, 클라이언트를 구글 인증 페이지로 리다이렉트시키고 있습니다.
+<br />
+<br />
+다음으로 <code class="language-plaintext highlighter-rouge">GoogleAuthService</code>의 <code class="language-plaintext highlighter-rouge">generateAuthOptions()</code> 메서드 코드를 살펴보겠습니다.</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// File: "google-auth.service.ts"</span>
+<span class="c1">// ... import statements ...</span>
+
+<span class="p">@</span><span class="nd">Injectable</span><span class="p">()</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nc">GoogleAuthService</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="k">readonly</span> <span class="nx">googleClient</span><span class="p">:</span> <span class="nx">OAuth2Client</span><span class="p">;</span>
+  <span class="k">private</span> <span class="k">readonly</span> <span class="nx">logger</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Logger</span><span class="p">(</span><span class="nx">GoogleAuthService</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+
+  <span class="nf">constructor</span><span class="p">(</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">appConfigService</span><span class="p">:</span> <span class="nx">AppConfigService</span><span class="p">,</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">userService</span><span class="p">:</span> <span class="nx">UserService</span><span class="p">,</span>
+    <span class="p">@</span><span class="nd">Inject</span><span class="p">(</span><span class="nx">AUTH_TOKENS</span><span class="p">.</span><span class="nx">ITokenService</span><span class="p">)</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">tokenService</span><span class="p">:</span> <span class="nx">ITokenService</span><span class="p">,</span>
+  <span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">googleClient</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">OAuth2Client</span><span class="p">({</span>
+      <span class="na">clientId</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">appConfigService</span><span class="p">.</span><span class="nx">googleClientId</span><span class="p">,</span>
+      <span class="na">clientSecret</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">appConfigService</span><span class="p">.</span><span class="nx">googleClientSecret</span><span class="p">,</span>
+      <span class="na">redirectUri</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">appConfigService</span><span class="p">.</span><span class="nx">googleRedirectUri</span><span class="p">,</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="cm">/**
+   * 구글 인증 URL 생성 및 보안 파라미터(state, nonce) 발급
+   */</span>
+  <span class="nf">generateAuthOptions</span><span class="p">():</span> <span class="nx">IGoogleAuthOptions</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">구글 인증 URL 생성을 시작합니다.</span><span class="dl">"</span><span class="p">);</span>
+
+    <span class="kd">const</span> <span class="nx">rootUrl</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">https://accounts.google.com/o/oauth2/v2/auth</span><span class="dl">"</span><span class="p">;</span>
+    <span class="kd">const</span> <span class="nx">state</span> <span class="o">=</span> <span class="nf">nanoid</span><span class="p">(</span><span class="nx">STATE_LENGTH</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">nonce</span> <span class="o">=</span> <span class="nf">nanoid</span><span class="p">(</span><span class="nx">NONCE_LENGTH</span><span class="p">);</span>
+    <span class="kd">const</span> <span class="nx">options</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="na">client_id</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">appConfigService</span><span class="p">.</span><span class="nx">googleClientId</span><span class="p">,</span>
+      <span class="na">redirect_uri</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">appConfigService</span><span class="p">.</span><span class="nx">googleRedirectUri</span><span class="p">,</span>
+      <span class="na">response_type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">code</span><span class="dl">"</span><span class="p">,</span>
+      <span class="na">scope</span><span class="p">:</span> <span class="p">[</span><span class="dl">"</span><span class="s2">openid</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">email</span><span class="dl">"</span><span class="p">,</span> <span class="dl">"</span><span class="s2">profile</span><span class="dl">"</span><span class="p">].</span><span class="nf">join</span><span class="p">(</span><span class="dl">"</span><span class="s2"> </span><span class="dl">"</span><span class="p">),</span>
+      <span class="na">access_type</span><span class="p">:</span> <span class="dl">"</span><span class="s2">offline</span><span class="dl">"</span><span class="p">,</span>
+      <span class="nx">state</span><span class="p">,</span>
+      <span class="nx">nonce</span><span class="p">,</span>
+      <span class="na">prompt</span><span class="p">:</span> <span class="dl">"</span><span class="s2">select_account</span><span class="dl">"</span><span class="p">,</span>
+    <span class="p">};</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+      <span class="na">url</span><span class="p">:</span> <span class="s2">`</span><span class="p">${</span><span class="nx">rootUrl</span><span class="p">}</span><span class="s2">?</span><span class="p">${</span><span class="k">new</span> <span class="nc">URLSearchParams</span><span class="p">(</span><span class="nx">options</span><span class="p">).</span><span class="nf">toString</span><span class="p">()}</span><span class="s2">`</span><span class="p">,</span>
+      <span class="nx">state</span><span class="p">,</span>
+      <span class="nx">nonce</span><span class="p">,</span>
+    <span class="p">};</span>
+  <span class="p">}</span>
+
+  <span class="c1">// ... other methods ...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<blockquote>
+  <p>인증 URL Parameter에 대한 자세한 내용은 <a href="https://developers.google.com/identity/openid-connect/openid-connect?hl=ko#authenticationuriparameters">여기</a>를 참고해주세요.</p>
+</blockquote>
+
+<p><br />
+<code class="language-plaintext highlighter-rouge">nanoid</code> 라이브러리를 사용하여 <code class="language-plaintext highlighter-rouge">state</code>와 <code class="language-plaintext highlighter-rouge">nonce</code>를 생성하고 있는데 각각 어떤 역할을 하는지 간단히 설명드리겠습니다.</p>
+
+<h3 id="state와-nonce의-역할">State와 Nonce의 역할</h3>
+
+<ul>
+  <li><b>State</b>
+    <ul>
+      <li>CSRF(Cross-Site Request Forgery) 공격을 방지하기 위한 보안 토큰입니다.</li>
+      <li>클라이언트가 구글 로그인 요청을 서버로 보낼 때 생성하여 클라이언트에 전송하고, 구글 인증 서버는 이 값을 포함시켜 응답합니다.</li>
+      <li>클라이언트가 이후에 서버에 서비스 토큰을 요청할 때, 서버는 <code class="language-plaintext highlighter-rouge">state</code> 값이 이전에 클라이언트에게 응답으로 보낸 값과 일치하는지 확인하여 요청의 정당성을 검증합니다.</li>
+    </ul>
+  </li>
+  <li><b>Nonce</b>
+    <ul>
+      <li>재전송 공격(Replay Attack)을 방지하기 위한 임의의 값입니다.</li>
+      <li>클라이언트가 구글 로그인 요청을 서버로 보낼 때 생성하여 클라이언트에 전송하고, 구글 인증 서버는 ID 토큰에 이 값을 포함시켜 응답합니다.</li>
+      <li>서버는 ID 토큰에서 받은 <code class="language-plaintext highlighter-rouge">nonce</code> 값이 이전에 클라이언트에게 응답으로 보낸 값과 일치하는지 확인하여 토큰의 유효성을 검증합니다.</li>
+    </ul>
+  </li>
+</ul>
+
+<p>즉, <code class="language-plaintext highlighter-rouge">state</code>는 클라이언트의 요청이 위변조되지 않았는지 검증하는 역할을 하고, <code class="language-plaintext highlighter-rouge">nonce</code>는 ID 토큰이 변조되지 않았는지 검증하는 역할을 합니다.
+<br />
+<br />
+위 코드를 정리해보면 <code class="language-plaintext highlighter-rouge">GET /auth/google</code> 엔드포인트에서 구글 인증 URL과 함께 <code class="language-plaintext highlighter-rouge">state</code>, <code class="language-plaintext highlighter-rouge">nonce</code>를 생성하여 클라이언트를 구글 인증 페이지로 리다이렉트시키는 기능을 구현한 것입니다.</p>
+
+<h3 id="post-authgoogleauthenticate-api-구현하기">POST /auth/google/authenticate API 구현하기</h3>
+
+<p>다음은 두번째 기능인 <b>‘클라이언트로부터 인가 코드를 받아 서비스 토큰을 발급하는 API’</b>를 구현한 코드입니다.</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// File: "auth.controller.ts"</span>
+<span class="c1">// ... import statements ...</span>
+
+<span class="p">@</span><span class="nd">ApiTags</span><span class="p">(</span><span class="dl">"</span><span class="s2">Auth (인증)</span><span class="dl">"</span><span class="p">)</span>
+<span class="p">@</span><span class="nd">Controller</span><span class="p">(</span><span class="dl">"</span><span class="s2">auth</span><span class="dl">"</span><span class="p">)</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nc">AuthController</span> <span class="p">{</span>
+  <span class="nf">constructor</span><span class="p">(</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">authService</span><span class="p">:</span> <span class="nx">AuthService</span><span class="p">,</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">googleAuthService</span><span class="p">:</span> <span class="nx">GoogleAuthService</span><span class="p">,</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">appConfigService</span><span class="p">:</span> <span class="nx">AppConfigService</span><span class="p">,</span>
+  <span class="p">)</span> <span class="p">{}</span>
+
+  <span class="c1">// ... other endpoints ...</span>
+
+  <span class="p">@</span><span class="nd">ApiAuth</span><span class="p">.</span><span class="nf">googleAuthenticate</span><span class="p">()</span>
+  <span class="p">@</span><span class="nd">Post</span><span class="p">(</span><span class="dl">"</span><span class="s2">google/authenticate</span><span class="dl">"</span><span class="p">)</span>
+  <span class="p">@</span><span class="nd">HttpCode</span><span class="p">(</span><span class="nx">HttpStatus</span><span class="p">.</span><span class="nx">OK</span><span class="p">)</span>
+  <span class="p">@</span><span class="nd">ResponseMessage</span><span class="p">(</span><span class="dl">"</span><span class="s2">구글 로그인에 성공하였습니다.</span><span class="dl">"</span><span class="p">)</span>
+  <span class="k">async</span> <span class="nf">googleAuthenticate</span><span class="p">(</span>
+    <span class="p">@</span><span class="nd">Body</span><span class="p">(</span><span class="dl">"</span><span class="s2">code</span><span class="dl">"</span><span class="p">)</span> <span class="nx">code</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span>
+    <span class="p">@</span><span class="nd">Body</span><span class="p">(</span><span class="dl">"</span><span class="s2">state</span><span class="dl">"</span><span class="p">)</span> <span class="nx">requestState</span><span class="p">:</span> <span class="kr">string</span><span class="p">,</span>
+    <span class="p">@</span><span class="nd">Req</span><span class="p">()</span> <span class="nx">req</span><span class="p">:</span> <span class="nx">Request</span><span class="p">,</span>
+    <span class="p">@</span><span class="nd">Res</span><span class="p">({</span> <span class="na">passthrough</span><span class="p">:</span> <span class="kc">true</span> <span class="p">})</span> <span class="nx">res</span><span class="p">:</span> <span class="nx">Response</span><span class="p">,</span>
+  <span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">AccessTokenResponseDto</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">if </span><span class="p">(</span><span class="o">!</span><span class="nx">code</span> <span class="o">||</span> <span class="o">!</span><span class="nx">requestState</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nc">UnauthorizedException</span><span class="p">(</span>
+        <span class="dl">"</span><span class="s2">필수 인증 파라미터(code, state)가 누락되었습니다.</span><span class="dl">"</span><span class="p">,</span>
+      <span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">const</span> <span class="nx">savedState</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">cookies</span><span class="p">[</span><span class="nx">COOKIE_NAME</span><span class="p">.</span><span class="nx">GOOGLE_STATE</span><span class="p">];</span>
+    <span class="kd">const</span> <span class="nx">savedNonce</span> <span class="o">=</span> <span class="nx">req</span><span class="p">.</span><span class="nx">cookies</span><span class="p">[</span><span class="nx">COOKIE_NAME</span><span class="p">.</span><span class="nx">GOOGLE_NONCE</span><span class="p">];</span>
+
+    <span class="kd">const</span> <span class="na">params</span><span class="p">:</span> <span class="nx">IHandleGoogleLoginParams</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="nx">code</span><span class="p">,</span>
+      <span class="nx">savedState</span><span class="p">,</span>
+      <span class="nx">requestState</span><span class="p">,</span>
+      <span class="nx">savedNonce</span><span class="p">,</span>
+    <span class="p">};</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">accessToken</span><span class="p">,</span> <span class="nx">refreshToken</span> <span class="p">}</span> <span class="o">=</span>
+      <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">googleAuthService</span><span class="p">.</span><span class="nf">handleGoogleLogin</span><span class="p">(</span><span class="nx">params</span><span class="p">);</span>
+
+    <span class="nx">res</span><span class="p">.</span><span class="nf">clearCookie</span><span class="p">(</span><span class="nx">COOKIE_NAME</span><span class="p">.</span><span class="nx">GOOGLE_STATE</span><span class="p">);</span>
+    <span class="nx">res</span><span class="p">.</span><span class="nf">clearCookie</span><span class="p">(</span><span class="nx">COOKIE_NAME</span><span class="p">.</span><span class="nx">GOOGLE_NONCE</span><span class="p">);</span>
+
+    <span class="nx">res</span><span class="p">.</span><span class="nf">cookie</span><span class="p">(</span>
+      <span class="nx">COOKIE_NAME</span><span class="p">.</span><span class="nx">REFRESH_TOKEN</span><span class="p">,</span>
+      <span class="nx">refreshToken</span><span class="p">,</span>
+      <span class="k">this</span><span class="p">.</span><span class="nf">getCommonCookieOptions</span><span class="p">(</span><span class="nx">COOKIE_MAX_AGE</span><span class="p">.</span><span class="nx">REFRESH_TOKEN</span><span class="p">),</span>
+    <span class="p">);</span>
+
+    <span class="k">return</span> <span class="p">{</span> <span class="nx">accessToken</span> <span class="p">};</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">POST /auth/google/authenticate</code>에선 클라이언트 Body로 인가 코드(<code class="language-plaintext highlighter-rouge">code</code>)와 <code class="language-plaintext highlighter-rouge">requestState</code>, 쿠키로 <code class="language-plaintext highlighter-rouge">savedState</code>와 <code class="language-plaintext highlighter-rouge">savedNonce</code> 값을 받아 <code class="language-plaintext highlighter-rouge">GoogleAuthService</code>의 <code class="language-plaintext highlighter-rouge">handleGoogleLogin()</code> 메서드를 호출하여 서비스 토큰을 생성하고 있습니다.
+<br />
+<br />
+<code class="language-plaintext highlighter-rouge">GoogleAuthService</code>의 <code class="language-plaintext highlighter-rouge">handleGoogleLogin()</code> 메서드에선 어떻게 서비스 토큰을 만드는지 살펴보겠습니다.</p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// File: "google-auth.service.ts"</span>
+<span class="c1">// ... import statements ...</span>
+
+<span class="p">@</span><span class="nd">Injectable</span><span class="p">()</span>
+<span class="k">export</span> <span class="kd">class</span> <span class="nc">GoogleAuthService</span> <span class="p">{</span>
+  <span class="k">private</span> <span class="k">readonly</span> <span class="nx">googleClient</span><span class="p">:</span> <span class="nx">OAuth2Client</span><span class="p">;</span>
+  <span class="k">private</span> <span class="k">readonly</span> <span class="nx">logger</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Logger</span><span class="p">(</span><span class="nx">GoogleAuthService</span><span class="p">.</span><span class="nx">name</span><span class="p">);</span>
+
+  <span class="nf">constructor</span><span class="p">(</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">appConfigService</span><span class="p">:</span> <span class="nx">AppConfigService</span><span class="p">,</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">userService</span><span class="p">:</span> <span class="nx">UserService</span><span class="p">,</span>
+    <span class="p">@</span><span class="nd">Inject</span><span class="p">(</span><span class="nx">AUTH_TOKENS</span><span class="p">.</span><span class="nx">ITokenService</span><span class="p">)</span>
+    <span class="k">private</span> <span class="k">readonly</span> <span class="nx">tokenService</span><span class="p">:</span> <span class="nx">ITokenService</span><span class="p">,</span>
+  <span class="p">)</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">googleClient</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">OAuth2Client</span><span class="p">({</span>
+      <span class="na">clientId</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">appConfigService</span><span class="p">.</span><span class="nx">googleClientId</span><span class="p">,</span>
+      <span class="na">clientSecret</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">appConfigService</span><span class="p">.</span><span class="nx">googleClientSecret</span><span class="p">,</span>
+      <span class="na">redirectUri</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">appConfigService</span><span class="p">.</span><span class="nx">googleRedirectUri</span><span class="p">,</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+
+  <span class="c1">// ... other methods ...</span>
+
+  <span class="cm">/**
+   * 콜백 처리: 구글 인가 코드를 우리 서비스의 토큰으로 교환
+   */</span>
+  <span class="k">async</span> <span class="nf">handleGoogleLogin</span><span class="p">(</span>
+    <span class="nx">params</span><span class="p">:</span> <span class="nx">IHandleGoogleLoginParams</span><span class="p">,</span>
+  <span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">LoginResponseDto</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">code</span><span class="p">,</span> <span class="nx">savedState</span><span class="p">,</span> <span class="nx">requestState</span><span class="p">,</span> <span class="nx">savedNonce</span> <span class="p">}</span> <span class="o">=</span> <span class="nx">params</span><span class="p">;</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">구글 로그인을 처리합니다.</span><span class="dl">"</span><span class="p">);</span>
+
+    <span class="k">if </span><span class="p">(</span><span class="o">!</span><span class="nx">code</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nc">UnauthorizedException</span><span class="p">(</span><span class="dl">"</span><span class="s2">인증 코드가 없습니다.</span><span class="dl">"</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">if </span><span class="p">(</span><span class="o">!</span><span class="nx">savedState</span> <span class="o">||</span> <span class="o">!</span><span class="nx">savedNonce</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nc">UnauthorizedException</span><span class="p">(</span>
+        <span class="dl">"</span><span class="s2">로그인 세션이 만료되었습니다. 다시 시도해주세요.</span><span class="dl">"</span><span class="p">,</span>
+      <span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// A. State 검증 (CSRF 방지)</span>
+    <span class="k">if </span><span class="p">(</span><span class="nx">savedState</span> <span class="o">!==</span> <span class="nx">requestState</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nc">UnauthorizedException</span><span class="p">(</span><span class="dl">"</span><span class="s2">유효하지 않은 인증 상태(state)입니다.</span><span class="dl">"</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// B. 구글 토큰 발급 (ID Token 포함)</span>
+    <span class="kd">const</span> <span class="p">{</span> <span class="nx">id_token</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nf">exchangeCodeForTokens</span><span class="p">(</span><span class="nx">code</span><span class="p">);</span>
+
+    <span class="k">if </span><span class="p">(</span><span class="o">!</span><span class="nx">id_token</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nc">UnauthorizedException</span><span class="p">(</span><span class="dl">"</span><span class="s2">구글 ID 토큰이 발급되지 않았습니다.</span><span class="dl">"</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// C. ID Token 검증 및 nonce 확인 (재전송 공격 방지)</span>
+    <span class="kd">const</span> <span class="nx">googlePayload</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nf">verifyGoogleIdToken</span><span class="p">(</span><span class="nx">id_token</span><span class="p">);</span>
+
+    <span class="k">if </span><span class="p">(</span><span class="nx">googlePayload</span><span class="p">.</span><span class="nx">nonce</span> <span class="o">!==</span> <span class="nx">savedNonce</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nc">UnauthorizedException</span><span class="p">(</span>
+        <span class="dl">"</span><span class="s2">ID 토큰 보안 검증(nonce)에 실패했습니다.</span><span class="dl">"</span><span class="p">,</span>
+      <span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">if </span><span class="p">(</span><span class="o">!</span><span class="nx">googlePayload</span><span class="p">.</span><span class="nx">email_verified</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nc">UnauthorizedException</span><span class="p">(</span>
+        <span class="dl">"</span><span class="s2">구글 이메일 인증이 완료되지 않았습니다.</span><span class="dl">"</span><span class="p">,</span>
+      <span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="c1">// D. 우리 서비스 유저 처리 (회원가입 또는 로그인)</span>
+    <span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">userService</span><span class="p">.</span><span class="nf">createSocialUser</span><span class="p">({</span>
+      <span class="na">email</span><span class="p">:</span> <span class="nx">googlePayload</span><span class="p">.</span><span class="nx">email</span><span class="p">,</span>
+      <span class="na">nickname</span><span class="p">:</span> <span class="nx">googlePayload</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span>
+      <span class="na">socialId</span><span class="p">:</span> <span class="nx">googlePayload</span><span class="p">.</span><span class="nx">sub</span><span class="p">,</span>
+      <span class="na">profileImageUrl</span><span class="p">:</span> <span class="nx">googlePayload</span><span class="p">.</span><span class="nx">picture</span><span class="p">,</span>
+      <span class="na">provider</span><span class="p">:</span> <span class="dl">"</span><span class="s2">GOOGLE</span><span class="dl">"</span><span class="p">,</span>
+    <span class="p">});</span>
+
+    <span class="kd">const</span> <span class="nx">sub</span> <span class="o">=</span> <span class="nx">user</span><span class="p">.</span><span class="nf">getId</span><span class="p">().</span><span class="nf">getValue</span><span class="p">();</span>
+    <span class="kd">const</span> <span class="nx">email</span> <span class="o">=</span> <span class="nx">user</span><span class="p">.</span><span class="nf">getEmail</span><span class="p">().</span><span class="nf">getValue</span><span class="p">();</span>
+    <span class="kd">const</span> <span class="nx">role</span> <span class="o">=</span> <span class="nx">user</span><span class="p">.</span><span class="nf">getRole</span><span class="p">().</span><span class="nf">getValue</span><span class="p">();</span>
+
+    <span class="kd">const</span> <span class="na">accessTokenPayload</span><span class="p">:</span> <span class="nx">IAccessTokenPayload</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="nx">sub</span><span class="p">,</span>
+      <span class="nx">email</span><span class="p">,</span>
+      <span class="nx">role</span><span class="p">,</span>
+    <span class="p">};</span>
+    <span class="kd">const</span> <span class="na">refreshTokenPayload</span><span class="p">:</span> <span class="nx">IRefreshTokenPayload</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="nx">sub</span><span class="p">,</span>
+    <span class="p">};</span>
+
+    <span class="c1">// E. 자체 서비스 토큰 발급</span>
+    <span class="kd">const</span> <span class="p">[</span><span class="nx">accessToken</span><span class="p">,</span> <span class="nx">refreshToken</span><span class="p">]</span> <span class="o">=</span> <span class="k">await</span> <span class="nb">Promise</span><span class="p">.</span><span class="nf">all</span><span class="p">([</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">tokenService</span><span class="p">.</span><span class="nf">generateAccessToken</span><span class="p">(</span><span class="nx">accessTokenPayload</span><span class="p">),</span>
+      <span class="k">this</span><span class="p">.</span><span class="nx">tokenService</span><span class="p">.</span><span class="nf">generateRefreshToken</span><span class="p">(</span><span class="nx">refreshTokenPayload</span><span class="p">),</span>
+    <span class="p">]);</span>
+
+    <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="s2">`구글 로그인이 성공적으로 완료되었습니다: </span><span class="p">${</span><span class="nx">email</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+
+    <span class="k">return</span> <span class="k">new</span> <span class="nc">LoginResponseDto</span><span class="p">(</span><span class="nx">accessToken</span><span class="p">,</span> <span class="nx">refreshToken</span><span class="p">);</span>
+  <span class="p">}</span>
+
+  <span class="cm">/**
+   * 구글 서버에 Code를 주고 ID Token을 받아옴
+   */</span>
+  <span class="k">private</span> <span class="k">async</span> <span class="nf">exchangeCodeForTokens</span><span class="p">(</span><span class="nx">code</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">Credentials</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">구글 서버와 인가 코드를 토큰으로 교환합니다.</span><span class="dl">"</span><span class="p">);</span>
+
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="p">{</span> <span class="nx">tokens</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">googleClient</span><span class="p">.</span><span class="nf">getToken</span><span class="p">(</span><span class="nx">code</span><span class="p">);</span>
+      <span class="k">return</span> <span class="nx">tokens</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">catch </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">let</span> <span class="nx">errorMessage</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">구글 토큰 발급에 실패했습니다.</span><span class="dl">"</span><span class="p">;</span>
+
+      <span class="k">if </span><span class="p">(</span><span class="nx">error</span> <span class="k">instanceof</span> <span class="nb">Error</span><span class="p">)</span> <span class="p">{</span>
+        <span class="c1">// google-auth-library는 에러 발생 시 response data를 포함할 수 있습니다.</span>
+        <span class="kd">const</span> <span class="nx">responseData</span> <span class="o">=</span> <span class="p">(</span><span class="nx">error</span> <span class="k">as</span> <span class="kr">any</span><span class="p">).</span><span class="nx">response</span><span class="p">?.</span><span class="nx">data</span><span class="p">;</span>
+        <span class="k">if </span><span class="p">(</span><span class="nx">responseData</span><span class="p">)</span> <span class="p">{</span>
+          <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nf">warn</span><span class="p">(</span>
+            <span class="s2">`구글 토큰 교환 실패 상세: </span><span class="p">${</span><span class="nx">JSON</span><span class="p">.</span><span class="nf">stringify</span><span class="p">(</span><span class="nx">responseData</span><span class="p">)}</span><span class="s2">`</span><span class="p">,</span>
+          <span class="p">);</span>
+          <span class="nx">errorMessage</span> <span class="o">=</span> <span class="s2">`구글 토큰 교환 실패: </span><span class="p">${</span><span class="nx">responseData</span><span class="p">.</span><span class="nx">error_description</span> <span class="o">||</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+          <span class="nx">errorMessage</span> <span class="o">=</span> <span class="s2">`구글 토큰 교환 실패: </span><span class="p">${</span><span class="nx">error</span><span class="p">.</span><span class="nx">message</span><span class="p">}</span><span class="s2">`</span><span class="p">;</span>
+        <span class="p">}</span>
+      <span class="p">}</span>
+
+      <span class="k">throw</span> <span class="k">new</span> <span class="nc">UnauthorizedException</span><span class="p">(</span><span class="nx">errorMessage</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="cm">/**
+   * 구글 ID 토큰 검증
+   */</span>
+  <span class="k">private</span> <span class="k">async</span> <span class="nf">verifyGoogleIdToken</span><span class="p">(</span><span class="nx">idToken</span><span class="p">:</span> <span class="kr">string</span><span class="p">):</span> <span class="nb">Promise</span><span class="o">&lt;</span><span class="nx">TokenPayload</span><span class="o">&gt;</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">구글 ID 토큰을 검증합니다.</span><span class="dl">"</span><span class="p">);</span>
+    <span class="k">try</span> <span class="p">{</span>
+      <span class="kd">const</span> <span class="nx">ticket</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">googleClient</span><span class="p">.</span><span class="nf">verifyIdToken</span><span class="p">({</span>
+        <span class="nx">idToken</span><span class="p">,</span>
+        <span class="na">audience</span><span class="p">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">appConfigService</span><span class="p">.</span><span class="nx">googleClientId</span><span class="p">,</span>
+      <span class="p">});</span>
+
+      <span class="kd">const</span> <span class="nx">payload</span> <span class="o">=</span> <span class="nx">ticket</span><span class="p">.</span><span class="nf">getPayload</span><span class="p">();</span>
+      <span class="k">if </span><span class="p">(</span><span class="o">!</span><span class="nx">payload</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">throw</span> <span class="k">new</span> <span class="nc">Error</span><span class="p">(</span><span class="dl">"</span><span class="s2">ID 토큰 페이로드가 비어있습니다.</span><span class="dl">"</span><span class="p">);</span>
+      <span class="p">}</span>
+
+      <span class="k">return</span> <span class="nx">payload</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">catch </span><span class="p">(</span><span class="nx">error</span><span class="p">)</span> <span class="p">{</span>
+      <span class="k">throw</span> <span class="k">new</span> <span class="nc">UnauthorizedException</span><span class="p">(</span>
+        <span class="s2">`구글 ID 토큰 검증 실패: </span><span class="p">${</span><span class="nx">error</span> <span class="k">instanceof</span> <span class="nb">Error</span> <span class="p">?</span> <span class="nx">error</span><span class="p">.</span><span class="nx">message</span> <span class="p">:</span> <span class="dl">"</span><span class="s2">알 수 없는 오류</span><span class="dl">"</span><span class="p">}</span><span class="s2">`</span><span class="p">,</span>
+      <span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>구글 ID 토큰 검증 단계는 <a href="https://developers.google.com/identity/openid-connect/openid-connect?hl=ko#validatinganidtoken">ID 토큰 검증 가이드</a>를 참고하시면 되며, 필자는 <a href="https://developers.google.com/identity/gsi/web/guides/verify-google-id-token?hl=ko#using-a-google-api-client-library">Google API 클라이언트 라이브러리</a>를 사용하여 구현했습니다.</p>
+</blockquote>
+
+<p><br />
+이제 코드를 단계별로 살펴보겠습니다.
+<br />
+<br />
+<b>A. State 검증</b></p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// A. State 검증 (CSRF 방지)</span>
+<span class="k">if </span><span class="p">(</span><span class="nx">savedState</span> <span class="o">!==</span> <span class="nx">requestState</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">throw</span> <span class="k">new</span> <span class="nc">UnauthorizedException</span><span class="p">(</span><span class="dl">"</span><span class="s2">유효하지 않은 인증 상태(state)입니다.</span><span class="dl">"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>먼저 <code class="language-plaintext highlighter-rouge">GET /auth/google</code> 엔드포인트에서 쿠키에 저장했던 <code class="language-plaintext highlighter-rouge">savedState</code> 값과 클라이언트로부터 받은 <code class="language-plaintext highlighter-rouge">requestState</code> 값을 비교합니다. 만약 두 값이 일치하지 않는다면 CSRF 공격일 가능성이 있으므로 예외를 던집니다.
+<br />
+<br />
+<b>B. 구글 ID 토큰 발급</b></p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// B. 구글 토큰 발급 (ID Token 포함)</span>
+<span class="kd">const</span> <span class="p">{</span> <span class="nx">id_token</span> <span class="p">}</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nf">exchangeCodeForTokens</span><span class="p">(</span><span class="nx">code</span><span class="p">);</span>
+
+<span class="k">if </span><span class="p">(</span><span class="o">!</span><span class="nx">id_token</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">throw</span> <span class="k">new</span> <span class="nc">UnauthorizedException</span><span class="p">(</span><span class="dl">"</span><span class="s2">구글 ID 토큰이 발급되지 않았습니다.</span><span class="dl">"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">exchangeCodeForTokens()</code> 메서드를 호출하여 구글 인증 서버에 인가 코드를 전달하고 ID 토큰과 액세스 토큰을 발급받습니다.
+<br />
+<br />
+<b>C. ID 토큰 검증 및 nonce 확인</b></p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// C. ID Token 검증 및 nonce 확인 (재전송 공격 방지)</span>
+<span class="kd">const</span> <span class="nx">googlePayload</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nf">verifyGoogleIdToken</span><span class="p">(</span><span class="nx">id_token</span><span class="p">);</span>
+
+<span class="k">if </span><span class="p">(</span><span class="nx">googlePayload</span><span class="p">.</span><span class="nx">nonce</span> <span class="o">!==</span> <span class="nx">savedNonce</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">throw</span> <span class="k">new</span> <span class="nc">UnauthorizedException</span><span class="p">(</span>
+    <span class="dl">"</span><span class="s2">ID 토큰 보안 검증(nonce)에 실패했습니다.</span><span class="dl">"</span><span class="p">,</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">if </span><span class="p">(</span><span class="o">!</span><span class="nx">googlePayload</span><span class="p">.</span><span class="nx">email_verified</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">throw</span> <span class="k">new</span> <span class="nc">UnauthorizedException</span><span class="p">(</span>
+    <span class="dl">"</span><span class="s2">구글 이메일 인증이 완료되지 않았습니다.</span><span class="dl">"</span><span class="p">,</span>
+  <span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">verifyGoogleIdToken()</code> 메서드를 호출하여 구글로부터 받은 ID 토큰을 검증하고, 토큰의 페이로드를 가져옵니다.<br />
+그 후에 페이로드에 포함된 <code class="language-plaintext highlighter-rouge">nonce</code> 값과 쿠키에 저장했던 <code class="language-plaintext highlighter-rouge">savedNonce</code> 값을 비교하여 재전송 공격을 방지합니다.<br />
+또한, 구글 이메일 인증이 완료되었는지도 확인합니다.
+<br />
+<br />
+<b>D. 우리 서비스 유저 처리</b></p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// D. 우리 서비스 유저 처리 (회원가입 또는 로그인)</span>
+<span class="kd">const</span> <span class="nx">user</span> <span class="o">=</span> <span class="k">await</span> <span class="k">this</span><span class="p">.</span><span class="nx">userService</span><span class="p">.</span><span class="nf">createSocialUser</span><span class="p">({</span>
+  <span class="na">email</span><span class="p">:</span> <span class="nx">googlePayload</span><span class="p">.</span><span class="nx">email</span><span class="p">,</span>
+  <span class="na">nickname</span><span class="p">:</span> <span class="nx">googlePayload</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span>
+  <span class="na">socialId</span><span class="p">:</span> <span class="nx">googlePayload</span><span class="p">.</span><span class="nx">sub</span><span class="p">,</span>
+  <span class="na">profileImageUrl</span><span class="p">:</span> <span class="nx">googlePayload</span><span class="p">.</span><span class="nx">picture</span><span class="p">,</span>
+  <span class="na">provider</span><span class="p">:</span> <span class="dl">"</span><span class="s2">GOOGLE</span><span class="dl">"</span><span class="p">,</span>
+<span class="p">});</span>
+</code></pre></div></div>
+
+<p>ID 토큰에서 추출한 사용자 정보를 바탕으로 <code class="language-plaintext highlighter-rouge">UserService</code>의 <code class="language-plaintext highlighter-rouge">createSocialUser()</code> 메서드를 호출하여 우리 서비스의 유저를 생성하거나 기존 유저를 조회합니다.
+<br />
+<br />
+<b>E. 자체 서비스 토큰 발급</b></p>
+
+<div class="language-typescript highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// E. 자체 서비스 토큰 발급</span>
+<span class="kd">const</span> <span class="p">[</span><span class="nx">accessToken</span><span class="p">,</span> <span class="nx">refreshToken</span><span class="p">]</span> <span class="o">=</span> <span class="k">await</span> <span class="nb">Promise</span><span class="p">.</span><span class="nf">all</span><span class="p">([</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">tokenService</span><span class="p">.</span><span class="nf">generateAccessToken</span><span class="p">(</span><span class="nx">accessTokenPayload</span><span class="p">),</span>
+  <span class="k">this</span><span class="p">.</span><span class="nx">tokenService</span><span class="p">.</span><span class="nf">generateRefreshToken</span><span class="p">(</span><span class="nx">refreshTokenPayload</span><span class="p">),</span>
+<span class="p">]);</span>
+
+<span class="k">this</span><span class="p">.</span><span class="nx">logger</span><span class="p">.</span><span class="nf">log</span><span class="p">(</span><span class="s2">`구글 로그인이 성공적으로 완료되었습니다: </span><span class="p">${</span><span class="nx">email</span><span class="p">}</span><span class="s2">`</span><span class="p">);</span>
+
+<span class="k">return</span> <span class="k">new</span> <span class="nc">LoginResponseDto</span><span class="p">(</span><span class="nx">accessToken</span><span class="p">,</span> <span class="nx">refreshToken</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>마지막으로 자체 서비스 토큰(JWT)을 발급한 후 반환합니다.</p>
+
+<h2 id="프론트엔드에서-필요한-작업">프론트엔드에서 필요한 작업</h2>
+
+<p>저는 이번 포스팅에서 백엔드 구현에 집중했기에 프론트엔드 코드는 다루지 않았습니다.<br />
+혹여나 필요한 분들을 위해 간단히 프론트엔드에서 필요한 작업에 대해서 말해보자면 아래와 같습니다.
+<br /></p>
+<ol>
+  <li>구글 로그인 버튼을 클릭했을 때 <code class="language-plaintext highlighter-rouge">GET /auth/google</code> API로 요청을 보내는 로직이 필요합니다.</li>
+  <li>구글 인증이 완료된 후 콜백 URL(http://localhost:5173/google-callback)에서 인가 코드와 <code class="language-plaintext highlighter-rouge">state</code> 값을 받아 <code class="language-plaintext highlighter-rouge">POST /auth/google/authenticate</code> API로 전달하는 작업이 필요합니다.</li>
+</ol>
+
+<h2 id="구글-로그인-테스트하기">구글 로그인 테스트하기</h2>
+
+<p>이제 모든 구현이 완료되었으니 제가 만든 서비스에서 구글 로그인을 테스트해보겠습니다.<br />
+로그인 페이지에서 구글 로그인 버튼을 클릭합니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-login-button.png" alt="Google Login Button" />
+<br />
+<br />
+구글 로그인 버튼을 클릭하면 <code class="language-plaintext highlighter-rouge">GET /auth/google</code> API가 호출되고, 클라이언트는 구글 인증 페이지로 리다이렉트됩니다.
+<br />
+<br />
+구글 로그인 페이지에서 원하는 계정을 선택하고 권한을 승인합니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-grant-permission.png" alt="Google Grant Permission" />
+<br />
+<br />
+승인 후에는 다시 클라이언트의 콜백 URL로 리다이렉트되고, 인가 코드와 <code class="language-plaintext highlighter-rouge">state</code> 값이 포함되어 있을겁니다.<br />
+프론트엔드에선 이 값을 추출하여 <code class="language-plaintext highlighter-rouge">POST /auth/google/authenticate</code> API로 전달합니다.<br />
+그 결과 응답값으로 서비스 토큰(액세스 토큰, 리프레시 토큰)을 받게 되고, 이를 통해 서비스에 로그인된 상태가 됩니다.
+<br />
+<br />
+<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-login-success.png" alt="Google Login Success" /></p>
+
+<h2 id="마치며">마치며</h2>
+
+<p>이렇게 해서 Nest.js 환경에서 OIDC를 사용하여 구글 로그인 구현을 완료했습니다.</p>
+
+<p class="note">전체 코드가 궁금하신 분들은 <a href="https://github.com/NicoDora/sift-backend/blob/develop/src/modules/auth/presentation/auth.controller.ts">여기</a>를 참고해주세요.</p>
+
+<p>아래부터는 제가 구글 로그인을 구현하면서 마주한 문제들과 그에 대한 생각을 정리해 보았으니 로그인 구현을 마치셨다면 한번쯤 읽어보시면 좋을 것 같습니다.</p>
+
+<p>그럼 다음 포스트에서 뵙겠습니다! 뾰로롱~
+<br />
+<br />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/frieren1.gif" width="300" height="300" alt="프리렌 움짤1" /></p>
+
+<h3 id="state-값-저장방식-쿠키-vs-서버">state 값 저장방식 (쿠키 vs 서버)</h3>
+
+<p><code class="language-plaintext highlighter-rouge">state</code> 값을 저장하는 이유는 CSRF 공격을 방지하기 위함인데, 제가 구현한 방식을 보다보면 이런 생각이 들 수 있습니다.<br />
+“<code class="language-plaintext highlighter-rouge">state</code> 값을 클라이언트 쿠키에 저장하지 않고, 서버 세션이나 인메모리 캐시(Redis 등)에 저장하는게 더 안전하지 않을까?”<br />
+서버 세션이나 인메모리 캐시에 저장하는 방법이 보안상 더 안전할 수 있지만, 서버에 저장하게 된다면 다음과 같은 문제점이 발생할 수 있습니다.
+<br />
+<br />
+먼저 서버에서 <code class="language-plaintext highlighter-rouge">state</code> 값을 관리해야 하므로 추가적인 저장소가 필요합니다. 그리고 로그인이 한번의 API 요청으로 완료되는게 아니라 두 단계로 나누어지기 때문에, 후에 토큰 발급 요청을 보내는 클라이언트가 이전에 로그인 요청을 보낸 클라이언트와 동일한지 확인하기 위해 세션 식별자나 기타 식별자를 함께 관리해야 합니다.
+<br />
+<br />
+세션 식별자는 쿠키에 저장되기 때문에 결국 쿠키를 사용하여 클라이언트에 정보를 저장하게 되고, 서버에서 세션을 관리해야 하는 추가적인 복잡성이 발생합니다. 그리고 OAuth 인증 흐름에서는 stateless(무상태성)를 유지하는 것이 권장되기 때문에, 서버에서 상태를 관리하는 것은 이러한 원칙에 어긋날 수 있습니다. (서버가 여러 대일 경우 상태 동기화 작업도 해줘야 합니다.)
+<br />
+<br />
+따라서 <code class="language-plaintext highlighter-rouge">state</code> 값을 클라이언트 쿠키에 저장하는 방식이 더 간단하게 구현할 수 있고 OAuth의 무상태성 원칙에도 부합한다고 생각하여 쿠키에 저장하는 방식을 선택했습니다.</p>
+
+<h3 id="인가-코드-콜백은-어디로-클라이언트-vs-서버">인가 코드 콜백은 어디로? (클라이언트 vs 서버)</h3>
+
+<p>대부분의 글이나 예제를 살펴보면 인가 코드 콜백 URL을 서버로 지정하는 경우가 많습니다.<br />
+실제로 구글의 <a href="https://developers.google.com/identity/openid-connect/openid-connect?hl=ko#server-flow">OIDC 서버 흐름</a> 문서에서도 콜백 URL을 서버로 지정하고 있습니다.
+<br />
+<br />
+그러나 이렇게 콜백 URL을 서버로 지정하게 되면 서버에서 다시 클라이언트로 리다이렉트 시켜주는 추가적인 작업이 필요합니다.<br />
+즉, 302 응답을 보내게 된다는 것인데 브라우저는 302 응답을 받으면 <code class="language-plaintext highlighter-rouge">Body</code>를 읽기 전에 <code class="language-plaintext highlighter-rouge">Location</code> 헤더에 적힌 주소로 즉시 이동(Redirect)해 버립니다.
+<br />
+<br />
+쿠키로 서비스 토큰을 전달할 수 있지만 저희 서비스에선 액세스 토큰은 <code class="language-plaintext highlighter-rouge">localStorage</code>에, 리프레시 토큰은 쿠키에 저장하는 방식을 사용하고 싶었기 때문에 어떤 방법을 써야할지 고민했습니다.
+<br />
+<br />
+가장 간단한 방법으론 액세스 토큰을 URL 파라미터에 포함시키는 방법이 있겠지만, URL에 민감한 정보를 담는 것은 보안상 좋지 않기에 이 방법은 제외했고, 또 다른 방법으로는 액세스 토큰도 <code class="language-plaintext highlighter-rouge">httpOnly</code> 옵션을 끈 쿠키에 임시 저장하여 클라이언트에서 이를 읽은 뒤 즉시 삭제하는 방법을 생각해봤습니다. 그러나 이 역시 보안상 좋지 않고 클라이언트에서 불필요한 작업이 추가된다는 단점이 있었습니다.
+<br />
+<br />
+그래서 저는 인가 코드 콜백 URL을 클라이언트로 지정하는 방식을 선택했습니다.<br />
+중간에 클라이언트가 요청을 보내는 작업이 추가되긴 하지만, 제가 원하는대로 <code class="language-plaintext highlighter-rouge">Body</code>에 액세스 토큰을 실어 보낼 수 있고, 실제 구글과 통신하여 토큰을 바꾸고 유효성을 검증하는 모든 권한과 로직은 서버에 있기 때문에 서버 주도 방식 (Server-side Flow)을 유지할 수 있었기 때문입니다.</p>
+
+<h2 id="참고-자료">참고 자료</h2>
+
+<ul>
+  <li><a href="https://developers.google.com/identity/openid-connect/openid-connect?hl=ko">OpenID Connect</a></li>
+  <li><a href="https://oauth.net/articles/authentication/">User Authentication with OAuth 2.0</a></li>
+  <li><a href="https://developers.google.com/oauthplayground/">Google OAuth 2.0 Playground</a></li>
+  <li><a href="https://openid.net/specs/openid-connect-core-1_0-final.html#StandardClaims">OpenID Connect Core 1.0</a></li>
+  <li><a href="https://developers.google.com/identity/openid-connect/openid-connect?hl=ko#an-id-tokens-payload">ID 토큰의 페이로드</a></li>
+  <li><a href="https://developers.google.com/identity/openid-connect/openid-connect?hl=ko#validatinganidtoken">ID 토큰 검증</a></li>
+  <li><a href="https://developers.google.com/identity/gsi/web/guides/verify-google-id-token?hl=ko">서버 측에서 Google ID 토큰 확인</a></li>
+</ul>]]></content><author><name>NicoDora</name></author><category term="nestjs" /><summary type="html"><![CDATA[Nest.js에서 Google OAuth2.0 (OIDC) 로그인을 구현하는 방법에 대해 알아보겠습니다.]]></summary></entry><entry><title type="html">[Nest.js] websocket 클라이언트로 ack 보내기</title><link href="http://localhost:4000/nestjs/Nest.js-websocket-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8%EB%A1%9C-ack-%EB%B3%B4%EB%82%B4%EA%B8%B0/" rel="alternate" type="text/html" title="[Nest.js] websocket 클라이언트로 ack 보내기" /><published>2025-03-24T20:00:00+09:00</published><updated>2025-03-24T20:00:00+09:00</updated><id>http://localhost:4000/nestjs/%5BNest.js%5D-websocket-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8%EB%A1%9C-ack-%EB%B3%B4%EB%82%B4%EA%B8%B0</id><content type="html" xml:base="http://localhost:4000/nestjs/Nest.js-websocket-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8%EB%A1%9C-ack-%EB%B3%B4%EB%82%B4%EA%B8%B0/"><![CDATA[<ol id="markdown-toc">
   <li><a href="#문제" id="markdown-toc-문제">문제</a></li>
   <li><a href="#해결방법-ack-보내기" id="markdown-toc-해결방법-ack-보내기">해결방법 (ack 보내기)</a></li>
   <li><a href="#마치며" id="markdown-toc-마치며">마치며</a></li>
@@ -140,7 +974,7 @@ postman에서 ack를 받는 방법도 엄청 간단합니다. 그냥 <code class
 그럼 다음 포스트에서 뵙겠습니다! 뾰로롱~
 <br />
 <br />
-<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/frieren1.gif" width="300" height="300" alt="프리렌 움짤1" /></p>]]></content><author><name>NicoDora</name></author><category term="nestjs" /><summary type="html"><![CDATA[NestJS의 websocket 라이브러리를 사용해 웹소켓을 구현할 때 클라이언트로 ack를 보내는 방법을 알아봅시다.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2025-03-24-Nestjs-websocket-클라이언트로-ack-보내기/send-ack.png" /><media:content medium="image" url="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2025-03-24-Nestjs-websocket-클라이언트로-ack-보내기/send-ack.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">GitHub Actions로 CI/CD 구축하기</title><link href="http://localhost:4000/github/2025/03/18/GitHub-Actions%EB%A1%9C-CICD-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0.html" rel="alternate" type="text/html" title="GitHub Actions로 CI/CD 구축하기" /><published>2025-03-18T18:03:00+09:00</published><updated>2025-03-18T18:03:00+09:00</updated><id>http://localhost:4000/github/2025/03/18/GitHub-Actions%EB%A1%9C-CICD-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0</id><content type="html" xml:base="http://localhost:4000/github/2025/03/18/GitHub-Actions%EB%A1%9C-CICD-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0.html"><![CDATA[<ol id="markdown-toc">
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/frieren1.gif" width="300" height="300" alt="프리렌 움짤1" /></p>]]></content><author><name>NicoDora</name></author><category term="nestjs" /><summary type="html"><![CDATA[NestJS의 websocket 라이브러리를 사용해 웹소켓을 구현할 때 클라이언트로 ack를 보내는 방법을 알아봅시다.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2025-03-24-Nestjs-websocket-클라이언트로-ack-보내기/send-ack.png" /><media:content medium="image" url="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2025-03-24-Nestjs-websocket-클라이언트로-ack-보내기/send-ack.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">GitHub Actions로 CI/CD 구축하기</title><link href="http://localhost:4000/github/GitHub-Actions%EB%A1%9C-CICD-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0/" rel="alternate" type="text/html" title="GitHub Actions로 CI/CD 구축하기" /><published>2025-03-18T18:03:00+09:00</published><updated>2025-03-18T18:03:00+09:00</updated><id>http://localhost:4000/github/GitHub-Actions%EB%A1%9C-CICD-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0</id><content type="html" xml:base="http://localhost:4000/github/GitHub-Actions%EB%A1%9C-CICD-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0/"><![CDATA[<ol id="markdown-toc">
   <li><a href="#지금까지의-이야기" id="markdown-toc-지금까지의-이야기">지금까지의 이야기</a></li>
   <li><a href="#cicd란" id="markdown-toc-cicd란">CI/CD란?</a></li>
   <li><a href="#actions-secrets-설정하기" id="markdown-toc-actions-secrets-설정하기">Actions Secrets 설정하기</a></li>
@@ -401,10 +1235,10 @@ build 탭에 들어가보면 각 단계별로 자세한 로그를 확인할 수 
 <br />
 <br />
 <br />
-이전에 수동으로 배포할 때는 약 5분정도 소요되었지만, GitHub Actions를 사용하여 CI/CD를 구축하니 평균 2분 10초 정도에 배포가 완료되는 모습입니다. 결과적으로 이전 수동 배포에 비해 53% 정도의 시간을 단축할 수 있었습니다.
+이전에 수동으로 배포할 때는 약 5분정도 소요되었지만, GitHub Actions를 사용하여 CI/CD를 구축하니 평균 2분 10초 정도에 배포가 완료되는 모습입니다. 결과적으로 이전 수동 배포에 비해 56% 정도의 시간을 단축할 수 있었습니다.
 <br />
 <br />
-<img src="/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-actions-run3.png" alt="GitHub Actions 실행 확인3" /></p>
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-actions-run3.png" alt="GitHub Actions 실행 확인3" /></p>
 
 <h2 id="마치며">마치며</h2>
 
@@ -414,7 +1248,7 @@ build 탭에 들어가보면 각 단계별로 자세한 로그를 확인할 수 
 <p>그럼 다음 포스트에서 뵙겠습니다! 뾰로롱~
 <br />
 <br />
-<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/frieren1.gif" width="300" height="300" alt="프리렌 움짤1" /></p>]]></content><author><name>NicoDora</name></author><category term="github" /><summary type="html"><![CDATA[GitHub Actions를 사용하여 CI/CD를 구축하는 방법에 대해 알아보겠습니다.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-actions.png" /><media:content medium="image" url="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-actions.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">AWS EC2에서 Nginx와 Certbot으로 Let’s encrypt SSL 인증서 발급하기</title><link href="http://localhost:4000/aws/2025/03/07/AWS-EC2%EC%97%90%EC%84%9C-Nginx%EC%99%80-Certbot%EC%9C%BC%EB%A1%9C-Lets-encrypt-SSL-%EC%9D%B8%EC%A6%9D%EC%84%9C-%EB%B0%9C%EA%B8%89%ED%95%98%EA%B8%B0.html" rel="alternate" type="text/html" title="AWS EC2에서 Nginx와 Certbot으로 Let’s encrypt SSL 인증서 발급하기" /><published>2025-03-07T14:31:00+09:00</published><updated>2025-03-07T14:31:00+09:00</updated><id>http://localhost:4000/aws/2025/03/07/AWS-EC2%EC%97%90%EC%84%9C-Nginx%EC%99%80-Certbot%EC%9C%BC%EB%A1%9C-Lets-encrypt-SSL-%EC%9D%B8%EC%A6%9D%EC%84%9C-%EB%B0%9C%EA%B8%89%ED%95%98%EA%B8%B0</id><content type="html" xml:base="http://localhost:4000/aws/2025/03/07/AWS-EC2%EC%97%90%EC%84%9C-Nginx%EC%99%80-Certbot%EC%9C%BC%EB%A1%9C-Lets-encrypt-SSL-%EC%9D%B8%EC%A6%9D%EC%84%9C-%EB%B0%9C%EA%B8%89%ED%95%98%EA%B8%B0.html"><![CDATA[<ol id="markdown-toc">
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/frieren1.gif" width="300" height="300" alt="프리렌 움짤1" /></p>]]></content><author><name>NicoDora</name></author><category term="github" /><summary type="html"><![CDATA[GitHub Actions를 사용하여 CI/CD를 구축하는 방법에 대해 알아보겠습니다.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-actions.png" /><media:content medium="image" url="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/github/2025-03-18-GitHub-Actions로-CICD-구축하기/github-actions.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">AWS EC2에서 Nginx와 Certbot으로 Let’s encrypt SSL 인증서 발급하기</title><link href="http://localhost:4000/aws/AWS-EC2%EC%97%90%EC%84%9C-Nginx%EC%99%80-Certbot%EC%9C%BC%EB%A1%9C-Lets-encrypt-SSL-%EC%9D%B8%EC%A6%9D%EC%84%9C-%EB%B0%9C%EA%B8%89%ED%95%98%EA%B8%B0/" rel="alternate" type="text/html" title="AWS EC2에서 Nginx와 Certbot으로 Let’s encrypt SSL 인증서 발급하기" /><published>2025-03-07T14:31:00+09:00</published><updated>2025-03-07T14:31:00+09:00</updated><id>http://localhost:4000/aws/AWS-EC2%EC%97%90%EC%84%9C-Nginx%EC%99%80-Certbot%EC%9C%BC%EB%A1%9C-Lets-encrypt-SSL-%EC%9D%B8%EC%A6%9D%EC%84%9C-%EB%B0%9C%EA%B8%89%ED%95%98%EA%B8%B0</id><content type="html" xml:base="http://localhost:4000/aws/AWS-EC2%EC%97%90%EC%84%9C-Nginx%EC%99%80-Certbot%EC%9C%BC%EB%A1%9C-Lets-encrypt-SSL-%EC%9D%B8%EC%A6%9D%EC%84%9C-%EB%B0%9C%EA%B8%89%ED%95%98%EA%B8%B0/"><![CDATA[<ol id="markdown-toc">
   <li><a href="#들어가기-전에" id="markdown-toc-들어가기-전에">들어가기 전에</a></li>
   <li><a href="#사전-준비-환경" id="markdown-toc-사전-준비-환경">사전 준비 환경</a></li>
   <li><a href="#dns-체크" id="markdown-toc-dns-체크">DNS 체크</a></li>
@@ -946,7 +1780,7 @@ If you like Certbot, please consider supporting our work by:
 <p>그럼 다음 포스트에서 뵙겠습니다! 뾰로롱~
 <br />
 <br />
-<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/frieren1.gif" width="300" height="300" alt="프리렌 움짤1" /></p>]]></content><author><name>NicoDora</name></author><category term="aws" /><summary type="html"><![CDATA[AWS EC2 인스턴스에서 Nginx를 사용하여 Let's encrypt SSL 인증서를 발급받고 Certbot으로 인증서 자동갱신까지 설정하는 방법을 다룹니다.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/letsencrypt-logo.png" /><media:content medium="image" url="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/letsencrypt-logo.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Docker 설치하기 for macOS</title><link href="http://localhost:4000/docker/2024/04/03/Docker-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0-for-macOS.html" rel="alternate" type="text/html" title="Docker 설치하기 for macOS" /><published>2024-04-03T15:50:00+09:00</published><updated>2024-04-03T15:50:00+09:00</updated><id>http://localhost:4000/docker/2024/04/03/Docker-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0-for-macOS</id><content type="html" xml:base="http://localhost:4000/docker/2024/04/03/Docker-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0-for-macOS.html"><![CDATA[<ol id="markdown-toc">
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/frieren1.gif" width="300" height="300" alt="프리렌 움짤1" /></p>]]></content><author><name>NicoDora</name></author><category term="aws" /><summary type="html"><![CDATA[AWS EC2 인스턴스에서 Nginx를 사용하여 Let's encrypt SSL 인증서를 발급받고 Certbot으로 인증서 자동갱신까지 설정하는 방법을 다룹니다.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/letsencrypt-logo.png" /><media:content medium="image" url="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/aws/2025-03-07-AWS-EC2에서-Nginx와-Certbot으로-Lets-encrypt-SSL-인증서-발급하기/letsencrypt-logo.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Docker 설치하기 for macOS</title><link href="http://localhost:4000/docker/Docker-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0-for-macOS/" rel="alternate" type="text/html" title="Docker 설치하기 for macOS" /><published>2024-04-03T15:50:00+09:00</published><updated>2024-04-03T15:50:00+09:00</updated><id>http://localhost:4000/docker/Docker-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0-for-macOS</id><content type="html" xml:base="http://localhost:4000/docker/Docker-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0-for-macOS/"><![CDATA[<ol id="markdown-toc">
   <li><a href="#docker란" id="markdown-toc-docker란">Docker란?</a></li>
   <li><a href="#macos에-docker-설치하기" id="markdown-toc-macos에-docker-설치하기">macOS에 Docker 설치하기</a></li>
   <li><a href="#마치며" id="markdown-toc-마치며">마치며</a></li>
@@ -1056,7 +1890,7 @@ If you like Certbot, please consider supporting our work by:
 <p>그럼 다음 포스트에서 뵙겠습니다! 뾰로롱~
 <br />
 <br />
-<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/frieren1.gif" width="300" height="300" alt="프리렌 움짤1" /></p>]]></content><author><name>NicoDora</name></author><category term="docker" /><summary type="html"><![CDATA[Docker 컨테이너와 이미지에 대해 간단히 살펴보고 macOS환경에서 Docker를 설치해봅시다.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/docker/2024-04-03-Docker-설치하기-for-macOS/docker-logo.png" /><media:content medium="image" url="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/docker/2024-04-03-Docker-설치하기-for-macOS/docker-logo.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">NestJS 설치 및 시작하기</title><link href="http://localhost:4000/nestjs/2024/03/29/NestJS-%EC%84%A4%EC%B9%98-%EB%B0%8F-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0.html" rel="alternate" type="text/html" title="NestJS 설치 및 시작하기" /><published>2024-03-29T09:57:00+09:00</published><updated>2024-03-29T09:57:00+09:00</updated><id>http://localhost:4000/nestjs/2024/03/29/NestJS-%EC%84%A4%EC%B9%98-%EB%B0%8F-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0</id><content type="html" xml:base="http://localhost:4000/nestjs/2024/03/29/NestJS-%EC%84%A4%EC%B9%98-%EB%B0%8F-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0.html"><![CDATA[<ol id="markdown-toc">
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/frieren1.gif" width="300" height="300" alt="프리렌 움짤1" /></p>]]></content><author><name>NicoDora</name></author><category term="docker" /><summary type="html"><![CDATA[Docker 컨테이너와 이미지에 대해 간단히 살펴보고 macOS환경에서 Docker를 설치해봅시다.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/docker/2024-04-03-Docker-설치하기-for-macOS/docker-logo.png" /><media:content medium="image" url="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/docker/2024-04-03-Docker-설치하기-for-macOS/docker-logo.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">NestJS 설치 및 시작하기</title><link href="http://localhost:4000/nestjs/NestJS-%EC%84%A4%EC%B9%98-%EB%B0%8F-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0/" rel="alternate" type="text/html" title="NestJS 설치 및 시작하기" /><published>2024-03-29T09:57:00+09:00</published><updated>2024-03-29T09:57:00+09:00</updated><id>http://localhost:4000/nestjs/NestJS-%EC%84%A4%EC%B9%98-%EB%B0%8F-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0</id><content type="html" xml:base="http://localhost:4000/nestjs/NestJS-%EC%84%A4%EC%B9%98-%EB%B0%8F-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0/"><![CDATA[<ol id="markdown-toc">
   <li><a href="#시작하기-전에" id="markdown-toc-시작하기-전에">시작하기 전에</a></li>
   <li><a href="#nestjs-설치하기" id="markdown-toc-nestjs-설치하기">NestJS 설치하기</a></li>
   <li><a href="#nestjs-기본-프로젝트-구조-살펴보기" id="markdown-toc-nestjs-기본-프로젝트-구조-살펴보기">NestJS 기본 프로젝트 구조 살펴보기</a></li>
@@ -1286,7 +2120,7 @@ NestJS를 설치하고 단 한 줄의 코드를 작성하지 않았음에도 간
       <p>CLI(Command Line Interface)는 명령어를 통해 프로그램을 제어하는 인터페이스를 의미합니다. NestJS CLI는 NestJS 프로젝트를 생성하고 관리하는 명령어를 제공합니다. <a href="#fnref:1" class="reversefootnote" role="doc-backlink">&#8617;</a></p>
     </li>
   </ol>
-</div>]]></content><author><name>NicoDora</name></author><category term="nestjs" /><summary type="html"><![CDATA[NestJS를 설치하고 기본 구조를 살펴보며 NestJS를 사용해서 프로젝트를 시작해봅시다.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2024-03-29-NestJS-설치-및-시작하기/nestjs-logo.png" /><media:content medium="image" url="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2024-03-29-NestJS-설치-및-시작하기/nestjs-logo.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">NestJS를 선택한 이유 (NestJS란?)</title><link href="http://localhost:4000/nestjs/2024/03/22/NestJS%EB%A5%BC-%EC%84%A0%ED%83%9D%ED%95%9C-%EC%9D%B4%EC%9C%A0.html" rel="alternate" type="text/html" title="NestJS를 선택한 이유 (NestJS란?)" /><published>2024-03-22T21:20:00+09:00</published><updated>2024-03-22T21:20:00+09:00</updated><id>http://localhost:4000/nestjs/2024/03/22/NestJS%EB%A5%BC-%EC%84%A0%ED%83%9D%ED%95%9C-%EC%9D%B4%EC%9C%A0</id><content type="html" xml:base="http://localhost:4000/nestjs/2024/03/22/NestJS%EB%A5%BC-%EC%84%A0%ED%83%9D%ED%95%9C-%EC%9D%B4%EC%9C%A0.html"><![CDATA[<ol id="markdown-toc">
+</div>]]></content><author><name>NicoDora</name></author><category term="nestjs" /><summary type="html"><![CDATA[NestJS를 설치하고 기본 구조를 살펴보며 NestJS를 사용해서 프로젝트를 시작해봅시다.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2024-03-29-NestJS-설치-및-시작하기/nestjs-logo.png" /><media:content medium="image" url="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2024-03-29-NestJS-설치-및-시작하기/nestjs-logo.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">NestJS를 선택한 이유 (NestJS란?)</title><link href="http://localhost:4000/nestjs/NestJS%EB%A5%BC-%EC%84%A0%ED%83%9D%ED%95%9C-%EC%9D%B4%EC%9C%A0/" rel="alternate" type="text/html" title="NestJS를 선택한 이유 (NestJS란?)" /><published>2024-03-22T21:20:00+09:00</published><updated>2024-03-22T21:20:00+09:00</updated><id>http://localhost:4000/nestjs/NestJS%EB%A5%BC-%EC%84%A0%ED%83%9D%ED%95%9C-%EC%9D%B4%EC%9C%A0</id><content type="html" xml:base="http://localhost:4000/nestjs/NestJS%EB%A5%BC-%EC%84%A0%ED%83%9D%ED%95%9C-%EC%9D%B4%EC%9C%A0/"><![CDATA[<ol id="markdown-toc">
   <li><a href="#nestjs란" id="markdown-toc-nestjs란">NestJS란?</a></li>
   <li><a href="#nestjs를-선택하기-전에" id="markdown-toc-nestjs를-선택하기-전에">NestJS를 선택하기 전에</a></li>
   <li><a href="#nestjs를-선택한-이유" id="markdown-toc-nestjs를-선택한-이유">NestJS를 선택한 이유</a></li>

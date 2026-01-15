@@ -1,11 +1,12 @@
 lang:                  ko
 title:                 NicoDora
-copyright:             © 2024 NicoDora. All rights reserved.
+copyright:             © 2026 NicoDora. All rights reserved.
 logo:                 https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/logo.png
 url:                  https://nicodora.github.io
 tagline:              keep moving
 description:          백엔드 개발을 중심으로 포스트 하고 있는 NicoDora의 블로그입니다.
 timezone:              Asia/Seoul
+permalink: /:categories/:title/
 
 author:
   name:                NicoDora
