@@ -4,7 +4,23 @@
                 xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     
     <url>
-        <loc>http://localhost:4000/nestjs/2025/03/24/Nest.js-websocket-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8%EB%A1%9C-ack-%EB%B3%B4%EB%82%B4%EA%B8%B0.html</loc>
+        <loc>http://localhost:4000/nestjs/Nest.js-Google-OAuth20-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0/</loc>
+        
+        <lastmod>2026-01-15T20:03:00+09:00</lastmod>
+        
+
+        
+        <changefreq>weekly</changefreq>
+        
+
+        
+        <priority>0.5</priority>
+        
+
+    </url>
+    
+    <url>
+        <loc>http://localhost:4000/nestjs/Nest.js-websocket-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8%EB%A1%9C-ack-%EB%B3%B4%EB%82%B4%EA%B8%B0/</loc>
         
         <lastmod>2025-03-24T20:00:00+09:00</lastmod>
         
@@ -20,7 +36,7 @@
     </url>
     
     <url>
-        <loc>http://localhost:4000/github/2025/03/18/GitHub-Actions%EB%A1%9C-CICD-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0.html</loc>
+        <loc>http://localhost:4000/github/GitHub-Actions%EB%A1%9C-CICD-%EA%B5%AC%EC%B6%95%ED%95%98%EA%B8%B0/</loc>
         
         <lastmod>2025-03-18T18:03:00+09:00</lastmod>
         
@@ -36,7 +52,7 @@
     </url>
     
     <url>
-        <loc>http://localhost:4000/aws/2025/03/07/AWS-EC2%EC%97%90%EC%84%9C-Nginx%EC%99%80-Certbot%EC%9C%BC%EB%A1%9C-Lets-encrypt-SSL-%EC%9D%B8%EC%A6%9D%EC%84%9C-%EB%B0%9C%EA%B8%89%ED%95%98%EA%B8%B0.html</loc>
+        <loc>http://localhost:4000/aws/AWS-EC2%EC%97%90%EC%84%9C-Nginx%EC%99%80-Certbot%EC%9C%BC%EB%A1%9C-Lets-encrypt-SSL-%EC%9D%B8%EC%A6%9D%EC%84%9C-%EB%B0%9C%EA%B8%89%ED%95%98%EA%B8%B0/</loc>
         
         <lastmod>2025-03-07T14:31:00+09:00</lastmod>
         
@@ -52,7 +68,7 @@
     </url>
     
     <url>
-        <loc>http://localhost:4000/docker/2024/04/03/Docker-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0-for-macOS.html</loc>
+        <loc>http://localhost:4000/docker/Docker-%EC%84%A4%EC%B9%98%ED%95%98%EA%B8%B0-for-macOS/</loc>
         
         <lastmod>2024-04-03T15:50:00+09:00</lastmod>
         
@@ -68,7 +84,7 @@
     </url>
     
     <url>
-        <loc>http://localhost:4000/nestjs/2024/03/29/NestJS-%EC%84%A4%EC%B9%98-%EB%B0%8F-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0.html</loc>
+        <loc>http://localhost:4000/nestjs/NestJS-%EC%84%A4%EC%B9%98-%EB%B0%8F-%EC%8B%9C%EC%9E%91%ED%95%98%EA%B8%B0/</loc>
         
         <lastmod>2024-03-29T09:57:00+09:00</lastmod>
         
@@ -84,7 +100,7 @@
     </url>
     
     <url>
-        <loc>http://localhost:4000/nestjs/2024/03/22/NestJS%EB%A5%BC-%EC%84%A0%ED%83%9D%ED%95%9C-%EC%9D%B4%EC%9C%A0.html</loc>
+        <loc>http://localhost:4000/nestjs/NestJS%EB%A5%BC-%EC%84%A0%ED%83%9D%ED%95%9C-%EC%9D%B4%EC%9C%A0/</loc>
         
         <lastmod>2024-03-22T21:20:00+09:00</lastmod>
         
