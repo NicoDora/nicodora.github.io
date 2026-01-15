@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ko"><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="ko" /><updated>2026-01-15T20:09:48+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">NicoDora</title><subtitle>백엔드 개발을 중심으로 포스트 하고 있는 NicoDora의 블로그입니다.</subtitle><author><name>NicoDora</name></author><entry><title type="html">[Nest.js] Google OAuth2.0 (OIDC) 로그인 구현하기</title><link href="http://localhost:4000/nestjs/Nest.js-Google-OAuth20-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0/" rel="alternate" type="text/html" title="[Nest.js] Google OAuth2.0 (OIDC) 로그인 구현하기" /><published>2026-01-15T20:03:00+09:00</published><updated>2026-01-15T20:03:00+09:00</updated><id>http://localhost:4000/nestjs/%5BNest.js%5D-Google-OAuth20-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0</id><content type="html" xml:base="http://localhost:4000/nestjs/Nest.js-Google-OAuth20-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0/"><![CDATA[<ol id="markdown-toc">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ko"><generator uri="https://jekyllrb.com/" version="4.3.3">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="ko" /><updated>2026-01-15T20:21:50+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">NicoDora</title><subtitle>백엔드 개발을 중심으로 포스트 하고 있는 NicoDora의 블로그입니다.</subtitle><author><name>NicoDora</name></author><entry><title type="html">[Nest.js] Google OAuth2.0 (OIDC) 로그인 구현하기</title><link href="http://localhost:4000/nestjs/Nest.js-Google-OAuth20-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0/" rel="alternate" type="text/html" title="[Nest.js] Google OAuth2.0 (OIDC) 로그인 구현하기" /><published>2026-01-15T20:03:00+09:00</published><updated>2026-01-15T20:03:00+09:00</updated><id>http://localhost:4000/nestjs/%5BNest.js%5D-Google-OAuth20-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0</id><content type="html" xml:base="http://localhost:4000/nestjs/Nest.js-Google-OAuth20-%EB%A1%9C%EA%B7%B8%EC%9D%B8-%EA%B5%AC%ED%98%84%ED%95%98%EA%B8%B0/"><![CDATA[<ol id="markdown-toc">
   <li><a href="#oauth20과-oidc의-차이점" id="markdown-toc-oauth20과-oidc의-차이점">OAuth2.0과 OIDC의 차이점</a></li>
   <li><a href="#oidc-인증-흐름-이해하기" id="markdown-toc-oidc-인증-흐름-이해하기">OIDC 인증 흐름 이해하기</a></li>
   <li><a href="#google-cloud-console에서-oauth-20-클라이언트-설정하기" id="markdown-toc-google-cloud-console에서-oauth-20-클라이언트-설정하기">Google Cloud Console에서 OAuth 2.0 클라이언트 설정하기</a></li>
@@ -70,7 +70,7 @@
 OAuth2.0과 OIDC 각각 사용자 정보를 얻는 흐름을 간단히 비교해보면 다음과 같습니다.
 <br />
 <br />
-<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-vs-oidc.png" alt="OAuth2.0 vs OIDC" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-vs-oidc.png" alt="OAuth2.0 vs OIDC" />
 <br />
 <br />
 OIDC의 경우, OAuth2.0의 흐름에 ID 토큰이 추가되어 사용자의 신원을 확인할 수 있도록 합니다. ID 토큰은 JWT(JSON Web Token) 형식으로 발급되며, 사용자의 정보(예: 이메일, 이름 등)를 포함하고 있습니다.
@@ -86,7 +86,7 @@ ID 토큰을 통해 사용자 정보를 얻을 수 있기 때문에 사용자 �
 <p>다음은 OIDC 인증 흐름을 나타낸 다이어그램입니다.
 <br />
 <br />
-<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oidc-flow.png" alt="OIDC 인증 흐름" width="400" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oidc-flow.png" alt="OIDC 인증 흐름" width="400" />
 <br />
 <br /></p>
 <details>
@@ -153,14 +153,14 @@ Step 2에서는 인가 코드를 교환하여 액세스 토큰을 발급받는 �
 Step 3에서는 발급받은 액세스 토큰을 사용하여 구글 API를 호출해볼 수 있습니다.
 <br />
 <br />
-<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground.png" alt="OAuth Playground" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground.png" alt="OAuth Playground" />
 <br />
 <br /></p>
 
 <p>오른쪽 톱니바퀴를 누르면 설정 창이 나오게 되는데 일단 기본 설정으로 두고 시작하겠습니다. (나중에 커스텀 설정을 통해 내 서비스의 구글 로그인을 테스트 해볼 수 있습니다.)
 <br />
 <br />
-<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground-setting.png" alt="OAuth Playground Setting" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground-setting.png" alt="OAuth Playground Setting" />
 <br />
 <br /></p>
 
@@ -168,14 +168,14 @@ Step 3에서는 발급받은 액세스 토큰을 사용하여 구글 API를 호�
 그리고 <b>Authorize APIs</b> 버튼을 클릭합니다.
 <br />
 <br />
-<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground-scope.png" alt="OAuth Playground Scope" width="400" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground-scope.png" alt="OAuth Playground Scope" width="400" />
 <br />
 <br /></p>
 
 <p>그러면 구글 로그인 페이지로 리다이렉트되며, 로그인을 진행하고 권한을 승인합니다.
 <br />
 <br />
-<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground-login.png" alt="OAuth Playground Login" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground-login.png" alt="OAuth Playground Login" />
 <br />
 <br /></p>
 
@@ -185,7 +185,7 @@ Step 3에서는 발급받은 액세스 토큰을 사용하여 구글 API를 호�
 여기까지가 ‘로그인 버튼 클릭’ 부터 ‘인가 코드 발급’까지의 흐름입니다.
 <br />
 <br />
-<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground-authorized.png" alt="OAuth Playground Authorized" width="400" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground-authorized.png" alt="OAuth Playground Authorized" width="400" />
 <br />
 <br /></p>
 
@@ -193,7 +193,7 @@ Step 3에서는 발급받은 액세스 토큰을 사용하여 구글 API를 호�
 <b>Exchange authorization code for tokens</b> 버튼을 클릭합니다.
 <br />
 <br />
-<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground-exchange.png" alt="OAuth Playground Exchange" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground-exchange.png" alt="OAuth Playground Exchange" />
 <br />
 <br /></p>
 
@@ -201,14 +201,14 @@ Step 3에서는 발급받은 액세스 토큰을 사용하여 구글 API를 호�
 액세스 토큰을 사용하여 Step 3에서 다른 구글 API를 호출해볼 수 있습니다만 지금은 구글 로그인 구현이 목적이기에 Step 3까지 진행하지 않아도 됩니다.
 <br />
 <br />
-<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground-tokens.png" alt="OAuth Playground Tokens" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground-tokens.png" alt="OAuth Playground Tokens" />
 <br />
 <br /></p>
 
 <p>ID 토큰은 JWT 형식으로 되어 있으며, <a href="https://jwt.io/">jwt.io</a>에서 디코딩해보면 다음과 같이 사용자 정보가 포함되어 있는 것을 확인할 수 있습니다.
 <br />
 <br />
-<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground-id-token.png" alt="OAuth Playground ID Token" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground-id-token.png" alt="OAuth Playground ID Token" />
 <br /></p>
 
 <blockquote>
@@ -219,7 +219,7 @@ Step 3에서는 발급받은 액세스 토큰을 사용하여 구글 API를 호�
 ID 토큰 디코딩은 실제 서버에서 수행하며, 여기까지가 ‘인가 코드를 가지고 서비스 토큰 발급 요청’부터 ‘ID 토큰을 디코딩하여 사용자 정보 획득’까지의 흐름입니다.
 <br />
 <br />
-<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground-id-token-decoded.png" alt="OAuth Playground ID Token Decoded" width="400" /></p>
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-playground-id-token-decoded.png" alt="OAuth Playground ID Token Decoded" width="400" /></p>
 
 <h2 id="google-cloud-console에서-oauth-20-클라이언트-설정하기">Google Cloud Console에서 OAuth 2.0 클라이언트 설정하기</h2>
 
@@ -227,7 +227,7 @@ ID 토큰 디코딩은 실제 서버에서 수행하며, 여기까지가 ‘인�
 Google Cloud Console에 접속한 후, 새 프로젝트를 생성하고 ‘API 및 서비스’ &gt; ‘OAuth 동의 화면’ 메뉴를 클릭합니다.
 <br />
 <br />
-<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-cloud-oauth-consent-screen.png" alt="Google Cloud Console OAuth Consent Screen" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-cloud-oauth-consent-screen.png" alt="Google Cloud Console OAuth Consent Screen" />
 <br />
 <br /></p>
 
@@ -235,14 +235,14 @@ Google Cloud Console에 접속한 후, 새 프로젝트를 생성하고 ‘API �
 앱 이름, 사용자 지원 이메일, 개발자 연락처 정보 등을 알맞게 입력하시고 대상 유형은 ‘외부’를 선택합니다.
 <br />
 <br />
-<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-cloud-oauth-consent-start.png" alt="Google Cloud Console OAuth Consent Start" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-cloud-oauth-consent-start.png" alt="Google Cloud Console OAuth Consent Start" />
 <br />
 <br /></p>
 
 <p>프로젝트 구성을 완료한 후, ‘OAuth 클라이언트 만들기’를 클릭하여 OAuth 2.0 클라이언트를 생성합니다.
 <br />
 <br />
-<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-cloud-create-oauth-client.png" alt="Google Cloud Console Create OAuth Client" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-cloud-create-oauth-client.png" alt="Google Cloud Console Create OAuth Client" />
 <br />
 <br /></p>
 
@@ -251,7 +251,7 @@ Google Cloud Console에 접속한 후, 새 프로젝트를 생성하고 ‘API �
 (일단 로컬에서 테스트할 예정이기에 localhost를 사용하였지만, 실제 서비스에서는 배포된 도메인을 사용해야 합니다.)
 <br />
 <br />
-<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-cloud-oauth-client-settings.png" alt="Google Cloud Console Create OAuth Client Settings" width="600" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-cloud-oauth-client-settings.png" alt="Google Cloud Console Create OAuth Client Settings" width="600" />
 <br />
 <br /></p>
 
@@ -262,28 +262,28 @@ Google Cloud Console에 접속한 후, 새 프로젝트를 생성하고 ‘API �
 다음으로 ‘데이터 액세스’ 탭으로 이동해서 ‘범위 추가 또는 삭제’ 버튼을 클릭합니다.
 <br />
 <br />
-<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-cloud-oauth-scopes.png" alt="Google Cloud Console OAuth Scopes" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-cloud-oauth-scopes.png" alt="Google Cloud Console OAuth Scopes" />
 <br />
 <br /></p>
 
 <p><code class="language-plaintext highlighter-rouge">.../auth/userinfo.email</code>, <code class="language-plaintext highlighter-rouge">.../auth/userinfo.profile</code>, <code class="language-plaintext highlighter-rouge">openid</code> 범위를 선택하고 ‘업데이트’ 버튼을 클릭합니다.
 <br />
 <br />
-<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-cloud-oauth-add-scopes.png" alt="Google Cloud Console OAuth Add Scopes" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-cloud-oauth-add-scopes.png" alt="Google Cloud Console OAuth Add Scopes" />
 <br />
 <br /></p>
 
 <p>‘민감하지 않는 범위’에 선택한 범위들이 추가되었다면 아래 ‘Save’ 버튼을 클릭하여 저장합니다.
 <br />
 <br />
-<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-cloud-oauth-scopes-saved.png" alt="Google Cloud Console OAuth Scopes Saved" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-cloud-oauth-scopes-saved.png" alt="Google Cloud Console OAuth Scopes Saved" />
 <br />
 <br /></p>
 
 <p>이제 ‘대상’ 탭으로 이동하여 ‘Add users’ 버튼을 클릭하고 테스트 사용자로 사용할 구글 계정을 추가합니다.
 <br />
 <br />
-<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-cloud-oauth-add-test-users.png" alt="Google Cloud Console OAuth Add Test Users" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-cloud-oauth-add-test-users.png" alt="Google Cloud Console OAuth Add Test Users" />
 <br />
 <br />
 이렇게 구글 OAuth 2.0 클라이언트 설정이 완료되었습니다.<br />
@@ -756,7 +756,7 @@ Google Cloud Console에 접속한 후, 새 프로젝트를 생성하고 ‘API �
 로그인 페이지에서 구글 로그인 버튼을 클릭합니다.
 <br />
 <br />
-<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-login-button.png" alt="Google Login Button" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-login-button.png" alt="Google Login Button" />
 <br />
 <br />
 구글 로그인 버튼을 클릭하면 <code class="language-plaintext highlighter-rouge">GET /auth/google</code> API가 호출되고, 클라이언트는 구글 인증 페이지로 리다이렉트됩니다.
@@ -765,7 +765,7 @@ Google Cloud Console에 접속한 후, 새 프로젝트를 생성하고 ‘API �
 구글 로그인 페이지에서 원하는 계정을 선택하고 권한을 승인합니다.
 <br />
 <br />
-<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-grant-permission.png" alt="Google Grant Permission" />
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-grant-permission.png" alt="Google Grant Permission" />
 <br />
 <br />
 승인 후에는 다시 클라이언트의 콜백 URL로 리다이렉트되고, 인가 코드와 <code class="language-plaintext highlighter-rouge">state</code> 값이 포함되어 있을겁니다.<br />
@@ -773,7 +773,7 @@ Google Cloud Console에 접속한 후, 새 프로젝트를 생성하고 ‘API �
 그 결과 응답값으로 서비스 토큰(액세스 토큰, 리프레시 토큰)을 받게 되고, 이를 통해 서비스에 로그인된 상태가 됩니다.
 <br />
 <br />
-<img src="/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-login-success.png" alt="Google Login Success" /></p>
+<img src="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/google-login-success.png" alt="Google Login Success" /></p>
 
 <h2 id="마치며">마치며</h2>
 
@@ -832,7 +832,7 @@ Google Cloud Console에 접속한 후, 새 프로젝트를 생성하고 ‘API �
   <li><a href="https://developers.google.com/identity/openid-connect/openid-connect?hl=ko#an-id-tokens-payload">ID 토큰의 페이로드</a></li>
   <li><a href="https://developers.google.com/identity/openid-connect/openid-connect?hl=ko#validatinganidtoken">ID 토큰 검증</a></li>
   <li><a href="https://developers.google.com/identity/gsi/web/guides/verify-google-id-token?hl=ko">서버 측에서 Google ID 토큰 확인</a></li>
-</ul>]]></content><author><name>NicoDora</name></author><category term="nestjs" /><summary type="html"><![CDATA[Nest.js에서 Google OAuth2.0 (OIDC) 로그인을 구현하는 방법에 대해 알아보겠습니다.]]></summary></entry><entry><title type="html">[Nest.js] websocket 클라이언트로 ack 보내기</title><link href="http://localhost:4000/nestjs/Nest.js-websocket-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8%EB%A1%9C-ack-%EB%B3%B4%EB%82%B4%EA%B8%B0/" rel="alternate" type="text/html" title="[Nest.js] websocket 클라이언트로 ack 보내기" /><published>2025-03-24T20:00:00+09:00</published><updated>2025-03-24T20:00:00+09:00</updated><id>http://localhost:4000/nestjs/%5BNest.js%5D-websocket-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8%EB%A1%9C-ack-%EB%B3%B4%EB%82%B4%EA%B8%B0</id><content type="html" xml:base="http://localhost:4000/nestjs/Nest.js-websocket-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8%EB%A1%9C-ack-%EB%B3%B4%EB%82%B4%EA%B8%B0/"><![CDATA[<ol id="markdown-toc">
+</ul>]]></content><author><name>NicoDora</name></author><category term="nestjs" /><summary type="html"><![CDATA[Nest.js에서 Google OAuth2.0 (OIDC) 로그인을 구현하는 방법에 대해 알아보겠습니다.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-vs-oidc.png" /><media:content medium="image" url="https://cdn.jsdelivr.net/gh/NicoDora/nicodora.github.io/assets/img/nestjs/2026-01-15-Nestjs-Google-OAuth20-로그인-구현하기/oauth-vs-oidc.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">[Nest.js] websocket 클라이언트로 ack 보내기</title><link href="http://localhost:4000/nestjs/Nest.js-websocket-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8%EB%A1%9C-ack-%EB%B3%B4%EB%82%B4%EA%B8%B0/" rel="alternate" type="text/html" title="[Nest.js] websocket 클라이언트로 ack 보내기" /><published>2025-03-24T20:00:00+09:00</published><updated>2025-03-24T20:00:00+09:00</updated><id>http://localhost:4000/nestjs/%5BNest.js%5D-websocket-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8%EB%A1%9C-ack-%EB%B3%B4%EB%82%B4%EA%B8%B0</id><content type="html" xml:base="http://localhost:4000/nestjs/Nest.js-websocket-%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8%EB%A1%9C-ack-%EB%B3%B4%EB%82%B4%EA%B8%B0/"><![CDATA[<ol id="markdown-toc">
   <li><a href="#문제" id="markdown-toc-문제">문제</a></li>
   <li><a href="#해결방법-ack-보내기" id="markdown-toc-해결방법-ack-보내기">해결방법 (ack 보내기)</a></li>
   <li><a href="#마치며" id="markdown-toc-마치며">마치며</a></li>
